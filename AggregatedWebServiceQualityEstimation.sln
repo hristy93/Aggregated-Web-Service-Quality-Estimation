@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregatedWebServiceQualityEstimation", "AggregatedWebServiceQualityEstimation\AggregatedWebServiceQualityEstimation.csproj", "{465E8161-9D31-42C4-87A0-281577D14CD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceAndLoadTests", "PerformanceAndLoadTests\PerformanceAndLoadTests.csproj", "{B92E0AD2-CDB8-4FDF-B178-AC15579A9C10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D8D8180D-2328-432A-A39B-14A954E72026}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{465E8161-9D31-42C4-87A0-281577D14CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{465E8161-9D31-42C4-87A0-281577D14CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{465E8161-9D31-42C4-87A0-281577D14CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{465E8161-9D31-42C4-87A0-281577D14CD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B92E0AD2-CDB8-4FDF-B178-AC15579A9C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B92E0AD2-CDB8-4FDF-B178-AC15579A9C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B92E0AD2-CDB8-4FDF-B178-AC15579A9C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B92E0AD2-CDB8-4FDF-B178-AC15579A9C10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ADC3ACEF-0A4D-4F95-8D58-5363E3F3CDC8}
+	EndGlobalSection
+EndGlobal
