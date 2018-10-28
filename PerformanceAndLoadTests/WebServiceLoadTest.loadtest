@@ -2,7 +2,7 @@
 <LoadTest Name="WebServiceLoadTest" Description="" Owner="" storage="c:\users\icho9\documents\visual studio 2017\projects\aggregatedwebservicequalityestimation\performanceandloadtests\webserviceloadtest.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="82cf4f53-70df-4317-9880-7ca3c7d5690c" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Scenarios>
     <Scenario Name="WebServiceScenario" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="false" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
-      <ThinkProfile Value="0.2" Pattern="NormalDistribution" />
+      <ThinkProfile Value="0.2" Pattern="Off" />
       <LoadProfile Pattern="Constant" InitialUsers="25" />
       <TestMix>
         <TestProfile Name="WebServicePerformanceTest" Path="webserviceperformancetest.webtest" Id="aef42a4d-23cb-4f8c-adc7-aee9f8326a13" Percentage="100" Type="Microsoft.VisualStudio.TestTools.WebStress.DeclarativeWebTestElement, Microsoft.VisualStudio.QualityTools.LoadTest, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />

@@ -11,12 +11,14 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         public readonly string ResponceTimeQuery = "select distinct ComputedValue, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'LoadTest:Request' "
-            + "and CounterName = 'Avg. Response Time'";
+            + "and CounterName = 'Avg. Response Time' "
+            + "and IntervalStartTime <> IntervalEndTime";
 
         public readonly string SuccessfullRequestPerSecondQuery = "select distinct ComputedValue, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'LoadTest:Request' "
-            + "and CounterName = 'Passed Requests/Sec'";
+            + "and CounterName = 'Passed Requests/Sec' "
+            + "and IntervalStartTime <> IntervalEndTime";
 
         private IConfiguration _configuration;
 

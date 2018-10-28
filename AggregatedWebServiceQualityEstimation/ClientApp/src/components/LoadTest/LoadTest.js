@@ -53,6 +53,9 @@ class LoadTest extends Component {
                     header: true
                 });
                 let parsedResultData = parsedResult.data;
+                parsedResultData.sort(function (a, b) {
+                    return new Date('1970/01/01 ' + a.IntervalStartTime) - new Date('1970/01/01 ' + b.IntervalStartTime);
+                });
                 console.log(parsedResultData);
                 parsedResultData.pop();
                 this.setState({
