@@ -57,7 +57,7 @@ class LoadTest extends Component {
                     return new Date('1970/01/01 ' + a.IntervalStartTime) - new Date('1970/01/01 ' + b.IntervalStartTime);
                 });
                 console.log(parsedResultData);
-                parsedResultData.pop();
+                parsedResultData = parsedResultData.filter(item => item.IntervalStartTime !== "");
                 this.setState({
                     csvData: parsedResultData
                 });
@@ -92,7 +92,19 @@ class LoadTest extends Component {
                 >
                     Read Load Test Data
                 </button>
-                <LineChart XAxisKey="IntervalStartTime" YAxisKey="ResponseTime" data={this.state.csvData} />
+                <LineChart
+                    XAxisKey="IntervalStartTime"
+                    YAxisKey="ResponseTime"
+                    data={this.state.csvData}
+                    lineColor="#00BFFF"
+                />
+                <br/>
+                <LineChart
+                    XAxisKey="IntervalStartTime"
+                    YAxisKey="RequestsPerSecond"
+                    data={this.state.csvData}
+                    lineColor="#32CD32"
+                />
             </div>
         );
     }

@@ -19,7 +19,7 @@ class LineChart extends Component {
                 <Line
                     type="monotone"
                     dataKey={this.props.YAxisKey}
-                    stroke="#8884d8" />
+                    stroke={this.props.lineColor} />
             </LineChartRecharts>
         );
     }
@@ -28,12 +28,16 @@ class LineChart extends Component {
 LineChart.propTypes = {
     data: PropTypes.array,
     XAxisKey: PropTypes.string.isRequired,
-    YAxisKey: PropTypes.string.isRequired
+    YAxisKey: PropTypes.string.isRequired,
+    width: PropTypes.integer,
+    height: PropTypes.integer,
+    lineColor: PropTypes.string
 };
 
 LineChart.defaultProps = {
     width: 730,
-    height: 250
+    height: 250,
+    lineColor: "#00BFFF"
 };
 
 export default LineChart;
