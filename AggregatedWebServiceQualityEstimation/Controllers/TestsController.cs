@@ -51,5 +51,19 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 throw ex;
             }
         }
+
+        [HttpGet("data/read")]
+        public IActionResult ReadTestData()
+        {
+            try
+            {
+                var result = _loadTestDataManager.ReadTestData();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

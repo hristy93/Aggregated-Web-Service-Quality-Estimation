@@ -1,18 +1,18 @@
 ﻿const responseTimeTestData = [
     {
-        name: '18:40:30', value: 0
+        ResponseTime: 0, IntervalStartTime: ' 18:40:30', IntervalStartEnd: ' 18:40:35'
     },
     {
-        name: '18:40:35', value: 0.03633786
+        ResponseTime: 0.03633786, IntervalStartTime: ' 18:40:35', IntervalStartEnd: ' 18:40:40'
     },
     {
-        name: '18:40:40', value: 0.03473354
+        ResponseTime: 0.03473354, IntervalStartTime: ' 18:40:40', IntervalStartEnd: ' 18:40:45'
     },
     {
-        name: '18:40:45', value: 0.0335774
+        ResponseTime: 0.0335774, IntervalStartTime: ' 18:40:45', IntervalStartEnd: ' 18:40:50'
     },
     {
-        name: '18:40:50', value: 0.03793961
+        ResponseTime: 0.03793961, IntervalStartTime: ' 18:40:50', IntervalStartEnd: ' 18:40:55'
     }
 ];
 

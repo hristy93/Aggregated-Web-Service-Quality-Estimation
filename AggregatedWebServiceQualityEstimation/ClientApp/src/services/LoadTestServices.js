@@ -8,6 +8,10 @@ class LoadTestServices {
     static writeLoadTestData() {
         return axios.get("https://localhost:44342/api/test/data/write");
     }
+
+    static readLoadTestData() {
+        return axios.get("https://localhost:44342/api/test/data/read");
+    }
 }
 
 export default LoadTestServices;

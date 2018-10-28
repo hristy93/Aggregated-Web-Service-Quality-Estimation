@@ -28,7 +28,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         public void WriteTestData()
         {
             string connectionString = _configuration.GetValue<string>("ConnectionString");
-            using (StreamWriter myFile = new StreamWriter(@"fileCSharp.txt"))
+            using (StreamWriter myFile = new StreamWriter(@"loadTestResults.csv"))
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -39,13 +39,17 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                     {
                         try
                         {
+                            var headers = "ResponseTime,IntervalStartTime,IntervalEndTime";
+                            myFile.WriteLine(headers);
                             while (reader.Read())
                             {
                                 //var startTime = DateTime.ParseExact(reader["IntervalStartTime"].ToString(), "dd.mm.YY г. HH:mm:ss",
                                 //        CultureInfo.CurrentCulture);
-                                var computedValue = reader["ComputedValue"].ToString().Replace(',', '.');
-                                var result = String.Format("{0}, {1}, {2}",
-                                computedValue, reader["IntervalStartTime"], reader["IntervalEndTime"]);
+
+                                var startTime = GetTimeFromDataTimeString(reader["IntervalStartTime"].ToString());
+                                var endTime = GetTimeFromDataTimeString(reader["IntervalEndTime"].ToString());
+                                var computedValue = FixDecimalNumberSeparator(reader["ComputedValue"].ToString());
+                                var result = String.Format("{0}, {1}, {2}", computedValue, startTime, endTime);
 
                                 myFile.WriteLine(result);
                             }
@@ -57,6 +61,27 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                     }
                 }
             }
+        }
+
+        public string ReadTestData()
+        {
+            using (StreamReader myFile = new StreamReader(@"loadTestResults.csv"))
+            {
+                var result = myFile.ReadToEnd();
+                return result;
+            }
+        }
+
+        private string GetTimeFromDataTimeString(string dateTime)
+        {
+            var startOfTimeIndex = dateTime.IndexOf('г') + 3;
+            var dateTimeAsTime = dateTime.Substring(startOfTimeIndex);
+            return dateTimeAsTime;
+        }
+
+        private string FixDecimalNumberSeparator(string decimalNumer)
+        {
+            return decimalNumer.Replace(',', '.');
         }
     }
 }

@@ -3,5 +3,6 @@
     public interface ITestDataManager
     {
         void WriteTestData();
+        string ReadTestData();
     }
 }
