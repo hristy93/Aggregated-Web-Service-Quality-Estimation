@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AggregatedWebServiceQualityEstimation.Utils;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace AggregatedWebServiceQualityEstimation.Controllers
 {
@@ -14,10 +16,21 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
+        private IConfiguration _configuration;
+
+        public SampleDataController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
             var rng = new Random();
+            var test = new LoadTestDataManager(_configuration);
+            //var test1 = new LoadTestRunner();
+            //test1.LaunchCommandLineApp();
+            test.GetLoadTestData();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 DateFormatted = DateTime.Now.AddDays(index).ToString("d"),

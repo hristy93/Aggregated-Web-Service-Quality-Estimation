@@ -19,6 +19,12 @@ namespace AggregatedWebServiceQualityEstimation
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    // delete all default configuration providers
+                    config.Sources.Clear();
+                    config.AddJsonFile("appsettings.json", optional: true);
+                });
     }
 }
