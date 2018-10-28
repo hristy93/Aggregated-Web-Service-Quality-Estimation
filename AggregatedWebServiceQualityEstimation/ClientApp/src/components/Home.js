@@ -11,7 +11,7 @@ export class Home extends Component {
       <div>
             <h1>Aggregated Web Service Quality Estimation</h1>
             <LoadTest />
-            <LineChart dataKey="value" data={responseTimeTestData}/>
+            <LineChart XAxisKey="name" YAxisKey="value" data={responseTimeTestData}/>
       </div>
     );
   }
