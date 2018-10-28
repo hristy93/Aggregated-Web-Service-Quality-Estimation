@@ -30,7 +30,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             var test = new LoadTestDataManager(_configuration);
             //var test1 = new LoadTestRunner();
             //test1.LaunchCommandLineApp();
-            test.GetLoadTestData();
+            test.WriteTestData();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 DateFormatted = DateTime.Now.AddDays(index).ToString("d"),

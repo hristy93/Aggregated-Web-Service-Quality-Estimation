@@ -4,25 +4,56 @@ import axios from 'axios';
 class LoadTest extends Component {
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
+        this.handleRunLoadTestButtonClick = this.handleRunLoadTestButtonClick.bind(this);
+        this.handleWriteLoadTestDataClick = this.handleWriteLoadTestDataClick.bind(this);
     }
 
-    handleClick() {
+    handleRunLoadTestButtonClick() {
         axios.get("https://localhost:44342/api/test/run")
-            .then(function (response) {
+            .then((response) => {
                 // handle success
                 console.log(response);
+                alert(response.data)
             })
-            .catch(function (error) {
+            .catch((error) => {
                 // handle error
                 console.log(error);
+                alert(error)
+            });
+    }
+
+    handleWriteLoadTestDataClick() {
+        axios.get("https://localhost:44342/api/test/data/write")
+            .then((response) => {
+                // handle success
+                console.log(response);
+                alert(response.data)
+            })
+            .catch((error) => {
+                // handle error
+                console.log(error);
+                alert(error)
             });
     }
 
     render() {
         return (
             <div>
-                <button onClick={this.handleClick}>Run Load Test</button>
+                <button
+                    id="run-load-test-button"
+                    onClick={this.handleRunLoadTestButtonClick}
+                    value="Run Load Test"
+                >
+                    Run Load Test
+                </button>
+
+                <button
+                    id="write-load-test-data-button"
+                    onClick={this.handleWriteLoadTestDataClick}
+                >
+                    Write Load Test Data
+                </button>
+
             </div>
         );
     }

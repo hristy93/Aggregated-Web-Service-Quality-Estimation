@@ -6,7 +6,7 @@ using System.IO;
 
 namespace AggregatedWebServiceQualityEstimation.Utils
 {
-    public class LoadTestDataManager
+    public class LoadTestDataManager : ITestDataManager
     {
         public readonly string ResponceTimeQuery = "select distinct ComputedValue, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
@@ -25,7 +25,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             _configuration = configuration;
         }
 
-        public void GetLoadTestData()
+        public void WriteTestData()
         {
             string connectionString = _configuration.GetValue<string>("ConnectionString");
             using (StreamWriter myFile = new StreamWriter(@"fileCSharp.txt"))
@@ -41,8 +41,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                         {
                             while (reader.Read())
                             {
-                                var startTime = DateTime.ParseExact(reader["IntervalStartTime"].ToString(), "dd.mm.YY HH:mm:ss",
-                                        CultureInfo.CurrentCulture);
+                                //var startTime = DateTime.ParseExact(reader["IntervalStartTime"].ToString(), "dd.mm.YY г. HH:mm:ss",
+                                //        CultureInfo.CurrentCulture);
                                 var computedValue = reader["ComputedValue"].ToString().Replace(',', '.');
                                 var result = String.Format("{0}, {1}, {2}",
                                 computedValue, reader["IntervalStartTime"], reader["IntervalEndTime"]);
