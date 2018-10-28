@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import axios from 'axios';
+import LoadTestServices from '../../services/LoadTestServices';
 
 class LoadTest extends Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class LoadTest extends Component {
     }
 
     handleRunLoadTestButtonClick() {
-        axios.get("https://localhost:44342/api/test/run")
+        LoadTestServices.runLoadTest()
             .then((response) => {
                 // handle success
                 console.log(response);
@@ -23,7 +23,7 @@ class LoadTest extends Component {
     }
 
     handleWriteLoadTestDataClick() {
-        axios.get("https://localhost:44342/api/test/data/write")
+        LoadTestServices.writeLoadTestData()
             .then((response) => {
                 // handle success
                 console.log(response);
