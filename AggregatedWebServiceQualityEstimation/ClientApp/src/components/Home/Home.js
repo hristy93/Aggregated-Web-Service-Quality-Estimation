@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import LoadTest from './LoadTest';
-import LineChart from './common/LineChart';
-import { responseTimeTestData } from '../TestData';
+import LoadTest from '../LoadTest/LoadTest';
+import LineChart from '../common/LineChart/LineChart';
+import { responseTimeTestData } from '../../data/testData';
 
 export class Home extends Component {
   displayName = Home.name
