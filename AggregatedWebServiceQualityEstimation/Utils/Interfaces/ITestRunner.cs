@@ -1,4 +1,4 @@
-﻿namespace AggregatedWebServiceQualityEstimation.Utils
+﻿namespace AggregatedWebServiceQualityEstimation.Utils.Interfaces
 {
     public interface ITestRunner
     {

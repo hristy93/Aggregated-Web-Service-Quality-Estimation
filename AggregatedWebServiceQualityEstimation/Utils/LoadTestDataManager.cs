@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Data.SqlClient;
 using System.IO;

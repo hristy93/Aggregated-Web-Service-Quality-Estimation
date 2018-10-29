@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AggregatedWebServiceQualityEstimation.Utils;
+using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,12 +17,14 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         private ITestRunner _loadTestRunner;
         private ITestDataManager _loadTestDataManager;
         private IConfiguration _configuration;
+        private ITestModifier _loadTestModifier;
 
         public TestController(IConfiguration configuration)
         {
             _configuration = configuration;
             _loadTestRunner = new LoadTestRunner();
             _loadTestDataManager = new LoadTestDataManager(_configuration);
+            _loadTestModifier = new LoadTestModifier();
         }
 
         [HttpGet("run")]

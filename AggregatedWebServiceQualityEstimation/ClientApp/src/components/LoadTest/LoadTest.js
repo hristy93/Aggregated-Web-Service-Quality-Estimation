@@ -11,13 +11,11 @@ class LoadTest extends Component {
         super(props);
         this.state = {
             csvData: [],
-            url: ""
         };
 
         this.handleRunLoadTestButtonClick = this.handleRunLoadTestButtonClick.bind(this);
         this.handleWriteLoadTestDataClick = this.handleWriteLoadTestDataClick.bind(this);
         this.handleReadLoadTestDataClick = this.handleReadLoadTestDataClick.bind(this);
-        this.handleUrlChange = this.handleUrlChange.bind(this);
     }
 
     handleRunLoadTestButtonClick() {
@@ -74,20 +72,11 @@ class LoadTest extends Component {
             });
     }
 
-    handleUrlChange(event) {
-        const newValue = event.target.value
-        this.setState({
-            url: newValue
-        });
-
-        console.log(newValue);
-    }
-
     render() {
         return (
             <Grid fluid>
                 <Row>
-                    <Col sm={5}>
+                    <Col sm={7}>
                         <LoadTestForm />
                     </Col>
                 </Row>

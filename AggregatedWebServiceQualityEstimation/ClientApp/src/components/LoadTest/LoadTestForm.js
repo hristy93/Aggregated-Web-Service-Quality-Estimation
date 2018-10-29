@@ -8,7 +8,7 @@ class LoadTestForm extends Component {
         super(props);
 
         this.state = {
-            url: ''
+            url: "https://jsonplaceholder.typicode.com/todos/1"
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -43,8 +43,8 @@ class LoadTestForm extends Component {
                     <ControlLabel>Web Service URL</ControlLabel>
                     <FormControl
                         type="url"
-                        value={this.state.value}
-                        placeholder="Enter web service endpoint"
+                        value={this.state.url}
+                        placeholder={this.state.url !== "" || "Enter web service endpoint"}
                         onChange={this.handleChange}
                     />
                     <FormControl.Feedback />
