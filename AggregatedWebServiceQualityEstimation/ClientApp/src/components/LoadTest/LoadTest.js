@@ -1,18 +1,23 @@
 ﻿import React, { Component } from 'react';
 import LoadTestServices from '../../services/LoadTestServices';
-import LineChart from './../common/LineChart/LineChart';
+import LoadTestForm from './LoadTestForm';
 import Papa from 'papaparse';
+import { Col, Row, Grid, Button, ButtonToolbar } from 'react-bootstrap';
+import LoadTestCharts from './LoadTestCharts';
 import { responseTimeTestData } from '../../data/testData';
 
 class LoadTest extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            csvData: []
+            csvData: [],
+            url: ""
         };
+
         this.handleRunLoadTestButtonClick = this.handleRunLoadTestButtonClick.bind(this);
         this.handleWriteLoadTestDataClick = this.handleWriteLoadTestDataClick.bind(this);
         this.handleReadLoadTestDataClick = this.handleReadLoadTestDataClick.bind(this);
+        this.handleUrlChange = this.handleUrlChange.bind(this);
     }
 
     handleRunLoadTestButtonClick() {
@@ -69,43 +74,51 @@ class LoadTest extends Component {
             });
     }
 
+    handleUrlChange(event) {
+        const newValue = event.target.value
+        this.setState({
+            url: newValue
+        });
+
+        console.log(newValue);
+    }
+
     render() {
         return (
-            <div>
-                <button
-                    id="run-load-test-button"
-                    onClick={this.handleRunLoadTestButtonClick}
-                    value="Run Load Test"
-                >
-                    Run Load Test
-                </button>
+            <Grid fluid>
+                <Row>
+                    <Col sm={5}>
+                        <LoadTestForm />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={10}>
+                        <ButtonToolbar>
+                            <Button
+                                id="run-load-test-button"
+                                onClick={this.handleRunLoadTestButtonClick}
+                                value="Run Load Test"
+                            >
+                                Run Load Test
+                            </Button>
 
-                <button
-                    id="write-load-test-data-button"
-                    onClick={this.handleWriteLoadTestDataClick}
-                >
-                    Write Load Test Data
-                </button>
-                <button
-                    id="read-load-test-data-button"
-                    onClick={this.handleReadLoadTestDataClick}
-                >
-                    Read Load Test Data
-                </button>
-                <LineChart
-                    XAxisKey="IntervalStartTime"
-                    YAxisKey="ResponseTime"
-                    data={this.state.csvData}
-                    lineColor="#00BFFF"
-                />
-                <br/>
-                <LineChart
-                    XAxisKey="IntervalStartTime"
-                    YAxisKey="RequestsPerSecond"
-                    data={this.state.csvData}
-                    lineColor="#32CD32"
-                />
-            </div>
+                            <Button
+                                id="write-load-test-data-button"
+                                onClick={this.handleWriteLoadTestDataClick}
+                            >
+                                Write Load Test Data
+                            </Button>
+                            <Button
+                                id="read-load-test-data-button"
+                                onClick={this.handleReadLoadTestDataClick}
+                            >
+                                Read Load Test Data
+                            </Button>
+                        </ButtonToolbar>
+                        <LoadTestCharts csvData={this.state.csvData} />
+                    </Col>
+                </Row>
+            </Grid>
         );
     }
 }
