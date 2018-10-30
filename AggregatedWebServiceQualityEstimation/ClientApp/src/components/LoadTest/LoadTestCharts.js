@@ -12,13 +12,13 @@ class LoadTestCharts extends Component {
                 <LineChart
                     XAxisKey="IntervalStartTime"
                     YAxisKey="ResponseTime"
-                    data={this.props.csvData}
+                    data={this.props.data}
                     lineColor="#00BFFF"
                 />
                 <LineChart
                     XAxisKey="IntervalStartTime"
                     YAxisKey="RequestsPerSecond"
-                    data={this.props.csvData}
+                    data={this.props.data}
                     lineColor="#32CD32"
                 />
             </React.Fragment>

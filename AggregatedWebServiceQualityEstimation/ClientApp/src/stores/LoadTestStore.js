@@ -8,16 +8,25 @@ class LoadTestStore {
         this.bindActions(LoadTestActions);
 
         this.state = Immutable.Map({
-            csvData: []
+            loadTestData: [],
+            url: "https://jsonplaceholder.typicode.com/todos/1"
         })
     }
 
     readLoadTestData(result) {
-        this.setState(this.state.set("csvData", result))
+        this.setState(this.state.set("loadTestData", result));
     }
 
-    static getCsvData() {
-        return this.state.get("csvData");
+    setUrl(url) {
+        this.setState(this.state.set("url", url));
+    }
+
+    static getLoadTestData() {
+        return this.state.get("loadTestData");
+    }
+
+    static getUrl() {
+        return this.state.get("url");
     }
 }
 

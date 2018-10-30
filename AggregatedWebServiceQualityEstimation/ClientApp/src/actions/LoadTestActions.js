@@ -3,6 +3,10 @@ import LoadTestServices from '../services/LoadTestServices';
 import Papa from 'papaparse';
 
 class LoadTestActions {
+    constructor() {
+        this.generateActions("setUrl");
+    }
+
     runLoadTest() {
         return (dispatch) => {
             LoadTestServices.runLoadTest()

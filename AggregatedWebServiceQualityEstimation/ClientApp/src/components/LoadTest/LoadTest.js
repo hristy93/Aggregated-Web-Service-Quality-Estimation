@@ -22,7 +22,7 @@ class LoadTest extends Component {
 
     static getPropsFromStores() {
         return ({
-            csvData: LoadTestStore.getCsvData()
+            loadTestData: LoadTestStore.getLoadTestData()
         });
     }
 
@@ -70,7 +70,7 @@ class LoadTest extends Component {
                                 Read Load Test Data
                             </Button>
                         </ButtonToolbar>
-                        <LoadTestCharts csvData={this.props.csvData} />
+                        <LoadTestCharts data={this.props.loadTestData} />
                     </Col>
                 </Row>
             </Grid>
