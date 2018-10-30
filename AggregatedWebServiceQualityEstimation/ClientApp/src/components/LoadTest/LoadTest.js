@@ -1,75 +1,41 @@
 ﻿import React, { Component } from 'react';
-import LoadTestServices from '../../services/LoadTestServices';
 import LoadTestForm from './LoadTestForm';
-import Papa from 'papaparse';
 import { Col, Row, Grid, Button, ButtonToolbar } from 'react-bootstrap';
 import LoadTestCharts from './LoadTestCharts';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import LoadTestStore from '../../stores/LoadTestStore';
+import LoadTestActions from '../../actions/LoadTestActions';
 import { responseTimeTestData } from '../../data/testData';
 
 class LoadTest extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            csvData: [],
-        };
 
         this.handleRunLoadTestButtonClick = this.handleRunLoadTestButtonClick.bind(this);
         this.handleWriteLoadTestDataClick = this.handleWriteLoadTestDataClick.bind(this);
         this.handleReadLoadTestDataClick = this.handleReadLoadTestDataClick.bind(this);
     }
 
+    static getStores() {
+        return [LoadTestStore];
+    }
+
+    static getPropsFromStores() {
+        return ({
+            csvData: LoadTestStore.getCsvData()
+        });
+    }
+
     handleRunLoadTestButtonClick() {
-        LoadTestServices.runLoadTest()
-            .then((response) => {
-                // handle success
-                console.log(response);
-                alert(response.data)
-            })
-            .catch((error) => {
-                // handle error
-                console.log(error);
-                alert(error)
-            });
+        LoadTestActions.runLoadTest();
     }
 
     handleWriteLoadTestDataClick() {
-        LoadTestServices.writeLoadTestData()
-            .then((response) => {
-                // handle success
-                console.log(response);
-                alert(response.data)
-            })
-            .catch((error) => {
-                // handle error
-                console.log(error);
-                alert(error)
-            });
+        LoadTestActions.writeLoadTestData();
     }
 
     handleReadLoadTestDataClick() {
-        LoadTestServices.readLoadTestData()
-            .then((response) => {
-                // handle success
-                console.log(response);
-                const result = response.data;
-                let parsedResult = Papa.parse(result, {
-                    header: true
-                });
-                let parsedResultData = parsedResult.data;
-                parsedResultData.sort(function (a, b) {
-                    return new Date('1970/01/01 ' + a.IntervalStartTime) - new Date('1970/01/01 ' + b.IntervalStartTime);
-                });
-                console.log(parsedResultData);
-                parsedResultData = parsedResultData.filter(item => item.IntervalStartTime !== "");
-                this.setState({
-                    csvData: parsedResultData
-                });
-            })
-            .catch((error) => {
-                // handle error
-                console.log(error);
-                alert(error)
-            });
+        LoadTestActions.readLoadTestData();
     }
 
     render() {
@@ -104,7 +70,7 @@ class LoadTest extends Component {
                                 Read Load Test Data
                             </Button>
                         </ButtonToolbar>
-                        <LoadTestCharts csvData={this.state.csvData} />
+                        <LoadTestCharts csvData={this.props.csvData} />
                     </Col>
                 </Row>
             </Grid>
@@ -112,4 +78,4 @@ class LoadTest extends Component {
     }
 }
 
-export default LoadTest;
+export default connectToStores(LoadTest);
