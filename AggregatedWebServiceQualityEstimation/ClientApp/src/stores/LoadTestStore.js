@@ -1,24 +1,24 @@
 ﻿import alt from '../alt';
 import LoadTestActions from '../actions/LoadTestActions';
+import immutable from 'alt-utils/lib/ImmutableUtil';
+import Immutable from 'immutable';
 
 class LoadTestStore {
     constructor() {
         this.bindActions(LoadTestActions);
 
-        this.state = {
+        this.state = Immutable.Map({
             csvData: []
-        };
-    }
-
-    readLoadTestData(result) {
-        this.setState({
-            csvData: result
         })
     }
 
+    readLoadTestData(result) {
+        this.setState(this.state.set("csvData", result))
+    }
+
     static getCsvData() {
-        return this.state.csvData;
+        return this.state.get("csvData");
     }
 }
 
-export default alt.createStore(LoadTestStore);
+export default alt.createStore(immutable(LoadTestStore));
