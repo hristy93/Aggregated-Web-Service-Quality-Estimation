@@ -4,7 +4,6 @@ import LoadTestActions from '../../actions/LoadTestActions';
 import LoadTestStore from '../../stores/LoadTestStore';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
-
 const URLRegexExpression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
 
 class LoadTestForm extends Component {
@@ -20,39 +19,40 @@ class LoadTestForm extends Component {
 
     static getPropsFromStores() {
         return ({
-            url: LoadTestStore.getUrl()
+            url: LoadTestStore.getUrl(),
+            isUrlValid: LoadTestStore.getUrlValidity()
         });
     }
 
-    getValidationState() {
+    checkUrlInputValidity(inputValue) {
         const regex = new RegExp(URLRegexExpression);
-        const { url } = this.props;
-        let result;    
-        if (regex.test(url)) {
-            result = "success";
+        if (regex.test(inputValue)) {
+            LoadTestActions.setUrlValidity(true);
         } else {
-            result = "error";
+            LoadTestActions.setUrlValidity(false);
         }
-
-        return result;
     }
 
     handleChange(event) {
-        LoadTestActions.setUrl(event.target.value);
+        const inputValue = event.target.value;
+
+        LoadTestActions.setUrl();
+        this.checkUrlInputValidity(inputValue);
     }
 
     render() {
+        const { url, isUrlValid } = this.props;
         return (
             <form>
                 <FormGroup
                     controlId="url-form"
-                    validationState={this.getValidationState()}
+                    validationState={isUrlValid ? "success" : "error"}
                 >
                     <ControlLabel>Web Service URL</ControlLabel>
                     <FormControl
                         type="url"
-                        value={this.props.url}
-                        placeholder={this.props.url !== "" ? "" : "Enter web service endpoint"}
+                        value={url}
+                        placeholder={url !== "" ? "" : "Enter web service endpoint"}
                         onChange={this.handleChange}
                     />
                     <FormControl.Feedback />

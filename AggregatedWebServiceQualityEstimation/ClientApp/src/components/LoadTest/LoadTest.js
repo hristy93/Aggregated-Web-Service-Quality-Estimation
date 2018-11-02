@@ -22,12 +22,14 @@ class LoadTest extends Component {
 
     static getPropsFromStores() {
         return ({
-            loadTestData: LoadTestStore.getLoadTestData()
+            loadTestData: LoadTestStore.getLoadTestData(),
+            url: LoadTestStore.getUrl(),
+            isUrlValid: LoadTestStore.getUrlValidity()
         });
     }
 
     handleRunLoadTestButtonClick() {
-        LoadTestActions.runLoadTest();
+        LoadTestActions.runLoadTest(this.props.url);
     }
 
     handleWriteLoadTestDataClick() {
@@ -39,6 +41,7 @@ class LoadTest extends Component {
     }
 
     render() {
+        const { loadTestData, isUrlValid } = this.props;
         return (
             <Grid fluid>
                 <Row>
@@ -52,6 +55,7 @@ class LoadTest extends Component {
                             <Button
                                 id="run-load-test-button"
                                 onClick={this.handleRunLoadTestButtonClick}
+                                disabled={!isUrlValid}
                                 value="Run Load Test"
                             >
                                 Run Load Test
@@ -70,7 +74,7 @@ class LoadTest extends Component {
                                 Read Load Test Data
                             </Button>
                         </ButtonToolbar>
-                        <LoadTestCharts data={this.props.loadTestData} />
+                        <LoadTestCharts data={loadTestData} />
                     </Col>
                 </Row>
             </Grid>

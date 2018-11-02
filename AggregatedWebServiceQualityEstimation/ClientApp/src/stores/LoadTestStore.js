@@ -9,16 +9,21 @@ class LoadTestStore {
 
         this.state = Immutable.Map({
             loadTestData: [],
-            url: "https://jsonplaceholder.typicode.com/todos/1"
+            url: "https://jsonplaceholder.typicode.com/todos/1",
+            isUrlValid: false
         })
     }
 
-    readLoadTestData(result) {
-        this.setState(this.state.set("loadTestData", result));
+    readLoadTestData(loadTestData) {
+        this.setState(this.state.set("loadTestData", loadTestData));
     }
 
     setUrl(url) {
         this.setState(this.state.set("url", url));
+    }
+
+    setUrlValidity(isUrlValid) {
+        this.setState(this.state.set("isUrlValid", isUrlValid));
     }
 
     static getLoadTestData() {
@@ -27,6 +32,10 @@ class LoadTestStore {
 
     static getUrl() {
         return this.state.get("url");
+    }
+
+    static getUrlValidity() {
+        return this.state.get("isUrlValid");
     }
 }
 

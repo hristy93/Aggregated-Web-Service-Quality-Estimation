@@ -27,11 +27,12 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             _loadTestModifier = new LoadTestModifier();
         }
 
-        [HttpGet("run")]
-        public IActionResult StartTest()
+        [HttpPost("run")]
+        public IActionResult StartTest([FromBody] string url)
         {
             try
             {
+                _loadTestModifier.EditUrl(url);
                 _loadTestRunner.InitiateTest();
                 return Ok("The load test finished sucessfully!");
             }

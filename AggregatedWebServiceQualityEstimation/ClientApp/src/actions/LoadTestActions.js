@@ -4,12 +4,12 @@ import Papa from 'papaparse';
 
 class LoadTestActions {
     constructor() {
-        this.generateActions("setUrl");
+        this.generateActions("setUrl", "setUrlValidity");
     }
 
-    runLoadTest() {
+    runLoadTest(url) {
         return (dispatch) => {
-            LoadTestServices.runLoadTest()
+            LoadTestServices.runLoadTest(url)
                 .then((response) => {
                     // handle success
                     console.log(response);

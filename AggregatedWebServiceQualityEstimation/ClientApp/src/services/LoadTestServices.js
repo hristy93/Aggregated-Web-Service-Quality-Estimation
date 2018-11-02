@@ -1,8 +1,12 @@
 ﻿import axios from 'axios';
 
 class LoadTestServices {
-    static runLoadTest() {
-        return axios.get("https://localhost:44342/api/test/run");
+    static runLoadTest(url) {
+        return axios.post("https://localhost:44342/api/test/run", "\"" + url + "\"", {
+            headers: {
+                "Content-type": "application/json",
+            }
+        });
     }
 
     static writeLoadTestData() {
