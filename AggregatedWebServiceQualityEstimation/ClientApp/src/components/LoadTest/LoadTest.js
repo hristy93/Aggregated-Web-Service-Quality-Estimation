@@ -29,7 +29,12 @@ class LoadTest extends Component {
     }
 
     handleRunLoadTestButtonClick() {
-        LoadTestActions.runLoadTest(this.props.url);
+        const { url } = this.props;
+        if (url != null) {
+            LoadTestActions.runLoadTest(this.props.url);
+        } else {
+            alert("There is a problem with the load test!");
+        }
     }
 
     handleWriteLoadTestDataClick() {

@@ -36,7 +36,7 @@ class LoadTestForm extends Component {
     handleChange(event) {
         const inputValue = event.target.value;
 
-        LoadTestActions.setUrl();
+        LoadTestActions.setUrl(inputValue);
         this.checkUrlInputValidity(inputValue);
     }
 
