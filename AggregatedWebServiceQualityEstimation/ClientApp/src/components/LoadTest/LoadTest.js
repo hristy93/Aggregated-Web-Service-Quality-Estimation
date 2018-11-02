@@ -5,19 +5,10 @@ import LoadTestCharts from './LoadTestCharts';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestActions from '../../actions/LoadTestActions';
-import { responseTimeTestData } from '../../data/testData';
 import isNil from 'lodash/isNil';
 import { displayFailureMessage } from '../../utils/displayInformation';
 
 class LoadTest extends Component {
-    constructor(props) {
-        super(props);
-
-        this.handleRunLoadTestButtonClick = this.handleRunLoadTestButtonClick.bind(this);
-        this.handleWriteLoadTestDataClick = this.handleWriteLoadTestDataClick.bind(this);
-        this.handleReadLoadTestDataClick = this.handleReadLoadTestDataClick.bind(this);
-    }
-
     static getStores() {
         return [LoadTestStore];
     }
@@ -30,20 +21,20 @@ class LoadTest extends Component {
         });
     }
 
-    handleRunLoadTestButtonClick() {
+    handleRunLoadTestButtonClick = () => {
         const { url } = this.props;
         if (!isNil(url)) {
-            LoadTestActions.runLoadTest(this.props.url);
+            LoadTestActions.runLoadTest(url);
         } else {
             displayFailureMessage("There is a problem with the load test!", "The url is invalid!");
         }
     }
 
-    handleWriteLoadTestDataClick() {
+    handleWriteLoadTestDataClick = () => {
         LoadTestActions.writeLoadTestData();
     }
 
-    handleReadLoadTestDataClick() {
+    handleReadLoadTestDataClick = () => {
         LoadTestActions.readLoadTestData();
     }
 

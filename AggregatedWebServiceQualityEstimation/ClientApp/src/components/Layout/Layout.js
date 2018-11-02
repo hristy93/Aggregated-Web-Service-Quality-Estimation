@@ -3,8 +3,6 @@ import { Col, Grid, Row } from 'react-bootstrap';
 import { NavigationBar } from '../common/NavigationBar/NavigationBar';
 
 export class Layout extends Component {
-  displayName = Layout.name
-
   render() {
     return (
       <Grid fluid>

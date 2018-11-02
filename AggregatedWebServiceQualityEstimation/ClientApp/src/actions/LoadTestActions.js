@@ -8,7 +8,7 @@ class LoadTestActions {
         this.generateActions("setUrl", "setUrlValidity");
     }
 
-    runLoadTest(url) {
+    runLoadTest = (url) => {
         return (dispatch) => {
             LoadTestServices.runLoadTest(url)
                 .then((response) => {
@@ -25,7 +25,7 @@ class LoadTestActions {
         }
     }
 
-    readLoadTestData() {
+    readLoadTestData = () => {
         return (dispatch) => {
             LoadTestServices.readLoadTestData()
                 .then((response) => {
@@ -51,7 +51,7 @@ class LoadTestActions {
         }
     }
 
-    writeLoadTestData() {
+    writeLoadTestData = () => {
         return (dispatch) => {
             LoadTestServices.writeLoadTestData()
                 .then((response) => {

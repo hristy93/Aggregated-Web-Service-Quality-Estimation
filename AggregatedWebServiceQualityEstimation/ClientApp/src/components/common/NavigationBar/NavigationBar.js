@@ -5,14 +5,14 @@ import { LinkContainer } from 'react-router-bootstrap';
 import '../../../styles/components/common/NavigationBar/NavigationBar.css';
 
 export class NavigationBar extends Component {
-    displayName = NavigationBar.name
-
   render() {
     return (
       <Navbar inverse fixedTop fluid collapseOnSelect>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to={'/'}>AggregatedWebServiceQualityEstimation</Link>
+            <Link to={'/'}>
+              AWSQE
+            </Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
@@ -20,7 +20,8 @@ export class NavigationBar extends Component {
           <Nav>
             <LinkContainer to={'/'} exact>
               <NavItem>
-                <Glyphicon glyph='home' /> Home
+                <Glyphicon glyph='home' /> 
+                Home
               </NavItem>
             </LinkContainer>
           </Nav>

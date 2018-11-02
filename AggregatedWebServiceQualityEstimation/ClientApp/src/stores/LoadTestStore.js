@@ -16,7 +16,7 @@ class LoadTestStore {
         })
     }
 
-    readLoadTestData(loadTestData) {
+    readLoadTestData = (loadTestData) => {
         if (!isNil(loadTestData)) {
             this.setState(this.state.set("loadTestData", loadTestData));
         } else {
@@ -27,7 +27,7 @@ class LoadTestStore {
        
     }
 
-    setUrl(url) {
+    setUrl = (url) => {
         if (!isNil(url)) {
             this.setState(this.state.set("url", url));
         } else {
@@ -37,7 +37,7 @@ class LoadTestStore {
         }
     }
 
-    setUrlValidity(isUrlValid) {
+    setUrlValidity = (isUrlValid) => {
         this.setState(this.state.set("isUrlValid", isUrlValid));
     }
 

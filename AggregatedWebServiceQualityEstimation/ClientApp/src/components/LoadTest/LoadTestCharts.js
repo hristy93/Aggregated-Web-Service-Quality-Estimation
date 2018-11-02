@@ -2,23 +2,21 @@
 import LineChart from './../common/LineChart/LineChart';
 
 class LoadTestCharts extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
+        const { data } = this.props;
+
         return (
             <React.Fragment>
                 <LineChart
                     XAxisKey="IntervalStartTime"
                     YAxisKey="ResponseTime"
-                    data={this.props.data}
+                    data={data}
                     lineColor="#00BFFF"
                 />
                 <LineChart
                     XAxisKey="IntervalStartTime"
                     YAxisKey="RequestsPerSecond"
-                    data={this.props.data}
+                    data={data}
                     lineColor="#32CD32"
                 />
             </React.Fragment>
