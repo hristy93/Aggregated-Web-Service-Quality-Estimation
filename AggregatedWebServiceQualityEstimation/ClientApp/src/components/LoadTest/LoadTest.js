@@ -6,6 +6,8 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestActions from '../../actions/LoadTestActions';
 import { responseTimeTestData } from '../../data/testData';
+import isNil from 'lodash/isNil';
+import { displayFailureMessage } from '../../utils/displayInformation';
 
 class LoadTest extends Component {
     constructor(props) {
@@ -30,10 +32,10 @@ class LoadTest extends Component {
 
     handleRunLoadTestButtonClick() {
         const { url } = this.props;
-        if (url != null) {
+        if (!isNil(url)) {
             LoadTestActions.runLoadTest(this.props.url);
         } else {
-            alert("There is a problem with the load test!");
+            displayFailureMessage("There is a problem with the load test!", "The url is invalid!");
         }
     }
 

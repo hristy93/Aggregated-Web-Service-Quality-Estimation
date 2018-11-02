@@ -1,6 +1,7 @@
 ﻿import alt from '../alt';
 import LoadTestServices from '../services/LoadTestServices';
 import Papa from 'papaparse';
+import { displayFailureMessage, displaySuccessMessage } from '../utils/displayInformation';
 
 class LoadTestActions {
     constructor() {
@@ -12,13 +13,14 @@ class LoadTestActions {
             LoadTestServices.runLoadTest(url)
                 .then((response) => {
                     // handle success
-                    console.log(response);
-                    alert(response.data)
+                    const alertMessage = response.data;
+                    const logMessage = response;
+                    displaySuccessMessage(alertMessage, logMessage);
                 })
                 .catch((error) => {
                     // handle error
-                    console.log(error);
-                    alert(error)
+                    const alertMessage = "There is a problem with the load test!";
+                    displayFailureMessage(alertMessage, error);
                 });
         }
     }
@@ -43,8 +45,8 @@ class LoadTestActions {
                 })
                 .catch((error) => {
                     // handle error
-                    console.log(error);
-                    alert(error)
+                    const alertMessage = "There is a problem with the load test data!";
+                    displayFailureMessage(alertMessage, error);
                 });
         }
     }
@@ -54,13 +56,14 @@ class LoadTestActions {
             LoadTestServices.writeLoadTestData()
                 .then((response) => {
                     // handle success
-                    console.log(response);
-                    alert(response.data)
+                    const alertMessage = response.data;
+                    const logMessage = response;
+                    displaySuccessMessage(alertMessage, logMessage);
                 })
                 .catch((error) => {
                     // handle error
-                    console.log(error);
-                    alert(error)
+                    const alertMessage = "There is a problem with the load test data!";
+                    displayFailureMessage(alertMessage, error);
                 });
         }
     }

@@ -29,8 +29,8 @@ LineChart.propTypes = {
     data: PropTypes.array,
     XAxisKey: PropTypes.string.isRequired,
     YAxisKey: PropTypes.string.isRequired,
-    width: PropTypes.integer,
-    height: PropTypes.integer,
+    width: PropTypes.number,
+    height: PropTypes.number,
     lineColor: PropTypes.string
 };
 
