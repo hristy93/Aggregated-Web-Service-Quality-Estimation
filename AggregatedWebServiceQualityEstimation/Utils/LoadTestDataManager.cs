@@ -8,32 +8,33 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 {
     public class LoadTestDataManager : ITestDataManager
     {
-        public readonly string combinedQuery = @"select distinct ComputedValue AS ResponseTime, RequestsPerSecond, A.IntervalStartTime, A.IntervalEndTime 
- from LoadTestComputedCounterSample AS B join (
-  select distinct ComputedValue AS RequestsPerSecond, IntervalStartTime, IntervalEndTime 
- from LoadTestComputedCounterSample
- where LoadTestRunId = (select max(LoadTestRunId)
-						 from LoadTestComputedCounterSample) 
-and CategoryName = 'LoadTest:Request'
-and CounterName = 'Passed Requests/Sec') AS A ON B.IntervalStartTime = A.IntervalStartTime and B.IntervalEndTime = A.IntervalEndTime
- where LoadTestRunId = (select max(LoadTestRunId)
-						 from LoadTestComputedCounterSample) 
-and CategoryName = 'LoadTest:Request'
-and CounterName = 'Avg. Response Time'
-and A.IntervalStartTime <> A.IntervalEndTime
-order by IntervalStartTime";
 
-        public readonly string ResponceTimeQuery = "select distinct ComputedValue, IntervalStartTime, IntervalEndTime "
+        public readonly string combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, ReceivedKilobytesPerSecond, SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime 
+            from LoadTestDataForAllCharts";
+
+        public readonly string ResponceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'LoadTest:Request' "
             + "and CounterName = 'Avg. Response Time' "
             + "and IntervalStartTime <> IntervalEndTime";
 
-        public readonly string SuccessfullRequestPerSecondQuery = "select distinct ComputedValue, IntervalStartTime, IntervalEndTime "
+        public readonly string SuccessfulRequestsPerSecondQuery = "select distinct ComputedValue as SuccessfulRequestsPerSecond, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'LoadTest:Request' "
             + "and CounterName = 'Passed Requests/Sec' "
             + "and IntervalStartTime <> IntervalEndTime";
+
+        public readonly string SentBytesPerSecondQuery = "select distinct ComputedValue AS SentBytesPerSecond, IntervalStartTime, IntervalEndTime "
+            + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
+            + "and CategoryName = 'Network Interface' "
+            + "and CounterName = 'Bytes Sent/sec' "
+            + "and ComputedValue<> 0";
+
+        public readonly string ReceivedBytesPerSecondQuery = "select distinct ComputedValue AS ReceivedBytesPerSecond, IntervalStartTime, IntervalEndTime "
+            + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
+            + "and CategoryName = 'Network Interface' "
+            + "and CounterName = 'Bytes Received/sec' "
+            + "and ComputedValue<> 0";
 
         private IConfiguration _configuration;
 
@@ -60,7 +61,7 @@ order by IntervalStartTime";
                     {
                         try
                         {
-                            headers = "IntervalStartTime,IntervalEndTime,ResponseTime,RequestsPerSecond";
+                            headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,SentKilobytesPerSecond,ReceivedKilobytesPerSecond";
                             myFile.WriteLine(headers);
                             while (reader.Read())
                             {
@@ -70,8 +71,10 @@ order by IntervalStartTime";
                                 var startTime = GetTimeFromDataTimeString(reader["IntervalStartTime"].ToString());
                                 var endTime = GetTimeFromDataTimeString(reader["IntervalEndTime"].ToString());
                                 var responseTime = FixDecimalNumberSeparator(reader["ResponseTime"].ToString());
-                                var requestsPerSecond = FixDecimalNumberSeparator(reader["RequestsPerSecond"].ToString());
-                                result = $"{startTime}, {endTime}, {responseTime}, {requestsPerSecond}";
+                                var successfulRequestsPerSecond = FixDecimalNumberSeparator(reader["SuccessfulRequestsPerSecond"].ToString());
+                                var sentKilobytesPerSecond = FixDecimalNumberSeparator(reader["SentKilobytesPerSecond"].ToString());
+                                var receivedKilobytesPerSecond = FixDecimalNumberSeparator(reader["ReceivedKilobytesPerSecond"].ToString());                     
+                                result = $"{startTime}, {endTime}, {responseTime}, {successfulRequestsPerSecond}, {sentKilobytesPerSecond}, {receivedKilobytesPerSecond}";
 
                                 myFile.WriteLine(result);
                             }
@@ -81,33 +84,6 @@ order by IntervalStartTime";
                             throw ex;
                         }
                     }
-
-                    //SqlCommand successfullRequestPerSecondCommand = new SqlCommand(SuccessfullRequestPerSecondQuery, connection);
-
-                    //using (SqlDataReader reader = successfullRequestPerSecondCommand.ExecuteReader())
-                    //{
-                    //    try
-                    //    {
-                    //        headers += ",RequestPerSecondCommand";
-                    //        myFile.WriteLine(headers);
-                    //        while (reader.Read())
-                    //        {
-                    //            //var startTime = DateTime.ParseExact(reader["IntervalStartTime"].ToString(), "dd.mm.YY г. HH:mm:ss",
-                    //            //        CultureInfo.CurrentCulture);
-
-                    //            var startTime = GetTimeFromDataTimeString(reader["IntervalStartTime"].ToString());
-                    //            var endTime = GetTimeFromDataTimeString(reader["IntervalEndTime"].ToString());
-                    //            var computedValue = FixDecimalNumberSeparator(reader["ComputedValue"].ToString());
-                    //            result += "endTime);
-
-                    //            myFile.WriteLine(result);
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        throw ex;
-                    //    }
-                    //}
                 }
             }
         }
@@ -128,9 +104,9 @@ order by IntervalStartTime";
             return dateTimeAsTime;
         }
 
-        private string FixDecimalNumberSeparator(string decimalNumer)
+        private string FixDecimalNumberSeparator(string decimalNumber)
         {
-            return decimalNumer.Replace(',', '.');
+            return decimalNumber.Replace(',', '.');
         }
     }
 }

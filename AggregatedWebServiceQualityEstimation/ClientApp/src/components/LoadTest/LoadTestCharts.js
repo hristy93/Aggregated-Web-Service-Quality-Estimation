@@ -8,16 +8,32 @@ class LoadTestCharts extends Component {
         return (
             <React.Fragment>
                 <LineChart
-                    XAxisKey="IntervalStartTime"
-                    YAxisKey="ResponseTime"
+                    axisXKey="IntervalStartTime"
                     data={data}
-                    lineColor="#00BFFF"
+                    lines={[{
+                        axisYKey: "ResponseTime",
+                        color: "#00BFFF"
+                    }]}
                 />
                 <LineChart
-                    XAxisKey="IntervalStartTime"
-                    YAxisKey="RequestsPerSecond"
+                    axisXKey="IntervalStartTime"
                     data={data}
-                    lineColor="#32CD32"
+                    lines={[{
+                        axisYKey: "SuccessfulRequestsPerSecond",
+                        color: "#32CD32"
+                    }]}
+                />
+                <LineChart
+                    axisXKey="IntervalStartTime"
+                    data={data}
+                    lines={[{
+                        axisYKey: "ReceivedKilobytesPerSecond",
+                        color: "#8884d8"
+                    },
+                    {
+                        axisYKey: "SentKilobytesPerSecond",
+                        color: "#E85D18"
+                    }]}
                 />
             </React.Fragment>
         );

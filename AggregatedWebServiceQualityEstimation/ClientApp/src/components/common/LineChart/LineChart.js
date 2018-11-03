@@ -5,8 +5,11 @@ import { LineChart as LineChartRecharts, CartesianGrid, XAxis, YAxis, Tooltip, L
 class LineChart extends Component {
     static propTypes = {
         data: PropTypes.array,
-        XAxisKey: PropTypes.string.isRequired,
-        YAxisKey: PropTypes.string.isRequired,
+        lines: PropTypes.arrayOf(PropTypes.shape({
+            axisXKey: PropTypes.string,
+            color: PropTypes.string
+        })).isRequired,
+        axisXKey: PropTypes.string.isRequired,
         width: PropTypes.number,
         height: PropTypes.number,
         margin: PropTypes.shape({
@@ -15,23 +18,29 @@ class LineChart extends Component {
             left: PropTypes.number,
             bottom: PropTypes.number
         }),
-        lineColor: PropTypes.string
+        axisXPadding: PropTypes.shape({
+            right: PropTypes.number,
+            left: PropTypes.number,
+        })
     };
 
     static defaultProps = {
         width: 730,
         height: 250,
-        maring: {
+        margin: {
             top: 5,
             right: 20,
             left: 20,
             bottom: 5
         },
-        lineColor: "#00BFFF"
+        axisXPadding: {
+            left: 30,
+            right: 30
+        }
     };
 
     render() {
-        const { data, width, height, margin, XAxisKey, YAxisKey, lineColor } = this.props;
+        const { data, width, height, margin, axisXPadding, axisXKey, lines} = this.props;
 
         return (
             <LineChartRecharts
@@ -41,15 +50,23 @@ class LineChart extends Component {
                 margin={margin}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey={XAxisKey} />
+                <XAxis dataKey={axisXKey} padding={axisXPadding} />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line
-                    type="monotone"
-                    dataKey={YAxisKey}
-                    stroke={lineColor}
-                />
+                {
+                    lines.map((lineInfo) => {
+                        return (
+                            <Line
+                                key={lineInfo.axisYKey}
+                                type="monotone"
+                                dataKey={lineInfo.axisYKey}
+                                stroke={lineInfo.color}
+                            />
+                        );
+                    })
+                }
+               
             </LineChartRecharts>
         );
     }
