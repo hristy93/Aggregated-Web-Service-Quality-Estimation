@@ -16,6 +16,7 @@ class LoadTestActions {
                     const alertMessage = response.data;
                     const logMessage = response;
                     displaySuccessMessage(alertMessage, logMessage);
+                    this.writeLoadTestData();
                 })
                 .catch((error) => {
                     // handle error
@@ -52,20 +53,18 @@ class LoadTestActions {
     }
 
     writeLoadTestData = () => {
-        return (dispatch) => {
-            LoadTestServices.writeLoadTestData()
-                .then((response) => {
-                    // handle success
-                    const alertMessage = response.data;
-                    const logMessage = response;
-                    displaySuccessMessage(alertMessage, logMessage);
-                })
-                .catch((error) => {
-                    // handle error
-                    const alertMessage = "There is a problem with the load test data!";
-                    displayFailureMessage(alertMessage, error);
-                });
-        }
+        LoadTestServices.writeLoadTestData()
+            .then((response) => {
+                // handle success
+                const alertMessage = response.data;
+                const logMessage = response;
+                displaySuccessMessage(alertMessage, logMessage);
+            })
+            .catch((error) => {
+                // handle error
+                const alertMessage = "There is a problem with the load test data!";
+                displayFailureMessage(alertMessage, error);
+            });
     }
 }
 
