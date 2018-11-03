@@ -21,6 +21,10 @@ class LoadTestCharts extends Component {
                     lines={[{
                         axisYKey: "SuccessfulRequestsPerSecond",
                         color: "#32CD32"
+                    },
+                    {
+                        axisYKey: "FailedRequestsPerSecond",
+                        color: "#F31111"
                     }]}
                 />
                 <LineChart

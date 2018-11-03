@@ -9,8 +9,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
     public class LoadTestDataManager : ITestDataManager
     {
 
-        public readonly string combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, ReceivedKilobytesPerSecond, SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime 
-            from LoadTestDataForAllCharts";
+        public readonly string combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond,
+            SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime from LoadTestDataForAllCharts";
 
         public readonly string ResponceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
@@ -61,7 +61,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                     {
                         try
                         {
-                            headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,SentKilobytesPerSecond,ReceivedKilobytesPerSecond";
+                            headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,FailedRequestsPerSecond"
+                                + ",SentKilobytesPerSecond,ReceivedKilobytesPerSecond";
                             myFile.WriteLine(headers);
                             while (reader.Read())
                             {
@@ -72,9 +73,11 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                                 var endTime = GetTimeFromDataTimeString(reader["IntervalEndTime"].ToString());
                                 var responseTime = FixDecimalNumberSeparator(reader["ResponseTime"].ToString());
                                 var successfulRequestsPerSecond = FixDecimalNumberSeparator(reader["SuccessfulRequestsPerSecond"].ToString());
+                                var failedRequestsPerSecond = FixDecimalNumberSeparator(reader["FailedRequestsPerSecond"].ToString());
                                 var sentKilobytesPerSecond = FixDecimalNumberSeparator(reader["SentKilobytesPerSecond"].ToString());
                                 var receivedKilobytesPerSecond = FixDecimalNumberSeparator(reader["ReceivedKilobytesPerSecond"].ToString());                     
-                                result = $"{startTime}, {endTime}, {responseTime}, {successfulRequestsPerSecond}, {sentKilobytesPerSecond}, {receivedKilobytesPerSecond}";
+                                result = $"{startTime}, {endTime}, {responseTime}, {successfulRequestsPerSecond}, {failedRequestsPerSecond}," +
+                                    $" {sentKilobytesPerSecond}, {receivedKilobytesPerSecond}";
 
                                 myFile.WriteLine(result);
                             }
