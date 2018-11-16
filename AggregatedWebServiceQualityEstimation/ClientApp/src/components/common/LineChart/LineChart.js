@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { LineChart as LineChartRecharts, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line} from 'recharts'
+import { LineChart as LineChartRecharts, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, Brush} from 'recharts'
 
 class LineChart extends Component {
     static propTypes = {
@@ -12,6 +12,7 @@ class LineChart extends Component {
         axisXKey: PropTypes.string.isRequired,
         width: PropTypes.number,
         height: PropTypes.number,
+        axisYUnit: PropTypes.string,
         margin: PropTypes.shape({
             top: PropTypes.number,
             right: PropTypes.number,
@@ -40,7 +41,7 @@ class LineChart extends Component {
     };
 
     render() {
-        const { data, width, height, margin, axisXPadding, axisXKey, lines} = this.props;
+        const { data, width, height, margin, axisXPadding, axisXKey, lines, axisYUnit} = this.props;
 
         return (
             <LineChartRecharts
@@ -48,10 +49,11 @@ class LineChart extends Component {
                 height={height}
                 data={data}
                 margin={margin}
+                syncId={""}
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey={axisXKey} padding={axisXPadding} />
-                <YAxis />
+                <YAxis unit={axisYUnit} />
                 <Tooltip />
                 <Legend />
                 {
@@ -66,7 +68,7 @@ class LineChart extends Component {
                         );
                     })
                 }
-               
+               <Brush />
             </LineChartRecharts>
         );
     }

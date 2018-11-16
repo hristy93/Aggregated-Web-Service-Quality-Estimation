@@ -10,6 +10,7 @@ class LoadTestCharts extends Component {
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={data}
+                    axisYUnit="s"
                     lines={[{
                         axisYKey: "ResponseTime",
                         color: "#00BFFF"
@@ -30,6 +31,7 @@ class LoadTestCharts extends Component {
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={data}
+                    axisYUnit="KBps"
                     lines={[{
                         axisYKey: "ReceivedKilobytesPerSecond",
                         color: "#8884d8"
@@ -38,7 +40,7 @@ class LoadTestCharts extends Component {
                         axisYKey: "SentKilobytesPerSecond",
                         color: "#E85D18"
                     }]}
-                />
+                />               
             </React.Fragment>
         );
     }
