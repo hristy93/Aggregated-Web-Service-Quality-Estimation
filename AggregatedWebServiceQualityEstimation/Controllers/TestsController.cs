@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AggregatedWebServiceQualityEstimation.Estimators;
 using AggregatedWebServiceQualityEstimation.Utils;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -62,6 +63,9 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             try
             {
                 var result = _loadTestDataManager.ReadTestData();
+                var clusterEstimator = new ClusterEstimator(_configuration);
+                clusterEstimator.FindClusterCenter();
+                clusterEstimator.FindClusterDensity();
                 return Ok(result);
             }
             catch (Exception ex)

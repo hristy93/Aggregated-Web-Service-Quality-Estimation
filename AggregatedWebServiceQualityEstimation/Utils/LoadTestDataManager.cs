@@ -9,28 +9,28 @@ namespace AggregatedWebServiceQualityEstimation.Utils
     public class LoadTestDataManager : ITestDataManager
     {
 
-        public readonly string combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond,
+        private readonly string _combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond,
             SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime from LoadTestDataForAllCharts";
 
-        public readonly string ResponceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
+        private readonly string _responceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'LoadTest:Request' "
             + "and CounterName = 'Avg. Response Time' "
             + "and IntervalStartTime <> IntervalEndTime";
 
-        public readonly string SuccessfulRequestsPerSecondQuery = "select distinct ComputedValue as SuccessfulRequestsPerSecond, IntervalStartTime, IntervalEndTime "
+        private readonly string _successfulRequestsPerSecondQuery = "select distinct ComputedValue as SuccessfulRequestsPerSecond, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'LoadTest:Request' "
             + "and CounterName = 'Passed Requests/Sec' "
             + "and IntervalStartTime <> IntervalEndTime";
 
-        public readonly string SentBytesPerSecondQuery = "select distinct ComputedValue AS SentBytesPerSecond, IntervalStartTime, IntervalEndTime "
+        private readonly string _sentBytesPerSecondQuery = "select distinct ComputedValue AS SentBytesPerSecond, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'Network Interface' "
             + "and CounterName = 'Bytes Sent/sec' "
             + "and ComputedValue<> 0";
 
-        public readonly string ReceivedBytesPerSecondQuery = "select distinct ComputedValue AS ReceivedBytesPerSecond, IntervalStartTime, IntervalEndTime "
+        private readonly string _receivedBytesPerSecondQuery = "select distinct ComputedValue AS ReceivedBytesPerSecond, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
             + "and CategoryName = 'Network Interface' "
             + "and CounterName = 'Bytes Received/sec' "
@@ -55,9 +55,10 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 {
                     connection.Open();
 
-                    SqlCommand responceTimeCommand = new SqlCommand(combinedQuery, connection);
+                    SqlCommand command = new SqlCommand(_combinedQuery, connection);
+                    command.CommandTimeout = 200;
 
-                    using (SqlDataReader reader = responceTimeCommand.ExecuteReader())
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
                         try
                         {
