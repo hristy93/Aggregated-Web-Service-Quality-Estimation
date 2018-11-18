@@ -1,9 +1,32 @@
 ﻿import React, { Component } from 'react';
 import LineChart from './../common/LineChart/LineChart';
+import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
+import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
+import connectToStores from 'alt-utils/lib/connectToStores';
 
 class LoadTestCharts extends Component {
+    static getStores() {
+        return [LoadTestChartsStore];
+    }
+
+    static getPropsFromStores() {
+        return ({
+            brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
+            brushEndIndex: LoadTestChartsStore.getBrushEndIndex()
+        });
+    }
+
+    handleBrushOnChange = (change) => {
+        const args = {
+            brushStartIndex: change.startIndex,
+            brushEndIndex: change.endIndex
+        }
+
+        LoadTestChartsActions.setBrushPosition(args);
+    }
+
     render() {
-        const { data } = this.props;
+        const { data, brushStartIndex, brushEndIndex } = this.props;
 
         return (
             <React.Fragment>
@@ -15,6 +38,9 @@ class LoadTestCharts extends Component {
                         axisYKey: "ResponseTime",
                         color: "#00BFFF"
                     }]}
+                    brushOnChange={this.handleBrushOnChange}
+                    brushStartIndex={brushStartIndex}
+                    brushEndIndex={brushEndIndex}
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
@@ -27,6 +53,9 @@ class LoadTestCharts extends Component {
                         axisYKey: "FailedRequestsPerSecond",
                         color: "#F31111"
                     }]}
+                    brushOnChange={this.handleBrushOnChange}
+                    brushStartIndex={brushStartIndex}
+                    brushEndIndex={brushEndIndex}
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
@@ -40,10 +69,13 @@ class LoadTestCharts extends Component {
                         axisYKey: "SentKilobytesPerSecond",
                         color: "#E85D18"
                     }]}
+                    brushOnChange={this.handleBrushOnChange}
+                    brushStartIndex={brushStartIndex}
+                    brushEndIndex={brushEndIndex}
                 />               
             </React.Fragment>
         );
     }
 }
 
-export default LoadTestCharts;
+export default connectToStores(LoadTestCharts);

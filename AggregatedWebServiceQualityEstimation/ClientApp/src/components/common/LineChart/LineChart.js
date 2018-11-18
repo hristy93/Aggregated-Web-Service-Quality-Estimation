@@ -22,7 +22,10 @@ class LineChart extends Component {
         axisXPadding: PropTypes.shape({
             right: PropTypes.number,
             left: PropTypes.number,
-        })
+        }),
+        brushOnChange: PropTypes.func.isRequired,
+        brushStartIndex: PropTypes.number.isRequired,
+        brushEndIndex: PropTypes.number.isRequired
     };
 
     static defaultProps = {
@@ -41,7 +44,19 @@ class LineChart extends Component {
     };
 
     render() {
-        const { data, width, height, margin, axisXPadding, axisXKey, lines, axisYUnit} = this.props;
+        const {
+            data,
+            width,
+            height,
+            margin,
+            axisXPadding,
+            axisXKey,
+            lines,
+            axisYUnit,
+            brushOnChange,
+            brushStartIndex,
+            brushEndIndex
+        } = this.props;
 
         return (
             <LineChartRecharts
@@ -68,7 +83,12 @@ class LineChart extends Component {
                         );
                     })
                 }
-               <Brush />
+                <Brush
+                    dataKey={axisXKey}
+                    startIndex={brushStartIndex}
+                    endIndex={brushEndIndex}
+                    onChange={brushOnChange}
+                />
             </LineChartRecharts>
         );
     }
