@@ -27,22 +27,33 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             try
             {
                 IList<double> potentials = new List<double>();
-                const double radius = 0.5;
+                Vector<double> firstVector;
+                Vector<double> secondVector;
+                double radius = 0.5;
+                double potentialSum;
+                double distance;
+                int maxPotentialIndex;
 
-                foreach (var metrics1 in MetricsData)
+                foreach (var firstMetrics in MetricsData)
                 {
-                    double potentialSum = 0;
-                    foreach (var metrics2 in MetricsData)
+                    potentialSum = 0;
+
+                    foreach (var secondMetrics in MetricsData)
                     {
-                        if (metrics1[0] != metrics2[0] && metrics1.Count() > 1 && metrics2.Count() > 1)
+                        if (firstMetrics[0] != secondMetrics[0] && firstMetrics.Count() > 1 && secondMetrics.Count() > 1)
                         {
-                            Vector<double> v1 = Vector<double>.Build.DenseOfEnumerable(metrics1.Skip(2).Select(x => Double.Parse(x.Replace('.', ','))));
-                            v1 = v1.Normalize(2);
-                            Vector<double> v2 = Vector<double>.Build.DenseOfEnumerable(metrics2.Skip(2).Select(x => Double.Parse(x.Replace('.', ','))));
-                            v2 = v2.Normalize(2);
-                            double distance = Distance.Euclidean(v1, v2);
-                            var partialPotentialSum = Math.Exp(4 / (radius * radius) * distance * distance);
-                            potentialSum += 1.0 / partialPotentialSum;
+                            firstVector = Vector<double>.Build.DenseOfEnumerable(firstMetrics.Skip(2)
+                                .Select(x => Double.Parse(x.Replace('.', ','))));
+                                //.Select(x => Math.Round(x, 3)));
+                            firstVector = firstVector.Normalize(2);
+
+                            secondVector = Vector<double>.Build.DenseOfEnumerable(secondMetrics.Skip(2)
+                                .Select(x => Double.Parse(x.Replace('.', ','))));
+                                //.Select(x => Math.Round(x, 3)));
+                            secondVector = secondVector.Normalize(2);
+
+                            distance = Distance.Euclidean(firstVector, secondVector);
+                            potentialSum += Math.Exp(-4 / (radius * radius) * distance * distance);
                         }
                     }
 
@@ -50,8 +61,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 }
 
                 DensestClusterCenterPotential = potentials.Max();
-                var maxPotentialIndex = potentials.IndexOf(DensestClusterCenterPotential);
-                _clusterCenter = Vector<double>.Build.DenseOfEnumerable(MetricsData[maxPotentialIndex].Skip(2).Select(x => Double.Parse(x.Replace('.', ','))));
+                maxPotentialIndex = potentials.IndexOf(DensestClusterCenterPotential);
+                _clusterCenter = Vector<double>.Build.DenseOfEnumerable(MetricsData[maxPotentialIndex].Skip(2)
+                    .Select(x => Double.Parse(x.Replace('.', ','))));
+                    //.Select(x => Math.Round(x, 3)));
             }
             catch (Exception ex)
             {
@@ -63,16 +76,23 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         {
             try
             {
+                Vector<double> firstMetricsVector;
+                Vector<double> secondMetricsVector;
                 double distanceSum = 0;
+                double distance;
 
-                foreach (var metrics1 in MetricsData)
+                foreach (var metrics in MetricsData)
                 {
-                    if (metrics1[0] != _clusterCenter[0].ToString() && metrics1.Count() > 1)
+                    if (metrics[0] != _clusterCenter[0].ToString() && metrics.Count() > 1)
                     {
-                        Vector<double> metricsVector1 = Vector<double>.Build.DenseOfEnumerable(metrics1.Skip(2).Select(x => Double.Parse(x.Replace('.', ','))));
-                        metricsVector1 = metricsVector1.Normalize(2);
-                        Vector<double> metricsVector2 = _clusterCenter.Normalize(2);
-                        double distance = Distance.Manhattan(metricsVector1, metricsVector2);
+                        firstMetricsVector = Vector<double>.Build.DenseOfEnumerable(metrics.Skip(2)
+                            .Select(x => Double.Parse(x.Replace('.', ','))));
+                            //.Select(x => Math.Round(x, 3)));
+
+                        firstMetricsVector = firstMetricsVector.Normalize(2);
+                        secondMetricsVector = _clusterCenter.Normalize(2);
+
+                        distance = Distance.Manhattan(firstMetricsVector, secondMetricsVector);
                         distanceSum += distance;
                     }
                 }

@@ -66,6 +66,10 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 var clusterEstimator = new ClusterEstimator(_configuration);
                 clusterEstimator.FindClusterCenter();
                 clusterEstimator.FindClusterDensity();
+                var statisticalEstimator = new StatisticalEstimator(_configuration);
+                statisticalEstimator.GetFiveNumberSummaries();
+                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
+                fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
                 return Ok(result);
             }
             catch (Exception ex)
