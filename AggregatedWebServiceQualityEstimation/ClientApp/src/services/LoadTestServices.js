@@ -1,10 +1,11 @@
 ﻿import axios from 'axios';
 
 class LoadTestServices {
-    static runLoadTest(url) {
-        return axios.post("https://localhost:44342/api/test/run", "\"" + url + "\"", {
+    static runLoadTest(data) {
+        return axios.post("https://localhost:44342/api/test/run", JSON.stringify(data), {
             headers: {
                 "Content-type": "application/json",
+                "Accept": "application/json",
             }
         });
     }

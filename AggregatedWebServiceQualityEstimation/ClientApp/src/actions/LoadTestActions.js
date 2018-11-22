@@ -5,12 +5,12 @@ import { displayFailureMessage, displaySuccessMessage } from '../utils/displayIn
 
 class LoadTestActions {
     constructor() {
-        this.generateActions("setUrl", "setUrlValidity");
+        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData");
     }
 
-    runLoadTest = (url) => {
+    runLoadTest = (data) => {
         return (dispatch) => {
-            LoadTestServices.runLoadTest(url)
+            LoadTestServices.runLoadTest(data)
                 .then((response) => {
                     // handle success
                     const alertMessage = response.data;

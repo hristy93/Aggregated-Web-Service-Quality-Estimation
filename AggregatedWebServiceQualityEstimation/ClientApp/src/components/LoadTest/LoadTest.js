@@ -17,16 +17,26 @@ class LoadTest extends Component {
         return ({
             loadTestData: LoadTestStore.getLoadTestData(),
             url: LoadTestStore.getUrl(),
-            isUrlValid: LoadTestStore.getUrlValidity()
+            isUrlValid: LoadTestStore.getUrlValidity(),
+            requestType: LoadTestStore.getRequestType(),
+            requestPostData: LoadTestStore.getRequestPostData()
         });
     }
 
     handleRunLoadTestButtonClick = () => {
-        const { url } = this.props;
-        if (!isNil(url)) {
-            LoadTestActions.runLoadTest(url);
+        const { url, requestPostData, requestType } = this.props;
+        let data = {};
+        data["url"] = url;
+
+        if (requestType === "POST" && !isNil(requestPostData)) {
+            const parsedRequestPostData = JSON.parse(requestPostData);
+            data["body"] = parsedRequestPostData;
+        }
+
+        if (!isNil(data)) {
+            LoadTestActions.runLoadTest(data);
         } else {
-            displayFailureMessage("There is a problem with the load test!", "The url is invalid!");
+            displayFailureMessage("There is a problem with the load test!", "The data is invalid!");
         }
     }
 
