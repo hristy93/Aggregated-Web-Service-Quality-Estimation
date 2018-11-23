@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AggregatedWebServiceQualityEstimation.Estimators;
+using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace AggregatedWebServiceQualityEstimation.Controllers
 {
@@ -29,11 +31,27 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpPost("run")]
-        public IActionResult StartTest([FromBody] string url)
+        public IActionResult StartTest([FromBody] PostData data)
         {
             try
             {
-                _loadTestModifier.EditUrl(url);
+                var deserializedData = data;
+
+                var url = deserializedData.Url;
+                if (url == null)
+                {
+                    return BadRequest("The url of the request is invalid!");
+                }
+
+                var requestPostData = deserializedData.Value;
+                var isPostRequest = requestPostData != null;
+                if (isPostRequest)
+                {
+                    _loadTestModifier.AddRequestBodyData(requestPostData.ToString());
+                }
+
+                _loadTestModifier.EditUrl(url, isPostRequest);
+
                 _loadTestRunner.InitiateTest();
                 return Ok("The load test finished sucessfully!");
             }

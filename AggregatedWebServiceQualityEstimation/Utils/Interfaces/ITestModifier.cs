@@ -2,6 +2,7 @@
 {
     public interface ITestModifier
     {
-        void EditUrl(string url);
+        void EditUrl(string url, bool isPost);
+        void AddRequestBodyData(string data);
     }
 }
