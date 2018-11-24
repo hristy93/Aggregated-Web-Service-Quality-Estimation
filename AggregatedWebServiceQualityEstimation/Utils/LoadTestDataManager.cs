@@ -8,6 +8,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 {
     public class LoadTestDataManager : ITestDataManager
     {
+        public readonly string loadTestFilePath = "loadTestResults.csv";
 
         private readonly string _combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond,
             SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime from LoadTestDataForAllCharts";
@@ -49,7 +50,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             string headers;
             string result;
 
-            using (StreamWriter myFile = new StreamWriter(@"loadTestResults.csv"))
+            using (StreamWriter myFile = new StreamWriter(loadTestFilePath))
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -92,9 +93,14 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             }
         }
 
+        public void WriteTestData(string testData)
+        {
+            File.WriteAllText(loadTestFilePath, testData);
+        }
+
         public string ReadTestData()
         {
-            using (StreamReader myFile = new StreamReader(@"loadTestResults.csv"))
+            using (StreamReader myFile = new StreamReader(loadTestFilePath))
             {
                 var result = myFile.ReadToEnd();
                 return result;

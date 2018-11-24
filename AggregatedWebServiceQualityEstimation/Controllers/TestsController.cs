@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AggregatedWebServiceQualityEstimation.Estimators;
 using AggregatedWebServiceQualityEstimation.Models;
@@ -94,6 +96,37 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             {
                 throw ex;
             }
+        }
+
+        [HttpPost("data/upload")]
+        public async Task<IActionResult> UploadTestData()
+        {
+            IFormFile file = Request.Form.Files.FirstOrDefault();
+            string fileContent = null;
+
+            if (file == null)
+            {
+                return BadRequest("The file is invalid!");
+            }
+
+            using (MemoryStream data = new MemoryStream())
+            {
+                using (Stream fileStream = file.OpenReadStream())
+                {
+                    fileStream.CopyTo(data);
+                    var buffer = data.ToArray();
+                    fileContent = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                }
+            }
+
+            if (fileContent == null)
+            {
+                throw new InvalidOperationException("The file is not processed correctly!");
+            }
+
+            _loadTestDataManager.WriteTestData(fileContent);
+
+            return Ok("The file is uploaded successfully!");
         }
     }
 }
