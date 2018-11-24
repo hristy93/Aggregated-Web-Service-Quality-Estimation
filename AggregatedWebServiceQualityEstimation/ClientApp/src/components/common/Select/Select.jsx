@@ -4,10 +4,11 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class Select extends Component {
     static propTypes = {
+        id: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         items: PropTypes.array.isRequired,
         onChange: PropTypes.func.isRequired,
-        style: PropTypes.object
+        style: PropTypes.shape({})
     };
 
     static defaultProps = {
@@ -16,6 +17,7 @@ class Select extends Component {
 
     render() {
         const {
+            id,
             title,
             items,
             onChange,
@@ -23,7 +25,7 @@ class Select extends Component {
         } = this.props;
 
         return (
-            <FormGroup controlId="formControlsSelect" style={style}>
+            <FormGroup controlId={`select-${id}`} style={style}>
                 <ControlLabel>{title}</ControlLabel>
                 <FormControl
                     componentClass="select"

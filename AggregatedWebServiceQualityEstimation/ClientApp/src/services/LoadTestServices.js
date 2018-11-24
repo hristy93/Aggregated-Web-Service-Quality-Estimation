@@ -10,6 +10,15 @@ class LoadTestServices {
         });
     }
 
+    static uploadLoadTestData(files) {
+        const file = new Blob([files[0]], { type: 'text/csv' });
+
+        const formData = new FormData();
+        formData.append('file', file, file.filename);
+
+        return axios.post("https://localhost:44342/api/test/data/upload", formData);
+    }
+
     static writeLoadTestData() {
         return axios.get("https://localhost:44342/api/test/data/write");
     }

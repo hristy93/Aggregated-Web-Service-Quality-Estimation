@@ -4,9 +4,10 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 
 class Textarea extends Component {
     static propTypes = {
+        id: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,
-        style: PropTypes.object
+        style: PropTypes.shape({})
     };
 
     static defaultProps = {
@@ -14,10 +15,15 @@ class Textarea extends Component {
     };
 
     render() {
-        const { title, onChange, style } = this.props;
+        const {
+            id,
+            title,
+            onChange,
+            style
+        } = this.props;
 
         return (
-            <FormGroup controlId="formControlsTextarea">
+            <FormGroup controlId={`textarea-${id}`}>
                 <ControlLabel>{title}</ControlLabel>
                 <FormControl
                     componentClass="textarea"

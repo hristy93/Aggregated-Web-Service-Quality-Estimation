@@ -66,6 +66,23 @@ class LoadTestActions {
                 displayFailureMessage(alertMessage, error);
             });
     }
+
+    uploadLoadTestData = (files) => {
+        return (dispatch) => {
+            LoadTestServices.uploadLoadTestData(files)
+                .then((response) => {
+                    // handle success
+                    const alertMessage = response.data;
+                    const logMessage = response;
+                    displaySuccessMessage(alertMessage, logMessage);
+                })
+                .catch((error) => {
+                    // handle error
+                    const alertMessage = "There is a problem with the upload of the load test file!";
+                    displayFailureMessage(alertMessage, error);
+                });
+        }
+    }
 }
 
 export default alt.createActions(LoadTestActions);
