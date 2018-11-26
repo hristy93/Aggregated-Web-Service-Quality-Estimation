@@ -2,9 +2,11 @@
 import LoadTestForm from './LoadTestForm';
 import { Col, Row, Grid, Button, ButtonToolbar } from 'react-bootstrap';
 import LoadTestCharts from './LoadTestCharts';
+import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestActions from '../../actions/LoadTestActions';
+import EstimationActions from '../../actions/EstimationActions';
 import isNil from 'lodash/isNil';
 import { displayFailureMessage } from '../../utils/displayInformation';
 
@@ -85,6 +87,13 @@ class LoadTest extends Component {
                         <LoadTestCharts data={loadTestData} />
                     </Col>
                 </Row>
+                <Button
+                    id="get-statistical-estimation-button"
+                    onClick={EstimationActions.getStatisticalEstimatorResult}
+                >
+                    Get Statistical Data
+                 </Button>
+                <StatisticalEstimation />
             </Grid>
         );
     }
