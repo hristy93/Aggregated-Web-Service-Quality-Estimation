@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using AggregatedWebServiceQualityEstimation.Models;
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Statistics;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -10,11 +11,11 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 {
     public class StatisticalEstimator : Estimator
     {
-        public IList<IEnumerable<double>> FiveNumberSummaries { get; private set; }
+        public IList<StatisticalEstimatorResult> statisticalData { get; private set; }
 
         public StatisticalEstimator(IConfiguration configuration) : base(configuration)
         {
-            FiveNumberSummaries = new List<IEnumerable<double>>();
+            statisticalData = new List<StatisticalEstimatorResult>();
             GetMetricsData(byRow: false);
         }
 
@@ -22,15 +23,35 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         {
             try
             {
+                Vector<double> metricsVector;
+                double[] fiveNumberSummary;
+                double mean;
+                double variance;
+                StatisticalEstimatorResult statisticalEstimatorResult;
                 foreach (var metrics in MetricsData)
                 {
-                    Vector<double> metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
+                    metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
                         .Skip(1)
                         .Select(x => Double.Parse(x.Replace('.', ','))));
                         //.Select(x => Math.Round(x, 3)));
-                    var distinctValuesCount = metricsVector.Distinct();
-                    var fiveNumberSummary = Statistics.FiveNumberSummary(metricsVector.ToArray());
-                    FiveNumberSummaries.Add(fiveNumberSummary);
+
+                    fiveNumberSummary = Statistics.FiveNumberSummary(metricsVector.ToArray());
+                    mean = Statistics.Mean(metricsVector);
+                    variance = Statistics.Variance(metricsVector);
+
+                    statisticalEstimatorResult = new StatisticalEstimatorResult()
+                    {
+                        MetricName = metrics.Take(1).ToList()[0],
+                        Min = fiveNumberSummary[0],
+                        LowerQuartile = fiveNumberSummary[1],
+                        Median = fiveNumberSummary[2],
+                        UpperQuartile = fiveNumberSummary[3],
+                        Max = fiveNumberSummary[4],
+                        Mean = mean,
+                        Variance = variance
+                    };
+
+                    statisticalData.Add(statisticalEstimatorResult);
                 }
             }
             catch (Exception ex)

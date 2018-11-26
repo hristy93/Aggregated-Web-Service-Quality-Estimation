@@ -98,6 +98,66 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
         }
 
+
+        [HttpGet("estimator/cluster")]
+        public IActionResult GetClusterEstimatorResult()
+        {
+            try
+            {
+                _loadTestDataManager.ReadTestData();
+                var clusterEstimator = new ClusterEstimator(_configuration);
+                clusterEstimator.FindClusterCenter();
+                clusterEstimator.FindClusterDensity();
+                var clusterEstimatorResult = new ClusterEstimatorResult()
+                {
+                    DensestClusterCenterPotential = clusterEstimator.DensestClusterCenterPotential,
+                    DensestClusterDensity = clusterEstimator.DensestClusterDensity,
+                    DensestClusterEstimation = clusterEstimator.DensestClusterEstimation
+                };
+
+                return Ok(clusterEstimatorResult);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("estimator/statistics")]
+        public IActionResult GetStatisticalEstimatorResult()
+        {
+            try
+            {
+                _loadTestDataManager.ReadTestData();
+                var statisticalEstimator = new StatisticalEstimator(_configuration);
+                statisticalEstimator.GetFiveNumberSummaries();
+                var fiveNumberSummaries = statisticalEstimator.statisticalData;
+                return Ok(fiveNumberSummaries);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("estimator/fuzzy-logic")]
+        public IActionResult GetFuzzyLogicEstimatorResult()
+        {
+            try
+            {
+                _loadTestDataManager.ReadTestData();
+                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
+                fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
+                var aggregatedQualityMembershipFunction = 
+                    fuzzyLogicEstimator.AggregatedQualityMembershipFunction;
+                return Ok(aggregatedQualityMembershipFunction);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost("data/upload")]
         public async Task<IActionResult> UploadTestData()
         {
