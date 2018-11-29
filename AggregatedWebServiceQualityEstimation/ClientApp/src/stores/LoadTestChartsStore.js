@@ -9,7 +9,8 @@ class LoadTestChartsStore {
 
         this.state = Immutable.Map({
             brushStartIndex: null,
-            brushEndIndex: null
+            brushEndIndex: null,
+            showReferenceLines: true
         })
     }
 
@@ -21,12 +22,20 @@ class LoadTestChartsStore {
         );
     }
 
+    setShowReferenceLines = (showReferenceLines) => {
+        this.setState(this.state.set("showReferenceLines", showReferenceLines));
+    }
+
     static getBrushStartIndex() {
         return this.state.get("brushStartIndex");
     }
 
     static getBrushEndIndex() {
         return this.state.get("brushEndIndex");
+    }
+
+    static getShowReferenceLines() {
+        return this.state.get("showReferenceLines");
     }
 }
 

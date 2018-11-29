@@ -2,17 +2,21 @@
 import LineChart from './../common/LineChart/LineChart';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
+import EstimationStore from '../../stores/EstimationStore';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
 class LoadTestCharts extends Component {
     static getStores() {
-        return [LoadTestChartsStore];
+        return [LoadTestChartsStore, EstimationStore];
     }
 
     static getPropsFromStores() {
         return ({
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
-            brushEndIndex: LoadTestChartsStore.getBrushEndIndex()
+            brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
+            brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
+            showReferenceLines: LoadTestChartsStore.getShowReferenceLines(),
+            statisticalData: EstimationStore.getStatisticalData()
         });
     }
 
@@ -26,7 +30,25 @@ class LoadTestCharts extends Component {
     }
 
     render() {
-        const { data, brushStartIndex, brushEndIndex } = this.props;
+        const {
+            data,
+            brushStartIndex,
+            brushEndIndex,
+            statisticalData,
+            showReferenceLines
+        } = this.props;
+
+        let referenceLines = [];
+        if (showReferenceLines) {
+            referenceLines = statisticalData.map((item) => {
+                const standardDeviation = Math.sqrt(item.variance);
+                return {
+                    mean: item.mean,
+                    lowerStandardDeviation: item.mean - standardDeviation,
+                    upperStandardDeviation: item.mean + standardDeviation,
+                };
+            });
+        }
 
         return (
             <React.Fragment>
@@ -41,6 +63,8 @@ class LoadTestCharts extends Component {
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
+                    showReferenceLines={showReferenceLines}
+                    referenceLinesData={referenceLines.length !== 0 ? [referenceLines[0]] : []}
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
@@ -56,7 +80,9 @@ class LoadTestCharts extends Component {
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
-                />
+                    showReferenceLines={showReferenceLines}
+                    referenceLinesData={referenceLines.length !== 0 ? [referenceLines[1], referenceLines[2]] : []}
+            />
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={data}
@@ -72,6 +98,8 @@ class LoadTestCharts extends Component {
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
+                    showReferenceLines={showReferenceLines}
+                    referenceLinesData={referenceLines.length !== 0 ? [referenceLines[3], referenceLines[4]] : []}
                 />               
             </React.Fragment>
         );

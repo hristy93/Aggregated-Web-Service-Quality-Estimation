@@ -19,14 +19,14 @@ class StatisticalEstimation extends Component {
 
     render() {
         const { statisticalData } = this.props;
-        const statisticMetricNames = statisticalData.length == 0 ? [] : statisticalData[0];
+        const statisticMetricNames = statisticalData.length === 0 ? [] : statisticalData[0];
 
         return (
             <Table
                 responsive
                 striped
-                borderedc
-                ondensed
+                bordered
+                condensed
                 hover
             >
                 <thead>

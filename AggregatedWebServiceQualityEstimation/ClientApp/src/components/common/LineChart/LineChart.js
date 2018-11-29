@@ -1,6 +1,16 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { LineChart as LineChartRecharts, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, Brush} from 'recharts'
+import {
+    LineChart as LineChartRecharts,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    Line,
+    Brush,
+    ReferenceLine
+} from 'recharts'
 
 class LineChart extends Component {
     static propTypes = {
@@ -24,8 +34,12 @@ class LineChart extends Component {
             left: PropTypes.number,
         }),
         brushOnChange: PropTypes.func.isRequired,
-        brushStartIndex: PropTypes.number.isRequired,
-        brushEndIndex: PropTypes.number.isRequired
+        brushStartIndex: PropTypes.number,
+        brushEndIndex: PropTypes.number,
+        showReferenceLines: PropTypes.bool,
+        referenceLinesData: PropTypes.arrayOf(PropTypes.shape({
+            mean: PropTypes.number
+        }))
     };
 
     static defaultProps = {
@@ -40,8 +54,29 @@ class LineChart extends Component {
         axisXPadding: {
             left: 30,
             right: 30
-        }
+        },
+        showReferenceLines: false,
+        referenceLinesData: []
     };
+
+    referenceLinesRenderer = (referenceLinesData, lines) => {
+        const result = referenceLinesData.map((item, outerIndex) => {
+            const data = Object.keys(item).map((key, innerIndex) => {
+                return (
+                    <ReferenceLine
+                        y={item[key]}
+                        //key={`reference-line-${key}-${index}`}
+                        label={""}
+                        stroke={lines[outerIndex].color}
+                        strokeDasharray="3 3"
+                    />
+                )
+            });
+            return data;
+        });
+
+        return result;
+    }
 
     render() {
         const {
@@ -55,7 +90,9 @@ class LineChart extends Component {
             axisYUnit,
             brushOnChange,
             brushStartIndex,
-            brushEndIndex
+            brushEndIndex,
+            showReferenceLines,
+            referenceLinesData
         } = this.props;
 
         return (
@@ -71,6 +108,9 @@ class LineChart extends Component {
                 <YAxis unit={axisYUnit} />
                 <Tooltip />
                 <Legend />
+                {
+                    showReferenceLines && this.referenceLinesRenderer(referenceLinesData, lines)
+                }
                 {
                     lines.map((lineInfo) => {
                         return (
