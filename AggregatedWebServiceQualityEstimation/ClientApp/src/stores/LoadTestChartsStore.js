@@ -10,7 +10,8 @@ class LoadTestChartsStore {
         this.state = Immutable.Map({
             brushStartIndex: null,
             brushEndIndex: null,
-            showReferenceLines: true
+            areReferenceLinesVisible: false,
+            syncCharts: false
         })
     }
 
@@ -22,8 +23,12 @@ class LoadTestChartsStore {
         );
     }
 
-    setShowReferenceLines = (showReferenceLines) => {
-        this.setState(this.state.set("showReferenceLines", showReferenceLines));
+    setReferenceLinesVisibility = (areReferenceLinesVisible) => {
+        this.setState(this.state.set("areReferenceLinesVisible", areReferenceLinesVisible));
+    }
+
+    setChartsSync(syncCharts) {
+        this.setState(this.state.set("syncCharts", syncCharts));
     }
 
     static getBrushStartIndex() {
@@ -34,8 +39,12 @@ class LoadTestChartsStore {
         return this.state.get("brushEndIndex");
     }
 
-    static getShowReferenceLines() {
-        return this.state.get("showReferenceLines");
+    static getReferenceLinesVisibility() {
+        return this.state.get("areReferenceLinesVisible");
+    }
+
+    static getSyncCharts() {
+        return this.state.get("syncCharts");
     }
 }
 

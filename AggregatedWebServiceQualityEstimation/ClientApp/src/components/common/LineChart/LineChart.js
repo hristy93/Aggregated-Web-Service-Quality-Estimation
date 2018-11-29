@@ -39,7 +39,8 @@ class LineChart extends Component {
         showReferenceLines: PropTypes.bool,
         referenceLinesData: PropTypes.arrayOf(PropTypes.shape({
             mean: PropTypes.number
-        }))
+        })),
+        syncChart: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -65,7 +66,7 @@ class LineChart extends Component {
                 return (
                     <ReferenceLine
                         y={item[key]}
-                        //key={`reference-line-${key}-${index}`}
+                        key={`reference-line-${lines[outerIndex].axisYKey}-${outerIndex}-${innerIndex}`}
                         label={""}
                         stroke={lines[outerIndex].color}
                         strokeDasharray="3 3"
@@ -92,7 +93,8 @@ class LineChart extends Component {
             brushStartIndex,
             brushEndIndex,
             showReferenceLines,
-            referenceLinesData
+            referenceLinesData,
+            syncChart
         } = this.props;
 
         return (
@@ -101,7 +103,7 @@ class LineChart extends Component {
                 height={height}
                 data={data}
                 margin={margin}
-                syncId={""}
+                syncId={syncChart ? "sync" : null}
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey={axisXKey} padding={axisXPadding} />

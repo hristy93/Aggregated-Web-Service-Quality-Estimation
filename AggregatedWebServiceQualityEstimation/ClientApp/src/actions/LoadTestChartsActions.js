@@ -2,7 +2,7 @@
 
 class LoadTestChartsActions {
     constructor() {
-        this.generateActions("setBrushPosition", "showReferenceLines");
+        this.generateActions("setBrushPosition", "setReferenceLinesVisibility", "setChartsSync");
     }
 }
 
