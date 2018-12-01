@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import LineChartOptions from './LineChartOptions';
 import {
     LineChart as LineChartRecharts,
     CartesianGrid,
@@ -10,16 +11,20 @@ import {
     Line,
     Brush,
     ReferenceLine
-} from 'recharts'
+} from 'recharts';
 
 class LineChart extends Component {
     static propTypes = {
         data: PropTypes.array,
         lines: PropTypes.arrayOf(PropTypes.shape({
             axisXKey: PropTypes.string,
-            color: PropTypes.string
+            color: PropTypes.string,
+            isLineVisible: PropTypes.bool,
+            isReferenceLineVisible: PropTypes.bool
         })).isRequired,
         axisXKey: PropTypes.string.isRequired,
+        syncChart: PropTypes.bool.isRequired,
+        brushOnChange: PropTypes.func.isRequired,
         width: PropTypes.number,
         height: PropTypes.number,
         axisYUnit: PropTypes.string,
@@ -33,14 +38,14 @@ class LineChart extends Component {
             right: PropTypes.number,
             left: PropTypes.number,
         }),
-        brushOnChange: PropTypes.func.isRequired,
+        toggleLineVisibility: PropTypes.func,
+        //legendOnClick: PropTypes.func,
         brushStartIndex: PropTypes.number,
         brushEndIndex: PropTypes.number,
         showReferenceLines: PropTypes.bool,
         referenceLinesData: PropTypes.arrayOf(PropTypes.shape({
             mean: PropTypes.number
-        })),
-        syncChart: PropTypes.bool.isRequired
+        }))
     };
 
     static defaultProps = {
@@ -64,6 +69,7 @@ class LineChart extends Component {
         const result = referenceLinesData.map((item, outerIndex) => {
             const data = Object.keys(item).map((key, innerIndex) => {
                 return (
+                    lines[outerIndex].areReferenceLinesVisible &&
                     <ReferenceLine
                         y={item[key]}
                         key={`reference-line-${lines[outerIndex].axisYKey}-${outerIndex}-${innerIndex}`}
@@ -90,48 +96,60 @@ class LineChart extends Component {
             lines,
             axisYUnit,
             brushOnChange,
+            //legendOnClick,
             brushStartIndex,
             brushEndIndex,
             showReferenceLines,
             referenceLinesData,
+            toggleLineVisibility,
             syncChart
         } = this.props;
 
         return (
-            <LineChartRecharts
-                width={width}
-                height={height}
-                data={data}
-                margin={margin}
-                syncId={syncChart ? "sync" : null}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey={axisXKey} padding={axisXPadding} />
-                <YAxis unit={axisYUnit} />
-                <Tooltip />
-                <Legend />
+            <React.Fragment>
+                <LineChartRecharts
+                    width={width}
+                    height={height}
+                    data={data}
+                    margin={margin}
+                    syncId={syncChart ? "sync" : null}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey={axisXKey} padding={axisXPadding} />
+                    <YAxis unit={axisYUnit} />
+                    <Tooltip />
+                    <Legend />
+                    {
+                        showReferenceLines && this.referenceLinesRenderer(referenceLinesData, lines)
+                    }
+                    {
+                        lines.map((lineInfo) => {
+                            return (
+                                lineInfo.isLineVisible &&
+                                <Line
+                                    key={lineInfo.axisYKey}
+                                    type="monotone"
+                                    dataKey={lineInfo.axisYKey}
+                                    stroke={lineInfo.color}
+                                />
+                            );
+                        })
+                    }
+                    <Brush
+                        dataKey={axisXKey}
+                        startIndex={brushStartIndex}
+                        endIndex={brushEndIndex}
+                        onChange={brushOnChange}
+                    />
+                </LineChartRecharts>
                 {
-                    showReferenceLines && this.referenceLinesRenderer(referenceLinesData, lines)
+                    lines.length > 1 && data.length > 0 &&
+                    <LineChartOptions
+                        lines={lines}
+                        toggleLineVisibility={toggleLineVisibility}
+                    />
                 }
-                {
-                    lines.map((lineInfo) => {
-                        return (
-                            <Line
-                                key={lineInfo.axisYKey}
-                                type="monotone"
-                                dataKey={lineInfo.axisYKey}
-                                stroke={lineInfo.color}
-                            />
-                        );
-                    })
-                }
-                <Brush
-                    dataKey={axisXKey}
-                    startIndex={brushStartIndex}
-                    endIndex={brushEndIndex}
-                    onChange={brushOnChange}
-                />
-            </LineChartRecharts>
+            </React.Fragment>
         );
     }
 }

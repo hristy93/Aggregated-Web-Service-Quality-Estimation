@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import LineChart from './../common/LineChart/LineChart';
+import LineChart from '../common/LineChart/LineChart';
 import Switch from '../common/Switch/Switch';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import EstimationActions from '../../actions/EstimationActions';
@@ -14,8 +14,8 @@ class LoadTestCharts extends Component {
 
     static getPropsFromStores() {
         return ({
+            chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
-            brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
             areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
             syncCharts: LoadTestChartsStore.getSyncCharts(),
@@ -33,27 +33,69 @@ class LoadTestCharts extends Component {
     }
 
     handleSwitchOnChange = (isChecked, event, id) => {
-        if (id === "switch-sync-charts") {
-            LoadTestChartsActions.setChartsSync(isChecked);
-        }
+        switch (id) {
+            case "switch-sync-charts":
+                LoadTestChartsActions.setChartsSync(isChecked);
+                break;
+            case "switch-show-reference-lines":
+                // need to check if the data is the same 
+                //if (this.props.statisticalData.length === 0) {
+                //    EstimationActions.getStatisticalEstimatorResult();
+                //}
 
-        if (id === "switch-show-reference-lines") {
-            // need to check if the data is the same 
-            //if (this.props.statisticalData.length === 0) {
-            //    EstimationActions.getStatisticalEstimatorResult();
-            //}
+                if (isChecked) {
+                    EstimationActions.getStatisticalEstimatorResult();
+                }
 
-            if (isChecked) {
-                EstimationActions.getStatisticalEstimatorResult();
-            }
-
-            LoadTestChartsActions.setReferenceLinesVisibility.defer(isChecked);
+                LoadTestChartsActions.setAllReferenceLinesVisibility.defer(isChecked);
+                break;
+            case "switch-line-visibility-SuccessfulRequestsPerSecond":
+                LoadTestChartsActions.setLineVisibility({
+                    chartName: "requests",
+                    lineName: "SuccessfulRequestsPerSecond"
+                });
+                LoadTestChartsActions.setReferenceLinesVisibility.defer({
+                    chartName: "requests",
+                    lineName: "SuccessfulRequestsPerSecond"
+                });
+                break;
+            case "switch-line-visibility-FailedRequestsPerSecond":
+                LoadTestChartsActions.setLineVisibility({
+                    chartName: "requests",
+                    lineName: "FailedRequestsPerSecond"
+                });
+                LoadTestChartsActions.setReferenceLinesVisibility.defer({
+                    chartName: "requests",
+                    lineName: "FailedRequestsPerSecond"
+                });
+                break;
+            case "switch-line-visibility-SentKilobytesPerSecond":
+                LoadTestChartsActions.setLineVisibility({
+                    chartName: "throughput",
+                    lineName: "SentKilobytesPerSecond"
+                });
+                LoadTestChartsActions.setReferenceLinesVisibility.defer({
+                    chartName: "throughput",
+                    lineName: "SentKilobytesPerSecond"
+                });
+                break;
+            case "switch-line-visibility-ReceivedKilobytesPerSecond":
+                LoadTestChartsActions.setLineVisibility({
+                    chartName: "throughput",
+                    lineName: "ReceivedKilobytesPerSecond"
+                });
+                LoadTestChartsActions.setReferenceLinesVisibility.defer({
+                    chartName: "throughput",
+                    lineName: "ReceivedKilobytesPerSecond"
+                });
+                break;
         }
     }
 
     render() {
         const {
             data,
+            chartsLinesData,
             brushStartIndex,
             brushEndIndex,
             statisticalData,
@@ -92,52 +134,41 @@ class LoadTestCharts extends Component {
                     axisXKey="IntervalStartTime"
                     data={data}
                     axisYUnit="s"
-                    lines={[{
-                        axisYKey: "ResponseTime",
-                        color: "#00BFFF"
-                    }]}
+                    lines={chartsLinesData['responseTime']}
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
                     referenceLinesData={referenceLines.length !== 0 ? [referenceLines[0]] : []}
+                    //legendOnClick={this.handleLegendOnClick}
+                    toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={data}
-                    lines={[{
-                        axisYKey: "SuccessfulRequestsPerSecond",
-                        color: "#32CD32"
-                    },
-                    {
-                        axisYKey: "FailedRequestsPerSecond",
-                        color: "#F31111"
-                    }]}
+                    lines={chartsLinesData['requests']}
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
                     referenceLinesData={referenceLines.length !== 0 ? [referenceLines[1], referenceLines[2]] : []}
+                    //legendOnClick={this.handleLegendOnClick}
+                    toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
             />
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={data}
                     axisYUnit="KBps"
-                    lines={[{
-                        axisYKey: "ReceivedKilobytesPerSecond",
-                        color: "#8884d8"
-                    },
-                    {
-                        axisYKey: "SentKilobytesPerSecond",
-                        color: "#E85D18"
-                    }]}
+                    lines={chartsLinesData['throughput']}
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
                     referenceLinesData={referenceLines.length !== 0 ? [referenceLines[3], referenceLines[4]] : []}
+                    //legendOnClick={this.handleLegendOnClick}
+                    toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
                 />               
             </React.Fragment>

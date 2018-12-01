@@ -8,6 +8,36 @@ class LoadTestChartsStore {
         this.bindActions(LoadTestChartsActions);
 
         this.state = Immutable.Map({
+            chartsLinesData: {
+                responseTime: [{
+                    axisYKey: "ResponseTime",
+                    color: "#00BFFF",
+                    isLineVisible: true,
+                    areReferenceLinesVisible: true
+                }],
+                requests: [{
+                    axisYKey: "SuccessfulRequestsPerSecond",
+                    color: "#32CD32",
+                    isLineVisible: true,
+                    areReferenceLinesVisible: true
+                }, {
+                    axisYKey: "FailedRequestsPerSecond",
+                    color: "#F31111",
+                    isLineVisible: true,
+                    areReferenceLinesVisible: true
+                }],
+                throughput: [{
+                    axisYKey: "ReceivedKilobytesPerSecond",
+                    color: "#8884d8",
+                    isLineVisible: true,
+                    areReferenceLinesVisible: true
+                }, {
+                    axisYKey: "SentKilobytesPerSecond",
+                    color: "#E85D18",
+                    isLineVisible: true,
+                    areReferenceLinesVisible: true
+                }]
+            },
             brushStartIndex: null,
             brushEndIndex: null,
             areReferenceLinesVisible: false,
@@ -23,12 +53,30 @@ class LoadTestChartsStore {
         );
     }
 
-    setReferenceLinesVisibility = (areReferenceLinesVisible) => {
+    setAllReferenceLinesVisibility = (areReferenceLinesVisible) => {
         this.setState(this.state.set("areReferenceLinesVisible", areReferenceLinesVisible));
+    }
+
+    setLineVisibility = ({ chartName, lineName }) => {
+        const chartsLinesData = this.state.get("chartsLinesData");
+        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`)
+        chartsLinesDataItem['isLineVisible'] = !chartsLinesDataItem['isLineVisible'];
+        this.setState(this.state.set("chartsLinesData", chartsLinesData));
+    }
+
+    setReferenceLinesVisibility = ({ chartName, lineName }) => {
+        const chartsLinesData = this.state.get("chartsLinesData");
+        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`)
+        chartsLinesDataItem['areReferenceLinesVisible'] = !chartsLinesDataItem['areReferenceLinesVisible'];
+        this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
 
     setChartsSync(syncCharts) {
         this.setState(this.state.set("syncCharts", syncCharts));
+    }
+
+    static getChartsLinesData() {
+        return this.state.get("chartsLinesData");
     }
 
     static getBrushStartIndex() {
