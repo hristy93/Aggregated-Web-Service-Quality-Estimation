@@ -9,13 +9,13 @@ import {
 
 class FileUpload extends Component {
     static propTypes = {
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        fileType: PropTypes.string.isRequired,
-        onChange: PropTypes.func.isRequired,
         buttonText: PropTypes.string.isRequired,
+        fileType: PropTypes.string.isRequired,
         helpText: PropTypes.string,
-        style: PropTypes.object
+        id: PropTypes.string.isRequired,
+        onChange: PropTypes.func.isRequired,
+        style: PropTypes.shape({}),
+        title: PropTypes.string.isRequired
     };
 
     static defaultProps = {

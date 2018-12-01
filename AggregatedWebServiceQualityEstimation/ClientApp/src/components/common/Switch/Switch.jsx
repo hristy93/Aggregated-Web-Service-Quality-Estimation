@@ -6,9 +6,9 @@ import '../../../styles/components/common/Switch/Switch.css';
 class Switch extends Component {
     static propTypes = {
         id: PropTypes.string.isRequired,
-        text: PropTypes.string.isRequired,
         isChecked: PropTypes.bool.isRequired,
-        onChange: PropTypes.func.isRequired
+        onChange: PropTypes.func.isRequired,
+        text: PropTypes.string.isRequired
     }
 
     render() {

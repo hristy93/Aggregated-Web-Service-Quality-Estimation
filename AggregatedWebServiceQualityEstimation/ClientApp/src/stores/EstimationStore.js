@@ -11,7 +11,7 @@ class EstimationStore {
 
         this.state = Immutable.Map({
             statisticalData: []
-        })
+        });
     }
 
     getStatisticalEstimatorResult(statisticalData) {

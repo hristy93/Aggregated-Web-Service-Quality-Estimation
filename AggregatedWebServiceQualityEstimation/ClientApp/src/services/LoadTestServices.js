@@ -5,7 +5,7 @@ class LoadTestServices {
         return axios.post("https://localhost:44342/api/test/run", JSON.stringify(data), {
             headers: {
                 "Content-type": "application/json",
-                "Accept": "application/json",
+                "Accept": "application/json"
             }
         });
     }

@@ -42,7 +42,7 @@ class LoadTestChartsStore {
             brushEndIndex: null,
             areReferenceLinesVisible: false,
             syncCharts: false
-        })
+        });
     }
 
     setBrushPosition = ({ brushStartIndex, brushEndIndex }) => {
@@ -59,14 +59,14 @@ class LoadTestChartsStore {
 
     setLineVisibility = ({ chartName, lineName }) => {
         const chartsLinesData = this.state.get("chartsLinesData");
-        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`)
+        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
         chartsLinesDataItem['isLineVisible'] = !chartsLinesDataItem['isLineVisible'];
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
 
     setReferenceLinesVisibility = ({ chartName, lineName }) => {
         const chartsLinesData = this.state.get("chartsLinesData");
-        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`)
+        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
         chartsLinesDataItem['areReferenceLinesVisible'] = !chartsLinesDataItem['areReferenceLinesVisible'];
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }

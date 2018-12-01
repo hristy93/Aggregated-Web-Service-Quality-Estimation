@@ -5,10 +5,10 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 class Select extends Component {
     static propTypes = {
         id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        items: PropTypes.array.isRequired,
+        items: PropTypes.instanceOf(Array).isRequired,
         onChange: PropTypes.func.isRequired,
-        style: PropTypes.shape({})
+        style: PropTypes.shape({}),
+        title: PropTypes.string.isRequired
     };
 
     static defaultProps = {

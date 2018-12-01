@@ -15,37 +15,37 @@ import {
 
 class LineChart extends Component {
     static propTypes = {
-        data: PropTypes.array,
+        axisXKey: PropTypes.string.isRequired,
+        axisXPadding: PropTypes.shape({
+            right: PropTypes.number,
+            left: PropTypes.number
+        }),
+        axisYUnit: PropTypes.string,
+        brushEndIndex: PropTypes.number,
+        brushOnChange: PropTypes.func.isRequired,       
+        brushStartIndex: PropTypes.number,
+        data: PropTypes.instanceOf(Array),
+        height: PropTypes.number,
         lines: PropTypes.arrayOf(PropTypes.shape({
             axisXKey: PropTypes.string,
             color: PropTypes.string,
             isLineVisible: PropTypes.bool,
             isReferenceLineVisible: PropTypes.bool
         })).isRequired,
-        axisXKey: PropTypes.string.isRequired,
-        syncChart: PropTypes.bool.isRequired,
-        brushOnChange: PropTypes.func.isRequired,
-        width: PropTypes.number,
-        height: PropTypes.number,
-        axisYUnit: PropTypes.string,
         margin: PropTypes.shape({
             top: PropTypes.number,
             right: PropTypes.number,
             left: PropTypes.number,
             bottom: PropTypes.number
         }),
-        axisXPadding: PropTypes.shape({
-            right: PropTypes.number,
-            left: PropTypes.number,
-        }),
-        toggleLineVisibility: PropTypes.func,
-        //legendOnClick: PropTypes.func,
-        brushStartIndex: PropTypes.number,
-        brushEndIndex: PropTypes.number,
-        showReferenceLines: PropTypes.bool,
         referenceLinesData: PropTypes.arrayOf(PropTypes.shape({
             mean: PropTypes.number
-        }))
+        })),
+        showReferenceLines: PropTypes.bool,
+        syncChart: PropTypes.bool.isRequired,
+        toggleLineVisibility: PropTypes.func,
+        width: PropTypes.number
+        //legendOnClick: PropTypes.func,
     };
 
     static defaultProps = {
@@ -77,7 +77,7 @@ class LineChart extends Component {
                         stroke={lines[outerIndex].color}
                         strokeDasharray="3 3"
                     />
-                )
+                );
             });
             return data;
         });

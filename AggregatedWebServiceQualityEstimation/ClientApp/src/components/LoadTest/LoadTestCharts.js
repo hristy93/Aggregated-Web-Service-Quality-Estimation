@@ -27,7 +27,7 @@ class LoadTestCharts extends Component {
         const args = {
             brushStartIndex: change.startIndex,
             brushEndIndex: change.endIndex
-        }
+        };
 
         LoadTestChartsActions.setBrushPosition(args);
     }
@@ -110,7 +110,7 @@ class LoadTestCharts extends Component {
                 return {
                     mean: item.mean,
                     lowerStandardDeviation: item.mean - standardDeviation,
-                    upperStandardDeviation: item.mean + standardDeviation,
+                    upperStandardDeviation: item.mean + standardDeviation
                 };
             });
         }
@@ -156,7 +156,7 @@ class LoadTestCharts extends Component {
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
-            />
+                />
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={data}

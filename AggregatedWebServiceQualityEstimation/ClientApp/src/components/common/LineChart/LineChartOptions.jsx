@@ -11,7 +11,7 @@ class LineChartOptions extends Component {
             isLineVisible: PropTypes.bool,
             isReferenceLineVisible: PropTypes.bool
         })).isRequired,
-        toggleLineVisibility: PropTypes.func.isRequired,
+        toggleLineVisibility: PropTypes.func.isRequired
     };
 
     render() {

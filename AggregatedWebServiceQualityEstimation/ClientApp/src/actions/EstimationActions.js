@@ -18,7 +18,7 @@ class EstimationActions {
                     const alertMessage = "There is a problem with the cluster estimator's result!";
                     displayFailureMessage(alertMessage, error);
                 });
-        }
+        };
     }
 
     getStatisticalEstimatorResult = () => {
@@ -36,7 +36,7 @@ class EstimationActions {
                     const alertMessage = "There is a problem with the statistical estimator's result!";
                     displayFailureMessage(alertMessage, error);
                 });
-        }
+        };
     }
 
     getFuzzyLogicEstimatorResult = () => {
@@ -54,7 +54,7 @@ class EstimationActions {
                     const alertMessage = "There is a problem with the fuzzy logic estimator's result!";
                     displayFailureMessage(alertMessage, error);
                 });
-        }
+        };
     }
 }
 

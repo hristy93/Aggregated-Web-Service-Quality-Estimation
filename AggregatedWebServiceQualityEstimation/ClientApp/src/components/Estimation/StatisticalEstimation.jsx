@@ -46,7 +46,7 @@ class StatisticalEstimation extends Component {
                 {
                         statisticalData.map((item) => {
                         return (
-                            <tr key={item}>
+                            <tr key={item.metricName}>
                                 <td sm={2}>
                                     <b>{startCase(item.metricName)}</b>
                                 </td>

@@ -23,7 +23,7 @@ class LoadTestActions {
                     const alertMessage = "There is a problem with the load test!";
                     displayFailureMessage(alertMessage, error);
                 });
-        }
+        };
     }
 
     readLoadTestData = () => {
@@ -49,7 +49,7 @@ class LoadTestActions {
                     const alertMessage = "There is a problem with the load test data!";
                     displayFailureMessage(alertMessage, error);
                 });
-        }
+        };
     }
 
     writeLoadTestData = () => {
@@ -81,7 +81,7 @@ class LoadTestActions {
                     const alertMessage = "There is a problem with the upload of the load test file!";
                     displayFailureMessage(alertMessage, error);
                 });
-        }
+        };
     }
 }
 

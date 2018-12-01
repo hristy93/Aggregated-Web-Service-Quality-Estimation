@@ -15,7 +15,7 @@ class LoadTestStore {
             isUrlValid: false,
             requestType: "GET",
             requestPostData: null
-        })
+        });
     }
 
     readLoadTestData = (loadTestData) => {

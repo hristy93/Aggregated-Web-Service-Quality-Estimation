@@ -12,10 +12,6 @@ import isNil from 'lodash/isNil';
 const URLRegexExpression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
 
 class LoadTestForm extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     static getStores() {
         return [LoadTestStore];
     }
@@ -61,9 +57,9 @@ class LoadTestForm extends Component {
         const { files } = event.target;
 
         if (isNil(files)) {
-            displayFailureMessage("No files selected!")
+            displayFailureMessage("No files selected!");
         } else if (files.length > 1) {
-            displayFailureMessage("More than 1 file selected!")
+            displayFailureMessage("More than 1 file selected!");
         } else {
             LoadTestActions.uploadLoadTestData(files);
         }
@@ -93,7 +89,7 @@ class LoadTestForm extends Component {
                     onChange={this.handleRequestTypeChange}
                 />
                 {
-                    requestType == "POST" && 
+                    requestType === "POST" && 
                     <Textarea
                         title="Request Body:"
                         onChange={this.handleRequestPostDataChange}
