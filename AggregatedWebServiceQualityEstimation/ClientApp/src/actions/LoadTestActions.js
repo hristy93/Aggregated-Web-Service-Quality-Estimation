@@ -5,7 +5,7 @@ import { displayFailureMessage, displaySuccessMessage } from '../utils/displayIn
 
 class LoadTestActions {
     constructor() {
-        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData");
+        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration");
     }
 
     runLoadTest = (data) => {

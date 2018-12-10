@@ -11,6 +11,7 @@ class LoadTestStore {
 
         this.state = Immutable.Map({
             loadTestData: [],
+            loadTestDuration: "00:00:30",
             url: "https://jsonplaceholder.typicode.com/todos/1",
             isUrlValid: false,
             requestType: "GET",
@@ -51,6 +52,10 @@ class LoadTestStore {
         this.setState(this.state.set("requestPostData", requestPostData));
     }
 
+    setLoadTestDuration(loadTestDuration) {
+        this.setState(this.state.set("loadTestDuration", loadTestDuration));
+    }
+
     static getLoadTestData() {
         return this.state.get("loadTestData");
     }
@@ -69,6 +74,10 @@ class LoadTestStore {
 
     static getRequestPostData() {
         return this.state.get("requestPostData");
+    }
+
+    static getLoadTestDuration() {
+        return this.state.get("loadTestDuration");
     }
 }
 

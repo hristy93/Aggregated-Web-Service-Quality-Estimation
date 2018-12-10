@@ -18,6 +18,7 @@ class LoadTest extends Component {
     static getPropsFromStores() {
         return ({
             loadTestData: LoadTestStore.getLoadTestData(),
+            loadTestDuration: LoadTestStore.getLoadTestDuration(),
             url: LoadTestStore.getUrl(),
             isUrlValid: LoadTestStore.getUrlValidity(),
             requestType: LoadTestStore.getRequestType(),
@@ -26,13 +27,23 @@ class LoadTest extends Component {
     }
 
     handleRunLoadTestButtonClick = () => {
-        const { url, requestPostData, requestType } = this.props;
+        const {
+            url,
+            requestPostData,
+            loadTestDuration,
+            requestType
+        } = this.props;
+
         let data = {};
         data["url"] = url;
 
         if (requestType === "POST" && !isNil(requestPostData)) {
             const parsedRequestPostData = JSON.parse(requestPostData);
             data["body"] = parsedRequestPostData;
+        }
+
+        if (!isNil(loadTestDuration)) {
+            data["duration"] = loadTestDuration;
         }
 
         if (!isNil(data)) {

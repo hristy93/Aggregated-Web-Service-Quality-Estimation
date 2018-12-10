@@ -20,7 +20,8 @@ class LoadTestForm extends Component {
         return ({
             url: LoadTestStore.getUrl(),
             isUrlValid: LoadTestStore.getUrlValidity(),
-            requestType: LoadTestStore.getRequestType()
+            requestType: LoadTestStore.getRequestType(),
+            loadTestDuration: LoadTestStore.getLoadTestDuration()
         });
     }
 
@@ -65,12 +66,24 @@ class LoadTestForm extends Component {
         }
     }
 
+    handleLoadTestDurationChange = (event) => {
+        const inputValue = event.target.value;
+
+        LoadTestActions.setLoadTestDuration(inputValue);
+    }
+
     render() {
-        const { url, isUrlValid, requestType } = this.props;
+        const {
+            url,
+            isUrlValid,
+            requestType,
+            loadTestDuration
+        } = this.props;
+
         return (
             <form>
                 <FormGroup
-                    controlId="url-form"
+                    controlId="url-input"
                     validationState={isUrlValid ? "success" : "error"}
                 >
                     <ControlLabel>Web Service URL</ControlLabel>
@@ -95,6 +108,18 @@ class LoadTestForm extends Component {
                         onChange={this.handleRequestPostDataChange}
                     />
                 }
+                <FormGroup
+                    controlId="load-test-duration-input"
+                >
+                    <ControlLabel>Test Duration: </ControlLabel>
+                    <FormControl
+                        type="text"
+                        value={loadTestDuration}
+                        placeholder={loadTestDuration !== "" ? "" : "Enter test duration"}
+                        onChange={this.handleLoadTestDurationChange}
+                    />
+                    <FormControl.Feedback />
+                </FormGroup>
                 <FileUpload
                     id="load-test-metrics"
                     title="Upload .CSV file with metrics:"
