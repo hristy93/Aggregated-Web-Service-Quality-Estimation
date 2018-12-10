@@ -56,8 +56,10 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 {
                     connection.Open();
 
-                    SqlCommand command = new SqlCommand(_combinedQuery, connection);
-                    command.CommandTimeout = 200;
+                    SqlCommand command = new SqlCommand(_combinedQuery, connection)
+                    {
+                        CommandTimeout = 200
+                    };
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {

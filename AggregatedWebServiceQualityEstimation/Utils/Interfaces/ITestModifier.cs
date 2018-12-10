@@ -3,6 +3,8 @@
     public interface ITestModifier
     {
         void EditUrl(string url, bool isPost);
-        void AddRequestBodyData(string data);
+        void EditRequestBodyData(string data);
+
+        bool EditDuration(string duration);
     }
 }

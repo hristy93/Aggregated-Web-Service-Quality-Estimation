@@ -49,12 +49,24 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 var isPostRequest = requestPostData != null;
                 if (isPostRequest)
                 {
-                    _loadTestModifier.AddRequestBodyData(requestPostData.ToString());
+                    _loadTestModifier.EditRequestBodyData(requestPostData.ToString());
                 }
 
                 _loadTestModifier.EditUrl(url, isPostRequest);
 
+                var duration = data.Duration;
+                if (duration != null)
+                {
+                    var isDurationValid = _loadTestModifier.EditDuration(duration);
+                    
+                    if (!isDurationValid)
+                    {
+                        return BadRequest("The duration of the test is invalid!");
+                    }
+                }
+
                 _loadTestRunner.InitiateTest();
+
                 return Ok("The load test finished sucessfully!");
             }
             catch (Exception ex)
@@ -83,13 +95,13 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             try
             {
                 var result = _loadTestDataManager.ReadTestData();
-                var clusterEstimator = new ClusterEstimator(_configuration);
-                clusterEstimator.FindClusterCenter();
-                clusterEstimator.FindClusterDensity();
-                var statisticalEstimator = new StatisticalEstimator(_configuration);
-                statisticalEstimator.GetFiveNumberSummaries();
-                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
-                fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
+                //var clusterEstimator = new ClusterEstimator(_configuration);
+                //clusterEstimator.FindClusterCenter();
+                //clusterEstimator.FindClusterDensity();
+                //var statisticalEstimator = new StatisticalEstimator(_configuration);
+                //statisticalEstimator.GetFiveNumberSummaries();
+                //var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
+                //fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
                 return Ok(result);
             }
             catch (Exception ex)

@@ -9,5 +9,8 @@ namespace AggregatedWebServiceQualityEstimation.Models
 
         [JsonProperty(PropertyName = "body")]
         public object Value { get; set; }
+
+        [JsonProperty(PropertyName = "duration")]
+        public string Duration { get; set; }
     }
 }
