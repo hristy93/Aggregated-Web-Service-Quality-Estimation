@@ -21,7 +21,8 @@ class LoadTestForm extends Component {
             url: LoadTestStore.getUrl(),
             isUrlValid: LoadTestStore.getUrlValidity(),
             requestType: LoadTestStore.getRequestType(),
-            loadTestDuration: LoadTestStore.getLoadTestDuration()
+                loadTestDuration: LoadTestStore.getLoadTestDuration(),
+            testState: LoadTestStore.getTestState()
         });
     }
 
@@ -77,8 +78,12 @@ class LoadTestForm extends Component {
             url,
             isUrlValid,
             requestType,
-            loadTestDuration
+            loadTestDuration,
+            testState
         } = this.props;
+
+        const isTestRunning = testState.started && !testState.finished;
+        const areOperationsDenied = testState.writingTestData || isTestRunning;
 
         return (
             <form>
@@ -91,6 +96,7 @@ class LoadTestForm extends Component {
                         type="url"
                         value={url}
                         placeholder={url !== "" ? "" : "Enter web service endpoint"}
+                        disabled={areOperationsDenied}
                         onChange={this.handleUrlChange}
                     />
                     <FormControl.Feedback />
@@ -99,23 +105,26 @@ class LoadTestForm extends Component {
                     id="request-type"
                     title="Request Type:"
                     items={["GET", "POST"]}
+                    disabled={areOperationsDenied}
                     onChange={this.handleRequestTypeChange}
                 />
                 {
                     requestType === "POST" && 
                     <Textarea
                         title="Request Body:"
+                        disabled={areOperationsDenied}
                         onChange={this.handleRequestPostDataChange}
                     />
                 }
                 <FormGroup
-                    controlId="load-test-duration-input"
+                    controlId="load-test-duration-input"                  
                 >
                     <ControlLabel>Test Duration: </ControlLabel>
                     <FormControl
                         type="text"
                         value={loadTestDuration}
                         placeholder={loadTestDuration !== "" ? "" : "Enter test duration"}
+                        disabled={areOperationsDenied}
                         onChange={this.handleLoadTestDurationChange}
                     />
                     <FormControl.Feedback />
@@ -125,6 +134,7 @@ class LoadTestForm extends Component {
                     title="Upload .CSV file with metrics:"
                     buttonText="Add file"
                     fileType=".csv"
+                    disabled={areOperationsDenied}
                     onChange={this.handleFileUploadChange}
                 />
             </form>

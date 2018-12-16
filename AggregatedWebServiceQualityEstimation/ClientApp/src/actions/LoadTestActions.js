@@ -3,9 +3,12 @@ import LoadTestServices from '../services/LoadTestServices';
 import Papa from 'papaparse';
 import { displayFailureMessage, displaySuccessMessage } from '../utils/displayInformation';
 
+const tempDate = '1970/01/01 ';
+
 class LoadTestActions {
     constructor() {
-        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration");
+        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration",
+            "setTestState");
     }
 
     runLoadTest = (data) => {
@@ -16,12 +19,13 @@ class LoadTestActions {
                     const alertMessage = response.data;
                     const logMessage = response;
                     displaySuccessMessage(alertMessage, logMessage);
-                    this.writeLoadTestData();
+                    dispatch({ isTestSuccessful: true });
                 })
                 .catch((error) => {
                     // handle error
                     const alertMessage = "There is a problem with the load test!";
                     displayFailureMessage(alertMessage, error);
+                    dispatch({ isTestSuccessful: false });
                 });
         };
     }
@@ -31,16 +35,16 @@ class LoadTestActions {
             LoadTestServices.readLoadTestData()
                 .then((response) => {
                     // handle success
-                    console.log(response);
                     const result = response.data;
-                    let parsedResult = Papa.parse(result, {
-                        header: true
-                    });
+                    let parsedResult = Papa.parse(
+                        result, {
+                            header: true
+                        }
+                    );
                     let parsedResultData = parsedResult.data;
                     parsedResultData.sort(function (a, b) {
-                        return new Date('1970/01/01 ' + a.IntervalStartTime) - new Date('1970/01/01 ' + b.IntervalStartTime);
+                        return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);
                     });
-                    console.log(parsedResultData);
                     parsedResultData = parsedResultData.filter(item => item.IntervalStartTime !== "");
                     dispatch(parsedResultData);
                 })
@@ -53,18 +57,22 @@ class LoadTestActions {
     }
 
     writeLoadTestData = () => {
-        LoadTestServices.writeLoadTestData()
-            .then((response) => {
-                // handle success
-                const alertMessage = response.data;
-                const logMessage = response;
-                displaySuccessMessage(alertMessage, logMessage);
-            })
-            .catch((error) => {
-                // handle error
-                const alertMessage = "There is a problem with the load test data!";
-                displayFailureMessage(alertMessage, error);
-            });
+        return (dispatch) => {
+            LoadTestServices.writeLoadTestData()
+                .then((response) => {
+                    // handle success
+                    const alertMessage = response.data;
+                    const logMessage = response;
+                    displaySuccessMessage(alertMessage, logMessage);
+                    dispatch({ isLoadTestDataWritten: true });
+                })
+                .catch((error) => {
+                    // handle error
+                    const alertMessage = "There is a problem with the load test data!";
+                    displayFailureMessage(alertMessage, error);
+                    dispatch({ isLoadTestDataWritten: true });
+                });
+        };
     }
 
     uploadLoadTestData = (files) => {
@@ -75,11 +83,13 @@ class LoadTestActions {
                     const alertMessage = response.data;
                     const logMessage = response;
                     displaySuccessMessage(alertMessage, logMessage);
+                    dispatch({ isFileUploaded: true });
                 })
                 .catch((error) => {
                     // handle error
                     const alertMessage = "There is a problem with the upload of the load test file!";
                     displayFailureMessage(alertMessage, error);
+                    dispatch({ isFileUploaded: false });
                 });
         };
     }

@@ -4,6 +4,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class Textarea extends Component {
     static propTypes = {
+        disabled: PropTypes.bool,
         id: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,
         style: PropTypes.shape({}),
@@ -11,7 +12,8 @@ class Textarea extends Component {
     };
 
     static defaultProps = {
-        style: {}
+        style: {},
+        disabled: false
     };
 
     render() {
@@ -19,7 +21,8 @@ class Textarea extends Component {
             id,
             title,
             onChange,
-            style
+            style,
+            disabled
         } = this.props;
 
         return (
@@ -29,6 +32,7 @@ class Textarea extends Component {
                     componentClass="textarea"
                     placeholder={title}
                     style={style}
+                    disabled={disabled}
                     onChange={onChange}
                 />
             </FormGroup>

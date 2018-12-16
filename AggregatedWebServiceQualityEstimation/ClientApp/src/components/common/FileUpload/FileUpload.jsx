@@ -10,6 +10,7 @@ import {
 class FileUpload extends Component {
     static propTypes = {
         buttonText: PropTypes.string.isRequired,
+        disabled: PropTypes.bool,
         fileType: PropTypes.string.isRequired,
         helpText: PropTypes.string,
         id: PropTypes.string.isRequired,
@@ -20,7 +21,8 @@ class FileUpload extends Component {
 
     static defaultProps = {
         helpText: null,
-        style: {}
+        style: {},
+        disabled: false
     };
 
     render() {
@@ -31,14 +33,17 @@ class FileUpload extends Component {
             helpText,
             buttonText,
             onChange,
-            style
+            style,
+            disabled
         } = this.props;
+
+        const spanClassName = !disabled ? "btn btn-default" : "btn btn-default disabled";
 
         return (
             <FormGroup style={style}>
                 <ControlLabel>{title}</ControlLabel><br />
                 <ControlLabel htmlFor={`file-upload-${id}`} style={{ cursor: "pointer" }}>
-                    <span className="btn btn-default"> {buttonText} </span>
+                    <span className={spanClassName}> {buttonText} </span>
                     <FormControl
                         id={`file-upload-${id}`}
                         type="file"

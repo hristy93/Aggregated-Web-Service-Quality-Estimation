@@ -15,8 +15,23 @@ class LoadTestStore {
             url: "https://jsonplaceholder.typicode.com/todos/1",
             isUrlValid: false,
             requestType: "GET",
+            testState: {
+                isStarted: false,
+                isFinished: false,
+                writingTestData: false
+            },
             requestPostData: null
         });
+    }
+
+    runLoadTest = (testResult) => {
+        LoadTestActions.setTestState.defer({
+            started: false,
+            finished: true,
+            writingTestData: true
+        });
+
+        LoadTestActions.writeLoadTestData.defer();
     }
 
     readLoadTestData = (loadTestData) => {
@@ -30,8 +45,23 @@ class LoadTestStore {
        
     }
 
-    setUrl = (url) => {
-        if (!isNil(url)) {
+    writeLoadTestData = (result) => {
+        if (!isNil(result) && result.isLoadTestDataWritten) {
+            LoadTestActions.readLoadTestData.defer();
+        }
+
+        LoadTestActions.setTestState.defer({
+            writingTestData: false
+        });
+    }
+
+    uploadLoadTestData = (result) => {
+        if (!isNil(result) && result.isFileUploaded) {
+            LoadTestActions.readLoadTestData.defer();
+        }
+    }
+
+    setUrl = (url) => {        if (!isNil(url)) {
             this.setState(this.state.set("url", url));
         } else {
             const alertMessage = "There is a problem with the url!";
@@ -56,6 +86,23 @@ class LoadTestStore {
         this.setState(this.state.set("loadTestDuration", loadTestDuration));
     }
 
+    setTestState(newTestState) {
+        if (!isNil(newTestState)) {
+            const localTestState = this.state.get("testState");
+            if (!isNil(newTestState.started)) {
+                localTestState["started"] = newTestState.started;
+            }
+            if (!isNil(newTestState.finished)) {
+                localTestState["finished"] = newTestState.finished;
+            }
+            if (!isNil(newTestState.writingTestData)) {
+                localTestState["writingTestData"] = newTestState.writingTestData;
+            }
+
+            this.setState(this.state.set("testState", localTestState));
+        }
+    }
+
     static getLoadTestData() {
         return this.state.get("loadTestData");
     }
@@ -78,6 +125,10 @@ class LoadTestStore {
 
     static getLoadTestDuration() {
         return this.state.get("loadTestDuration");
+    }
+
+    static getTestState() {
+        return this.state.get("testState");
     }
 }
 

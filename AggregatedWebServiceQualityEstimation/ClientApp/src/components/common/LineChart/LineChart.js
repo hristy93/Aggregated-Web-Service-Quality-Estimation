@@ -107,43 +107,46 @@ class LineChart extends Component {
 
         return (
             <React.Fragment>
-                <LineChartRecharts
-                    width={width}
-                    height={height}
-                    data={data}
-                    margin={margin}
-                    syncId={syncChart ? "sync" : null}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey={axisXKey} padding={axisXPadding} />
-                    <YAxis unit={axisYUnit} />
-                    <Tooltip />
-                    <Legend />
-                    {
-                        showReferenceLines && this.referenceLinesRenderer(referenceLinesData, lines)
-                    }
-                    {
-                        lines.map((lineInfo) => {
-                            return (
-                                lineInfo.isLineVisible &&
-                                <Line
-                                    key={lineInfo.axisYKey}
-                                    type="monotone"
-                                    dataKey={lineInfo.axisYKey}
-                                    stroke={lineInfo.color}
-                                />
-                            );
-                        })
-                    }
-                    <Brush
-                        dataKey={axisXKey}
-                        startIndex={brushStartIndex}
-                        endIndex={brushEndIndex}
-                        onChange={brushOnChange}
-                    />
-                </LineChartRecharts>
                 {
-                    lines.length > 1 && data.length > 0 &&
+                    data.length > 0 &&
+                    <LineChartRecharts
+                        width={width}
+                        height={height}
+                        data={data}
+                        margin={margin}
+                        syncId={syncChart ? "sync" : null}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey={axisXKey} padding={axisXPadding} />
+                        <YAxis unit={axisYUnit} />
+                        <Tooltip />
+                        <Legend />
+                        {
+                            showReferenceLines && this.referenceLinesRenderer(referenceLinesData, lines)
+                        }
+                        {
+                            lines.map((lineInfo) => {
+                                return (
+                                    lineInfo.isLineVisible &&
+                                    <Line
+                                        key={lineInfo.axisYKey}
+                                        type="monotone"
+                                        dataKey={lineInfo.axisYKey}
+                                        stroke={lineInfo.color}
+                                    />
+                                );
+                            })
+                        }
+                        <Brush
+                            dataKey={axisXKey}
+                            startIndex={brushStartIndex}
+                            endIndex={brushEndIndex}
+                            onChange={brushOnChange}
+                        />
+                    </LineChartRecharts>
+                }
+                {
+                    data.length > 0 && lines.length > 1 &&
                     <LineChartOptions
                         lines={lines}
                         toggleLineVisibility={toggleLineVisibility}

@@ -94,7 +94,7 @@ class LoadTestCharts extends Component {
 
     render() {
         const {
-            data,
+            chartsData,
             chartsLinesData,
             brushStartIndex,
             brushEndIndex,
@@ -118,21 +118,31 @@ class LoadTestCharts extends Component {
         return (
             <React.Fragment>
                 <h4><b>Metrics Charts</b></h4>
-                <Switch
-                    id="switch-sync-charts"
-                    text="Synchronize charts:"
-                    isChecked={syncCharts}
-                    onChange={this.handleSwitchOnChange}
-                />
-                <Switch
-                    id="switch-show-reference-lines"
-                    text="Show reference lines:"
-                    isChecked={areReferenceLinesVisible}
-                    onChange={this.handleSwitchOnChange}
-                />
+                {
+                    chartsData.length > 0 ? (
+                        <div id="charts-switches">
+                            <Switch
+                                id="switch-sync-charts"
+                                text="Synchronize charts:"
+                                isChecked={syncCharts}
+                                onChange={this.handleSwitchOnChange}
+                            />
+                            <Switch
+                                id="switch-show-reference-lines"
+                                text="Show reference lines:"
+                                isChecked={areReferenceLinesVisible}
+                                onChange={this.handleSwitchOnChange}
+                            />
+                        </div>
+                    ) : (
+                            <div id="no-charts-data">
+                                <h3> No data </h3>
+                            </div>
+                    )
+                }
                 <LineChart
                     axisXKey="IntervalStartTime"
-                    data={data}
+                    data={chartsData}
                     axisYUnit="s"
                     lines={chartsLinesData['responseTime']}
                     brushOnChange={this.handleBrushOnChange}
@@ -146,7 +156,7 @@ class LoadTestCharts extends Component {
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
-                    data={data}
+                    data={chartsData}
                     lines={chartsLinesData['requests']}
                     brushOnChange={this.handleBrushOnChange}
                     brushStartIndex={brushStartIndex}
@@ -159,7 +169,7 @@ class LoadTestCharts extends Component {
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
-                    data={data}
+                    data={chartsData}
                     axisYUnit="KBps"
                     lines={chartsLinesData['throughput']}
                     brushOnChange={this.handleBrushOnChange}

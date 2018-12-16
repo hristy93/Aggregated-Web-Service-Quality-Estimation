@@ -22,7 +22,8 @@ class LoadTest extends Component {
             url: LoadTestStore.getUrl(),
             isUrlValid: LoadTestStore.getUrlValidity(),
             requestType: LoadTestStore.getRequestType(),
-            requestPostData: LoadTestStore.getRequestPostData()
+            requestPostData: LoadTestStore.getRequestPostData(),
+            testState: LoadTestStore.getTestState()
         });
     }
 
@@ -48,6 +49,11 @@ class LoadTest extends Component {
 
         if (!isNil(data)) {
             LoadTestActions.runLoadTest(data);
+
+            LoadTestActions.setTestState({
+                started: true,
+                finished: false
+            });
         } else {
             displayFailureMessage("There is a problem with the load test!", "The data is invalid!");
         }
@@ -61,8 +67,24 @@ class LoadTest extends Component {
         LoadTestActions.readLoadTestData();
     }
 
+    getRunLoadTestButtonText = (testState) => {
+        if (!isNil(testState)) {
+            if (!testState.started && !testState.writingTestData) {
+                return "Run Load Test";
+            } else if (testState.started && !testState.finished) {
+                return "Load Test Running";
+            } else if (testState.writingTestData) {
+                return "Writing test data ..."
+            }
+        }
+    }
+
     render() {
-        const { loadTestData, isUrlValid } = this.props;
+        const { loadTestData, isUrlValid, testState } = this.props;
+
+        const isTestRunning = testState.started && !testState.finished;
+        const areOperationsDenied = testState.writingTestData || isTestRunning;
+
         return (
             <Grid fluid>
                 <Row>
@@ -76,10 +98,9 @@ class LoadTest extends Component {
                             <Button
                                 id="run-load-test-button"
                                 onClick={this.handleRunLoadTestButtonClick}
-                                disabled={!isUrlValid}
-                                value="Run Load Test"
+                                disabled={!isUrlValid || areOperationsDenied}
                             >
-                                Run Load Test
+                                {this.getRunLoadTestButtonText(testState)}
                             </Button>
 
                             <Button
@@ -95,11 +116,12 @@ class LoadTest extends Component {
                                 Read Load Test Data
                             </Button>
                         </ButtonToolbar>
-                        <LoadTestCharts data={loadTestData} />
+                        <LoadTestCharts chartsData={loadTestData} />
                     </Col>
                 </Row>
                 <Button
                     id="get-statistical-estimation-button"
+                    disabled={areOperationsDenied}
                     onClick={EstimationActions.getStatisticalEstimatorResult}
                 >
                     Get Statistical Data

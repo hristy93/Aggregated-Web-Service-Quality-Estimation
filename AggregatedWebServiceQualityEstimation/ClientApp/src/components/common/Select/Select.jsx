@@ -4,6 +4,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class Select extends Component {
     static propTypes = {
+        disabled: PropTypes.bool,
         id: PropTypes.string.isRequired,
         items: PropTypes.instanceOf(Array).isRequired,
         onChange: PropTypes.func.isRequired,
@@ -12,7 +13,8 @@ class Select extends Component {
     };
 
     static defaultProps = {
-        style: {}
+        style: {},
+        disabled: false
     };
 
     render() {
@@ -21,15 +23,20 @@ class Select extends Component {
             title,
             items,
             onChange,
-            style
+            style,
+            disabled
         } = this.props;
 
         return (
-            <FormGroup controlId={`select-${id}`} style={style}>
+            <FormGroup
+                controlId={`select-${id}`}
+                style={style}
+            >
                 <ControlLabel>{title}</ControlLabel>
                 <FormControl
                     componentClass="select"
                     placeholder={items[0]}
+                    disabled={disabled}
                     onChange={onChange}
                 >
                     {
