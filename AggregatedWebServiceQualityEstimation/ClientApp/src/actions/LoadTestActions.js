@@ -8,7 +8,7 @@ const tempDate = '1970/01/01 ';
 class LoadTestActions {
     constructor() {
         this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration",
-            "setTestState");
+            "setTestState", "setTimeLeft");
     }
 
     runLoadTest = (data) => {

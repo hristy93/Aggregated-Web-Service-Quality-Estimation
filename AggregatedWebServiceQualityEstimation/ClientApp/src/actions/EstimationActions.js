@@ -1,6 +1,6 @@
 ﻿import alt from '../alt';
 import EstimationServices from '../services/EstimationServices';
-import { displayFailureMessage, displaySuccessMessage } from '../utils/displayInformation';
+import { displayFailureMessage } from '../utils/displayInformation';
 
 class EstimationActions {
     getClusterEstimatorResult = () => {
@@ -8,9 +8,7 @@ class EstimationActions {
             EstimationServices.getClusterEstimatorResult()
                 .then((response) => {
                     // handle success
-                    console.log(response);
                     const result = response.data;
-
                     dispatch(result);
                 })
                 .catch((error) => {

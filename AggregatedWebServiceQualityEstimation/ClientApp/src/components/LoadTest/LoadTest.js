@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import LoadTestForm from './LoadTestForm';
-import { Col, Row, Grid, Button, ButtonToolbar } from 'react-bootstrap';
+import { Col, Row, Grid, Button, ButtonToolbar, Badge } from 'react-bootstrap';
 import LoadTestCharts from './LoadTestCharts';
 import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import connectToStores from 'alt-utils/lib/connectToStores';
@@ -8,7 +8,10 @@ import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestActions from '../../actions/LoadTestActions';
 import EstimationActions from '../../actions/EstimationActions';
 import isNil from 'lodash/isNil';
+import moment from 'moment';
 import { displayFailureMessage } from '../../utils/displayInformation';
+
+let testTimer;
 
 class LoadTest extends Component {
     static getStores() {
@@ -23,7 +26,8 @@ class LoadTest extends Component {
             isUrlValid: LoadTestStore.getUrlValidity(),
             requestType: LoadTestStore.getRequestType(),
             requestPostData: LoadTestStore.getRequestPostData(),
-            testState: LoadTestStore.getTestState()
+            testState: LoadTestStore.getTestState(),
+            timeLeft: LoadTestStore.getTimeLeft()
         });
     }
 
@@ -54,9 +58,36 @@ class LoadTest extends Component {
                 started: true,
                 finished: false
             });
+
+            this.setTestTimer(loadTestDuration);
         } else {
             displayFailureMessage("There is a problem with the load test!", "The data is invalid!");
         }
+    }
+
+    setTestTimer = (loadTestDuration) => {
+        const duration = moment.duration(loadTestDuration);
+        var justStarted = true;
+        var dateTimeAfterTest;
+        testTimer = setInterval(() => {
+            // Get datetime after the test is finished
+            if (justStarted) {
+                dateTimeAfterTest = moment(new Date()).add(duration).add(500, 'ms');
+                justStarted = false;
+            }
+
+            // Find the difference between now and the count down time
+            let diff = moment.duration(dateTimeAfterTest.diff(moment(new Date())));
+
+            // Set time left until the test is finished
+            const diffTime = `${diff.hours()}:${diff.minutes()}:${diff.seconds()}`;
+            LoadTestActions.setTimeLeft(diffTime);
+
+            // If the count down is finished, stop the timer
+            if (diff < 0) {
+                clearInterval(testTimer);
+            }
+        }, 1000);
     }
 
     handleWriteLoadTestDataClick = () => {
@@ -80,7 +111,12 @@ class LoadTest extends Component {
     }
 
     render() {
-        const { loadTestData, isUrlValid, testState } = this.props;
+        const {
+            loadTestData,
+            isUrlValid,
+            testState,
+            timeLeft
+        } = this.props;
 
         const isTestRunning = testState.started && !testState.finished;
         const areOperationsDenied = testState.writingTestData || isTestRunning;
@@ -94,7 +130,7 @@ class LoadTest extends Component {
                 </Row>
                 <Row>
                     <Col sm={10}>
-                        <ButtonToolbar>
+                        <ButtonToolbar style={{ display: 'flex', alignItems: 'center' }}>
                             <Button
                                 id="run-load-test-button"
                                 onClick={this.handleRunLoadTestButtonClick}
@@ -102,7 +138,14 @@ class LoadTest extends Component {
                             >
                                 {this.getRunLoadTestButtonText(testState)}
                             </Button>
-
+                            {
+                                isTestRunning && !isNil(timeLeft) && (
+                                    <div style={{marginLeft: '1rem'}}>
+                                        Time Left: <Badge>{timeLeft}</Badge>
+                                    </div>
+                                )
+                            }
+                            <br />
                             <Button
                                 id="write-load-test-data-button"
                                 onClick={this.handleWriteLoadTestDataClick}

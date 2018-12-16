@@ -67,7 +67,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
                 _loadTestRunner.InitiateTest();
 
-                return Ok("The load test finished sucessfully!");
+                return Ok("The load test finished successfully!");
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             try
             {
                 _loadTestDataManager.WriteTestData();
-                return Ok("The load test data was written sucessfully!");
+                return Ok("The load test data was written successfully!");
             }
             catch (Exception ex)
             {

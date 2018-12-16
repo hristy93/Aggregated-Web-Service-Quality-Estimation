@@ -20,7 +20,8 @@ class LoadTestStore {
                 isFinished: false,
                 writingTestData: false
             },
-            requestPostData: null
+            requestPostData: null,
+            timeLeft: null
         });
     }
 
@@ -78,15 +79,15 @@ class LoadTestStore {
         this.setState(this.state.set("requestType", requestType));
     }
 
-    setRequestPostData(requestPostData) {
+    setRequestPostData = (requestPostData) => {
         this.setState(this.state.set("requestPostData", requestPostData));
     }
 
-    setLoadTestDuration(loadTestDuration) {
+    setLoadTestDuration = (loadTestDuration) => {
         this.setState(this.state.set("loadTestDuration", loadTestDuration));
     }
 
-    setTestState(newTestState) {
+    setTestState = (newTestState) => {
         if (!isNil(newTestState)) {
             const localTestState = this.state.get("testState");
             if (!isNil(newTestState.started)) {
@@ -101,6 +102,10 @@ class LoadTestStore {
 
             this.setState(this.state.set("testState", localTestState));
         }
+    }
+
+    setTimeLeft = (timeLeft) => {
+        this.setState(this.state.set("timeLeft", timeLeft));
     }
 
     static getLoadTestData() {
@@ -129,6 +134,10 @@ class LoadTestStore {
 
     static getTestState() {
         return this.state.get("testState");
+    }
+
+    static getTimeLeft() {
+        return this.state.get("timeLeft");
     }
 }
 

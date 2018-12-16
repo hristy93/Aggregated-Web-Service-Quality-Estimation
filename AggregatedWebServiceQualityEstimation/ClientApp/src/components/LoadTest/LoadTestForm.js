@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Collapse} from 'react-bootstrap';
 import Select from '../common/Select/Select';
 import Textarea from '../common/Textarea/Textarea';
 import FileUpload from '../common/FileUpload/FileUpload';
@@ -110,11 +110,15 @@ class LoadTestForm extends Component {
                 />
                 {
                     requestType === "POST" && 
-                    <Textarea
-                        title="Request Body:"
-                        disabled={areOperationsDenied}
-                        onChange={this.handleRequestPostDataChange}
-                    />
+                    <Collapse in={requestType === "POST"}>
+                        <div>
+                            <Textarea
+                                title="Request Body:"
+                                disabled={areOperationsDenied}
+                                onChange={this.handleRequestPostDataChange}
+                            />
+                        </div>
+                    </Collapse>
                 }
                 <FormGroup
                     controlId="load-test-duration-input"                  

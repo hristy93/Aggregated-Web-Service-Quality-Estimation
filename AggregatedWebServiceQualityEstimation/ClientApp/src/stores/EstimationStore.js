@@ -2,8 +2,6 @@
 import EstimationActions from '../actions/EstimationActions';
 import immutable from 'alt-utils/lib/ImmutableUtil';
 import Immutable from 'immutable';
-import isNil from 'lodash/isNil';
-import { displayFailureMessage } from '../utils/displayInformation';
 
 class EstimationStore {
     constructor() {

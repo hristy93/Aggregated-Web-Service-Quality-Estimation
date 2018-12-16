@@ -6,6 +6,7 @@ import EstimationActions from '../../actions/EstimationActions';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
 import EstimationStore from '../../stores/EstimationStore';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import { displayFailureMessage } from '../../utils/displayInformation';
 
 class LoadTestCharts extends Component {
     static getStores() {
@@ -88,6 +89,11 @@ class LoadTestCharts extends Component {
                     chartName: "throughput",
                     lineName: "ReceivedKilobytesPerSecond"
                 });
+                break;
+            default:
+                const alertMessage = "There is a problem with the switch!";
+                const errorMessage = `There is no switch with id = ${id}`;
+                displayFailureMessage(alertMessage, errorMessage)
                 break;
         }
     }

@@ -27,6 +27,7 @@ class LineChartOptions extends Component {
                         return (
                             <Switch
                                 id={`switch-line-visibility-${lineInfo.axisYKey}`}
+                                key={`${lineInfo.axisYKey}`}
                                 text={`Toggle ${startCase(lineInfo.axisYKey)}:`}
                                 isChecked={lineInfo.isLineVisible}
                                 onChange={toggleLineVisibility}
