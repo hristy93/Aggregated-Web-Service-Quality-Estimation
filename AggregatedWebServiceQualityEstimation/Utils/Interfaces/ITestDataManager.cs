@@ -4,6 +4,6 @@
     {
         void WriteTestData();
         void WriteTestData(string testData);
-        string ReadTestData();
+        string ReadTestData(bool fromFile);
     }
 }

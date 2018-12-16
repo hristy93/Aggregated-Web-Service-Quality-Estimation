@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AggregatedWebServiceQualityEstimation.Estimators;
+﻿using AggregatedWebServiceQualityEstimation.Estimators;
 using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AggregatedWebServiceQualityEstimation.Controllers
 {
@@ -58,7 +56,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 if (duration != null)
                 {
                     var isDurationValid = _loadTestModifier.EditDuration(duration);
-                    
+
                     if (!isDurationValid)
                     {
                         return BadRequest("The duration of the test is invalid!");
@@ -90,18 +88,11 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpGet("data/read")]
-        public IActionResult ReadTestData()
+        public IActionResult ReadTestData(bool fromFile)
         {
             try
             {
-                var result = _loadTestDataManager.ReadTestData();
-                //var clusterEstimator = new ClusterEstimator(_configuration);
-                //clusterEstimator.FindClusterCenter();
-                //clusterEstimator.FindClusterDensity();
-                //var statisticalEstimator = new StatisticalEstimator(_configuration);
-                //statisticalEstimator.GetFiveNumberSummaries();
-                //var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
-                //fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
+                var result = _loadTestDataManager.ReadTestData(fromFile);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -116,7 +107,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         {
             try
             {
-                _loadTestDataManager.ReadTestData();
+                _loadTestDataManager.ReadTestData(fromFile: true);
                 var clusterEstimator = new ClusterEstimator(_configuration);
                 clusterEstimator.FindClusterCenter();
                 clusterEstimator.FindClusterDensity();
@@ -140,7 +131,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         {
             try
             {
-                _loadTestDataManager.ReadTestData();
+                _loadTestDataManager.ReadTestData(fromFile: true);
                 var statisticalEstimator = new StatisticalEstimator(_configuration);
                 statisticalEstimator.GetFiveNumberSummaries();
                 var fiveNumberSummaries = statisticalEstimator.statisticalData;
@@ -157,10 +148,10 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         {
             try
             {
-                _loadTestDataManager.ReadTestData();
+                _loadTestDataManager.ReadTestData(fromFile: true);
                 var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
                 fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
-                var aggregatedQualityMembershipFunction = 
+                var aggregatedQualityMembershipFunction =
                     fuzzyLogicEstimator.AggregatedQualityMembershipFunction;
                 return Ok(aggregatedQualityMembershipFunction);
             }

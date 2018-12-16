@@ -21,7 +21,7 @@ class LoadTestForm extends Component {
             url: LoadTestStore.getUrl(),
             isUrlValid: LoadTestStore.getUrlValidity(),
             requestType: LoadTestStore.getRequestType(),
-                loadTestDuration: LoadTestStore.getLoadTestDuration(),
+            loadTestDuration: LoadTestStore.getLoadTestDuration(),
             testState: LoadTestStore.getTestState()
         });
     }

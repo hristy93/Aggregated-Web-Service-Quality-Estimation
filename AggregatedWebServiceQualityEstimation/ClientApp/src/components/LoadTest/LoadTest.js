@@ -43,8 +43,15 @@ class LoadTest extends Component {
         data["url"] = url;
 
         if (requestType === "POST" && !isNil(requestPostData)) {
-            const parsedRequestPostData = JSON.parse(requestPostData);
-            data["body"] = parsedRequestPostData;
+            try {
+                const parsedRequestPostData = JSON.parse(requestPostData);
+                data["body"] = parsedRequestPostData;
+            } catch (error) {
+                const alertMessage = "There is a problem with the data in the body! Please check it and try again";
+                displayFailureMessage(alertMessage, error);
+                return;
+            }
+           
         }
 
         if (!isNil(loadTestDuration)) {
@@ -58,6 +65,8 @@ class LoadTest extends Component {
                 started: true,
                 finished: false
             });
+
+            LoadTestActions.clearLoadTestData();
 
             this.setTestTimer(loadTestDuration);
         } else {
@@ -77,11 +86,19 @@ class LoadTest extends Component {
             }
 
             // Find the difference between now and the count down time
-            let diff = moment.duration(dateTimeAfterTest.diff(moment(new Date())));
+            let diff = dateTimeAfterTest.diff(moment(new Date()));
+            let diffDuration = moment.duration(diff);
 
             // Set time left until the test is finished
-            const diffTime = `${diff.hours()}:${diff.minutes()}:${diff.seconds()}`;
+            const diffTime = `${diffDuration.hours()}:${diffDuration.minutes()}:${diffDuration.seconds()}`;
             LoadTestActions.setTimeLeft(diffTime);
+
+            if (diff % 3 === 0) {
+                // Load the test data periodically while the test is running
+                new Promise((resolve) => {
+                    resolve(LoadTestActions.readLoadTestData.defer(false));
+                });
+            }
 
             // If the count down is finished, stop the timer
             if (diff < 0) {
@@ -95,7 +112,7 @@ class LoadTest extends Component {
     }
 
     handleReadLoadTestDataClick = () => {
-        LoadTestActions.readLoadTestData();
+        LoadTestActions.readLoadTestData(true);
     }
 
     getRunLoadTestButtonText = (testState) => {

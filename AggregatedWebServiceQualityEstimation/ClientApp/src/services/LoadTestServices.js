@@ -23,8 +23,12 @@ class LoadTestServices {
         return axios.get("https://localhost:44342/api/test/data/write");
     }
 
-    static readLoadTestData() {
-        return axios.get("https://localhost:44342/api/test/data/read");
+    static readLoadTestData(fromFile) {
+        if (fromFile) {
+            return axios.get("https://localhost:44342/api/test/data/read?fromFile=true");
+        } else {
+            return axios.get("https://localhost:44342/api/test/data/read?fromFile=false");
+        }
     }
 }
 

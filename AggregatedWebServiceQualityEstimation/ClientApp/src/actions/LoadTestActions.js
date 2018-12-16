@@ -8,7 +8,7 @@ const tempDate = '1970/01/01 ';
 class LoadTestActions {
     constructor() {
         this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration",
-            "setTestState", "setTimeLeft");
+            "setTestState", "setTimeLeft", "clearLoadTestData");
     }
 
     runLoadTest = (data) => {
@@ -30,9 +30,9 @@ class LoadTestActions {
         };
     }
 
-    readLoadTestData = () => {
+    readLoadTestData = (fromFile) => {
         return (dispatch) => {
-            LoadTestServices.readLoadTestData()
+            LoadTestServices.readLoadTestData(fromFile)
                 .then((response) => {
                     // handle success
                     const result = response.data;

@@ -21,7 +21,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         protected void GetMetricsData(bool byRow = true)
         {
-            var fileOutput = _loadTestDataManager.ReadTestData();
+            var fileOutput = _loadTestDataManager.ReadTestData(fromFile: true);
             var fileLines = fileOutput.Split(Environment.NewLine);
             var fileLinesTransformed = fileLines.Select(x => x.Split(','));
             if (byRow)

@@ -48,7 +48,7 @@ class LoadTestStore {
 
     writeLoadTestData = (result) => {
         if (!isNil(result) && result.isLoadTestDataWritten) {
-            LoadTestActions.readLoadTestData.defer();
+            LoadTestActions.readLoadTestData.defer(true);
         }
 
         LoadTestActions.setTestState.defer({
@@ -58,7 +58,7 @@ class LoadTestStore {
 
     uploadLoadTestData = (result) => {
         if (!isNil(result) && result.isFileUploaded) {
-            LoadTestActions.readLoadTestData.defer();
+            LoadTestActions.readLoadTestData.defer(true);
         }
     }
 
@@ -102,6 +102,10 @@ class LoadTestStore {
 
             this.setState(this.state.set("testState", localTestState));
         }
+    }
+
+    clearLoadTestData = () => {
+        this.setState(this.state.set("loadTestData", []));
     }
 
     setTimeLeft = (timeLeft) => {
