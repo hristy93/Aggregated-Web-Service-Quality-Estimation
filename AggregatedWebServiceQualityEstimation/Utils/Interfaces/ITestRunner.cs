@@ -3,5 +3,7 @@
     public interface ITestRunner
     {
         void InitiateTest();
+        void CancelTest();
+        bool IsTestRunning();
     }
 }

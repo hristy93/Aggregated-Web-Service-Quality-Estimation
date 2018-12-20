@@ -3,18 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AggregatedWebServiceQualityEstimation.Utils
 {
     public class LoadTestRunner : ITestRunner
     {
+        private const string CMD_PROCESS_NAME = "cmd.exe";
+        private const string MSTEST_PROCESS_NAME = "MSTest";
         private const string LOAD_TEST_CMD_ARGUMENTS = @"mstest /TestContainer:../PerformanceAndLoadTests/WebServiceLoadTest.loadtest";
 
         public void InitiateTest()
         {
             Process cmd = new Process();
-            cmd.StartInfo.FileName = "cmd.exe";
+            cmd.StartInfo.FileName = CMD_PROCESS_NAME;
             cmd.StartInfo.RedirectStandardInput = true;
             cmd.StartInfo.RedirectStandardOutput = true;
             cmd.StartInfo.CreateNoWindow = true;
@@ -26,5 +29,22 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             cmd.StandardInput.Close();
             cmd.WaitForExit();
         }
+
+        public void CancelTest()
+        {
+            try
+            {
+                var testProcess = GetTestProcess();
+                testProcess?.Kill();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public bool IsTestRunning() => GetTestProcess() != null;
+
+        private Process GetTestProcess() => Process.GetProcessesByName(MSTEST_PROCESS_NAME).FirstOrDefault();
     }
 }

@@ -8,8 +8,10 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace AggregatedWebServiceQualityEstimation.Controllers
 {
@@ -71,6 +73,34 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             {
                 throw ex;
             }
+        }
+
+        [HttpGet("cancel")]
+        public IActionResult CancelTest()
+        {
+            int retries = 0;
+            do
+            {
+                _loadTestRunner.CancelTest();
+                retries += 1;
+            }
+            while (_loadTestRunner.IsTestRunning() && retries < 5);
+
+            if (retries >= 5)
+            {
+                throw new Exception("The load test was not cancelled after 5 retries!");
+            }
+
+            return Ok("The load test was canceled!");
+        }
+
+
+        [HttpGet("status")]
+        public IActionResult CheckTestStatus()
+        {
+            var isTestRunning = _loadTestRunner.IsTestRunning();
+            var status = isTestRunning ? "running" : "stopped";
+            return Ok(status);
         }
 
         [HttpGet("data/write")]
