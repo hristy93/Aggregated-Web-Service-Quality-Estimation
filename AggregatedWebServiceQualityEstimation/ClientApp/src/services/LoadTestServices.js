@@ -10,6 +10,14 @@ class LoadTestServices {
         });
     }
 
+    static cancelLoadTest() {
+        return axios.get("https://localhost:44342/api/test/cancel");
+    }
+
+    static checkLoadTestStatus() {
+        return axios.get("https://localhost:44342/api/test/status");
+    }
+
     static uploadLoadTestData(files) {
         const file = new Blob([files[0]], { type: 'text/csv' });
 

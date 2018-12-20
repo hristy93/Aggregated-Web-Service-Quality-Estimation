@@ -107,6 +107,10 @@ class LoadTest extends Component {
         }, 1000);
     }
 
+    handleCancelLoadTestButtonClick = () => {
+        LoadTestActions.cancelLoadTest();
+    }
+
     handleWriteLoadTestDataClick = () => {
         LoadTestActions.writeLoadTestData();
     }
@@ -122,7 +126,7 @@ class LoadTest extends Component {
             } else if (testState.started && !testState.finished) {
                 return "Load Test Running";
             } else if (testState.writingTestData) {
-                return "Writing test data ..."
+                return "Writing test data ...";
             }
         }
     }
@@ -154,6 +158,13 @@ class LoadTest extends Component {
                                 disabled={!isUrlValid || areOperationsDenied}
                             >
                                 {this.getRunLoadTestButtonText(testState)}
+                            </Button>
+                            <Button
+                                id="cancel-load-test-button"
+                                onClick={this.handleCancelLoadTestButtonClick}
+                                disabled={!isTestRunning}
+                            >
+                                Cancel Test
                             </Button>
                             {
                                 isTestRunning && !isNil(timeLeft) && (

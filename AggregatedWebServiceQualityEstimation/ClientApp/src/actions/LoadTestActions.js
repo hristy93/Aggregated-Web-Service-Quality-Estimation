@@ -30,6 +30,42 @@ class LoadTestActions {
         };
     }
 
+    cancelLoadTest = () => {
+        return (dispatch) => {
+            LoadTestServices.cancelLoadTest()
+                .then((response) => {
+                    // handle success
+                    const alertMessage = response.data;
+                    const logMessage = response;
+                    displaySuccessMessage(alertMessage, logMessage);
+                })
+                .catch((error) => {
+                    // handle error
+                    const alertMessage = "There is a problem with the canceling of the load test!";
+                    displayFailureMessage(alertMessage, error);
+                });
+        };
+    }
+
+    checkLoadTestStatus = () => {
+        return (dispatch) => {
+            LoadTestServices.cancelLoadTest()
+                .then((response) => {
+                    // handle success
+                    const alertMessage = response.data;
+                    const logMessage = response;
+                    displaySuccessMessage(alertMessage, logMessage);
+                    dispatch({ isCanceled: true });
+                })
+                .catch((error) => {
+                    // handle error
+                    const alertMessage = "There is a problem with the load test!";
+                    displayFailureMessage(alertMessage, error);
+                    dispatch({ isTestCanceled: false });
+                });
+        };
+    }
+
     readLoadTestData = (fromFile) => {
         return (dispatch) => {
             LoadTestServices.readLoadTestData(fromFile)
