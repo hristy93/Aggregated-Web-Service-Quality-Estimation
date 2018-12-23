@@ -17,6 +17,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         {
             statisticalData = new List<StatisticalEstimatorResult>();
             GetMetricsData(byRow: false);
+            MetricsData = MetricsData.Skip(2).ToList();
         }
 
         public void GetFiveNumberSummaries()

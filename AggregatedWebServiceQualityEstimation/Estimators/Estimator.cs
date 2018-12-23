@@ -12,16 +12,16 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     {
         private ITestDataManager _loadTestDataManager;
 
-        protected IList<String[]> MetricsData { get; private set; }
+        public IList<String[]> MetricsData { get; protected set; }
 
         public Estimator(IConfiguration configuration)
         {
             _loadTestDataManager = new LoadTestDataManager(configuration);
         }
 
-        protected void GetMetricsData(bool byRow = true)
+        protected void GetMetricsData(bool byRow = true, bool fromFile = true)
         {
-            var fileOutput = _loadTestDataManager.ReadTestData(fromFile: true);
+            var fileOutput = _loadTestDataManager.ReadTestData(fromFile);
             var fileLines = fileOutput.Split(Environment.NewLine);
             var fileLinesTransformed = fileLines.Select(x => x.Split(','));
             if (byRow)
@@ -34,7 +34,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     .SelectMany(inner => inner.Select((item, index) => new { item, index }))
                     .GroupBy(i => i.index, i => i.item)
                     .Select(g => g.ToArray())
-                    .Skip(2)
                     .ToList();
             }
         }

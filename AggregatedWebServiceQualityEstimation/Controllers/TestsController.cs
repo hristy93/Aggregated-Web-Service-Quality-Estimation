@@ -137,7 +137,6 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         {
             try
             {
-                _loadTestDataManager.ReadTestData(fromFile: true);
                 var clusterEstimator = new ClusterEstimator(_configuration);
                 clusterEstimator.FindClusterCenter();
                 clusterEstimator.FindClusterDensity();
@@ -161,7 +160,6 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         {
             try
             {
-                _loadTestDataManager.ReadTestData(fromFile: true);
                 var statisticalEstimator = new StatisticalEstimator(_configuration);
                 statisticalEstimator.GetFiveNumberSummaries();
                 var fiveNumberSummaries = statisticalEstimator.statisticalData;
@@ -178,12 +176,28 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         {
             try
             {
-                _loadTestDataManager.ReadTestData(fromFile: true);
                 var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
                 fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
                 var aggregatedQualityMembershipFunction =
                     fuzzyLogicEstimator.AggregatedQualityMembershipFunction;
                 return Ok(aggregatedQualityMembershipFunction);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpGet("estimator/apdex-score")]
+        public IActionResult GetApdexScoreResult(double apdexScoreLimit, bool fromFile = true)
+        {
+            try
+            {
+                var apdexScoreEstimator = new ApdexScoreEstimator(_configuration);
+                var currentApdexScoreInfo = apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile);
+
+                return Ok(currentApdexScoreInfo);
             }
             catch (Exception ex)
             {

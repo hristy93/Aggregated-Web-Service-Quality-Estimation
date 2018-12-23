@@ -22,6 +22,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         {
             AggregatedQualityMembershipFunction = new List<double>();
             GetMetricsData(byRow: false);
+            MetricsData = MetricsData.Skip(2).ToList();
         }
 
         public void GetAggregatedQualityMembershipFunction()
