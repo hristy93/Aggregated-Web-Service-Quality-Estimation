@@ -3,10 +3,14 @@ import LoadTestForm from './LoadTestForm';
 import { Col, Row, Grid, Button, ButtonToolbar, Badge } from 'react-bootstrap';
 import LoadTestCharts from './LoadTestCharts';
 import StatisticalEstimation from '../Estimation/StatisticalEstimation';
+import EstimationForm from '../Estimation/EstimationForm';
+import ApdexScoreEstimation from '../Estimation/ApdexScoreEstimation';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
+import EstimationStore from '../../stores/EstimationStore';
 import LoadTestActions from '../../actions/LoadTestActions';
 import EstimationActions from '../../actions/EstimationActions';
+import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import isNil from 'lodash/isNil';
 import moment from 'moment';
 import { displayFailureMessage } from '../../utils/displayInformation';
@@ -27,8 +31,18 @@ class LoadTest extends Component {
             requestType: LoadTestStore.getRequestType(),
             requestPostData: LoadTestStore.getRequestPostData(),
             testState: LoadTestStore.getTestState(),
-            timeLeft: LoadTestStore.getTimeLeft()
+            timeLeft: LoadTestStore.getTimeLeft(),
+            apdexScoreLimit: EstimationStore.getApdexScoreLimit()
         });
+    }
+
+    handleBrushOnChange = (change) => {
+        const args = {
+            brushStartIndex: change.startIndex,
+            brushEndIndex: change.endIndex
+        };
+
+        LoadTestChartsActions.setBrushPosition(args);
     }
 
     handleRunLoadTestButtonClick = () => {
@@ -36,7 +50,8 @@ class LoadTest extends Component {
             url,
             requestPostData,
             loadTestDuration,
-            requestType
+            requestType,
+            apdexScoreLimit
         } = this.props;
 
         let data = {};
@@ -66,15 +81,16 @@ class LoadTest extends Component {
                 finished: false
             });
 
-            LoadTestActions.clearLoadTestData();
+            LoadTestActions.clearLoadTestData.defer();
+            //EstimationActions.clearApdexScoreData.defer();
 
-            this.setTestTimer(loadTestDuration);
+            this.setTestTimer(loadTestDuration, apdexScoreLimit);
         } else {
             displayFailureMessage("There is a problem with the load test!", "The data is invalid!");
         }
     }
 
-    setTestTimer = (loadTestDuration) => {
+    setTestTimer = (loadTestDuration, apdexScoreLimit) => {
         const duration = moment.duration(loadTestDuration);
         var justStarted = true;
         var dateTimeAfterTest;
@@ -95,9 +111,10 @@ class LoadTest extends Component {
 
             if (diff % 3 === 0) {
                 // Load the test data periodically while the test is running
-                new Promise((resolve) => {
+                var promise = new Promise((resolve) => {
                     resolve(LoadTestActions.readLoadTestData.defer(false));
                 });
+                //promise.then(() => EstimationActions.getApdexScoreEstimatorResult.defer(apdexScoreLimit));
             }
 
             // If the count down is finished, stop the timer
@@ -136,7 +153,8 @@ class LoadTest extends Component {
             loadTestData,
             isUrlValid,
             testState,
-            timeLeft
+            timeLeft,
+            apdexScoreLimit
         } = this.props;
 
         const isTestRunning = testState.started && !testState.finished;
@@ -147,6 +165,7 @@ class LoadTest extends Component {
                 <Row>
                     <Col sm={7}>
                         <LoadTestForm />
+                        <EstimationForm />
                     </Col>
                 </Row>
                 <Row>
@@ -187,9 +206,10 @@ class LoadTest extends Component {
                                 Read Load Test Data
                             </Button>
                         </ButtonToolbar>
-                        <LoadTestCharts chartsData={loadTestData} />
+                        <LoadTestCharts chartsData={loadTestData} brushOnChange={this.handleBrushOnChange} />
                     </Col>
                 </Row>
+                <ApdexScoreEstimation brushOnChange={this.handleBrushOnChange} />
                 <Button
                     id="get-statistical-estimation-button"
                     disabled={areOperationsDenied}

@@ -12,6 +12,10 @@ class EstimationServices {
     static getFuzzyLogicEstimatorResult() {
         return axios.get("https://localhost:44342/api/test/estimator/fuzzy-logic");
     }
+
+    static getApdexScoreEstimatorResult(apdexScoreLimit) {
+        return axios.get("https://localhost:44342/api/test/estimator/apdex-score?apdexScoreLimit=" + apdexScoreLimit);
+    }
 }
 
 export default EstimationServices;

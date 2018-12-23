@@ -36,7 +36,13 @@ class LoadTestChartsStore {
                     color: "#E85D18",
                     isLineVisible: true,
                     areReferenceLinesVisible: true
-                }]
+                }],
+                apdexScore: [{
+                    axisYKey: "ApdexScore",
+                    color: "#00BFFF",
+                    isLineVisible: true,
+                    areReferenceLinesVisible: true
+                }],
             },
             brushStartIndex: null,
             brushEndIndex: null,

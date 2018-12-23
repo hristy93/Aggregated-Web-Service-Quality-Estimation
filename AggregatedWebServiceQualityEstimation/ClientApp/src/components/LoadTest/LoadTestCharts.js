@@ -24,15 +24,6 @@ class LoadTestCharts extends Component {
         });
     }
 
-    handleBrushOnChange = (change) => {
-        const args = {
-            brushStartIndex: change.startIndex,
-            brushEndIndex: change.endIndex
-        };
-
-        LoadTestChartsActions.setBrushPosition(args);
-    }
-
     handleSwitchOnChange = (isChecked, event, id) => {
         switch (id) {
             case "switch-sync-charts":
@@ -104,6 +95,7 @@ class LoadTestCharts extends Component {
             chartsLinesData,
             brushStartIndex,
             brushEndIndex,
+            brushOnChange,
             statisticalData,
             areReferenceLinesVisible,
             syncCharts
@@ -151,7 +143,7 @@ class LoadTestCharts extends Component {
                     data={chartsData}
                     axisYUnit="s"
                     lines={chartsLinesData['responseTime']}
-                    brushOnChange={this.handleBrushOnChange}
+                    brushOnChange={brushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
@@ -164,7 +156,7 @@ class LoadTestCharts extends Component {
                     axisXKey="IntervalStartTime"
                     data={chartsData}
                     lines={chartsLinesData['requests']}
-                    brushOnChange={this.handleBrushOnChange}
+                    brushOnChange={brushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
@@ -178,7 +170,7 @@ class LoadTestCharts extends Component {
                     data={chartsData}
                     axisYUnit="KBps"
                     lines={chartsLinesData['throughput']}
-                    brushOnChange={this.handleBrushOnChange}
+                    brushOnChange={brushOnChange}
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
