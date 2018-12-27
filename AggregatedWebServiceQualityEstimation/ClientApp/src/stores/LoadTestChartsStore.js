@@ -2,6 +2,7 @@
 import LoadTestChartsActions from '../actions/LoadTestChartsActions';
 import immutable from 'alt-utils/lib/ImmutableUtil';
 import Immutable from 'immutable';
+import isNil from 'lodash/isNil';
 
 class LoadTestChartsStore {
     constructor() {
@@ -28,7 +29,7 @@ class LoadTestChartsStore {
                 }],
                 throughput: [{
                     axisYKey: "ReceivedKilobytesPerSecond",
-                    color: "#8884d8",
+                    color: "#6319FF",
                     isLineVisible: true,
                     areReferenceLinesVisible: true
                 }, {
@@ -39,10 +40,10 @@ class LoadTestChartsStore {
                 }],
                 apdexScore: [{
                     axisYKey: "ApdexScore",
-                    color: "#00BFFF",
+                    color: "#00FFFF",
                     isLineVisible: true,
                     areReferenceLinesVisible: true
-                }],
+                }]
             },
             brushStartIndex: null,
             brushEndIndex: null,
@@ -63,16 +64,22 @@ class LoadTestChartsStore {
         this.setState(this.state.set("areReferenceLinesVisible", areReferenceLinesVisible));
     }
 
-    setLineVisibility = ({ chartName, lineName }) => {
+    setLineVisibility = (lineName) => {
         const chartsLinesData = this.state.get("chartsLinesData");
-        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
+        const chartsLinesDataItem = Object.keys(chartsLinesData)
+            .map(key => chartsLinesData[key].find(lines => lines.axisYKey === `${lineName}`))
+            .filter(item => !isNil(item))[0];
+        //const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
         chartsLinesDataItem['isLineVisible'] = !chartsLinesDataItem['isLineVisible'];
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
 
-    setReferenceLinesVisibility = ({ chartName, lineName }) => {
+    setReferenceLinesVisibility = (lineName) => {
         const chartsLinesData = this.state.get("chartsLinesData");
-        const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
+        const chartsLinesDataItem = Object.keys(chartsLinesData)
+            .map(key => chartsLinesData[key].find(lines => lines.axisYKey === `${lineName}`))
+            .filter(item => !isNil(item))[0];
+        //const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
         chartsLinesDataItem['areReferenceLinesVisible'] = !chartsLinesDataItem['areReferenceLinesVisible'];
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }

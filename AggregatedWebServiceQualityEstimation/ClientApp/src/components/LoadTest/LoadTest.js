@@ -4,10 +4,12 @@ import { Col, Row, Grid, Button, ButtonToolbar, Badge } from 'react-bootstrap';
 import LoadTestCharts from './LoadTestCharts';
 import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import EstimationForm from '../Estimation/EstimationForm';
+import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';
 import ApdexScoreEstimation from '../Estimation/ApdexScoreEstimation';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
 import EstimationStore from '../../stores/EstimationStore';
+import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 import LoadTestActions from '../../actions/LoadTestActions';
 import EstimationActions from '../../actions/EstimationActions';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
@@ -31,8 +33,7 @@ class LoadTest extends Component {
             requestType: LoadTestStore.getRequestType(),
             requestPostData: LoadTestStore.getRequestPostData(),
             testState: LoadTestStore.getTestState(),
-            timeLeft: LoadTestStore.getTimeLeft(),
-            apdexScoreLimit: EstimationStore.getApdexScoreLimit()
+            timeLeft: LoadTestStore.getTimeLeft()
         });
     }
 
@@ -50,8 +51,7 @@ class LoadTest extends Component {
             url,
             requestPostData,
             loadTestDuration,
-            requestType,
-            apdexScoreLimit
+            requestType
         } = this.props;
 
         let data = {};
@@ -84,13 +84,13 @@ class LoadTest extends Component {
             LoadTestActions.clearLoadTestData.defer();
             //EstimationActions.clearApdexScoreData.defer();
 
-            this.setTestTimer(loadTestDuration, apdexScoreLimit);
+            this.setTestTimer(loadTestDuration);
         } else {
             displayFailureMessage("There is a problem with the load test!", "The data is invalid!");
         }
     }
 
-    setTestTimer = (loadTestDuration, apdexScoreLimit) => {
+    setTestTimer = (loadTestDuration) => {
         const duration = moment.duration(loadTestDuration);
         var justStarted = true;
         var dateTimeAfterTest;
@@ -153,8 +153,7 @@ class LoadTest extends Component {
             loadTestData,
             isUrlValid,
             testState,
-            timeLeft,
-            apdexScoreLimit
+            timeLeft
         } = this.props;
 
         const isTestRunning = testState.started && !testState.finished;
@@ -164,6 +163,7 @@ class LoadTest extends Component {
             <Grid fluid>
                 <Row>
                     <Col sm={7}>
+                        <LoadTestMetricsForm />
                         <LoadTestForm />
                         <EstimationForm />
                     </Col>

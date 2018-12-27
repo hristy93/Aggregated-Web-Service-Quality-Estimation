@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isNil from 'lodash/isNil';
 import LineChartOptions from './LineChartOptions';
 import {
     LineChart as LineChartRecharts,
@@ -39,7 +40,10 @@ class LineChart extends Component {
             bottom: PropTypes.number
         }),
         referenceLinesData: PropTypes.arrayOf(PropTypes.shape({
-            mean: PropTypes.number
+            metricName: PropTypes.string,
+            mean: PropTypes.number,
+            lowerStandardDeviation: PropTypes.number,
+            upperStandardDeviation: PropTypes.number
         })),
         showReferenceLines: PropTypes.bool,
         syncChart: PropTypes.bool.isRequired,
@@ -66,23 +70,29 @@ class LineChart extends Component {
     };
 
     referenceLinesRenderer = (referenceLinesData, lines) => {
-        const result = referenceLinesData.map((item, outerIndex) => {
-            const data = Object.keys(item).map((key, innerIndex) => {
-                return (
-                    lines[outerIndex].areReferenceLinesVisible &&
-                    <ReferenceLine
-                        y={item[key]}
-                        key={`reference-line-${lines[outerIndex].axisYKey}-${outerIndex}-${innerIndex}`}
-                        label={""}
-                        stroke={lines[outerIndex].color}
-                        strokeDasharray="3 3"
-                    />
-                );
-            });
-            return data;
-        });
+        if (!isNil(referenceLinesData) && referenceLinesData.length !== 0) {
+            const result = lines.map((linesItem, outerIndex) => {
+                const referenceLinesItem = referenceLinesData.filter(s => s.metricName === linesItem.axisYKey)[0];
+                if (!isNil(referenceLinesItem)) {
+                    const data = Object.keys(referenceLinesItem).map((key, innerIndex) => {
+                        return (
+                            linesItem.areReferenceLinesVisible && key !== "metricName" &&
+                            <ReferenceLine
+                                y={referenceLinesItem[key]}
+                                key={`reference-line-${linesItem.axisYKey}-${outerIndex}-${innerIndex}`}
+                                label={""}
+                                stroke={linesItem.color}
+                                strokeDasharray="3 3"
+                            />
+                        );
+                    });
 
-        return result;
+                    return data;
+                }
+            });
+
+            return result;
+        }
     }
 
     render() {
@@ -145,13 +155,13 @@ class LineChart extends Component {
                         />
                     </LineChartRecharts>
                 }
-                {
+                {/*
                     data.length > 0 && lines.length > 1 &&
                     <LineChartOptions
                         lines={lines}
                         toggleLineVisibility={toggleLineVisibility}
                     />
-                }
+                */}
             </React.Fragment>
         );
     }

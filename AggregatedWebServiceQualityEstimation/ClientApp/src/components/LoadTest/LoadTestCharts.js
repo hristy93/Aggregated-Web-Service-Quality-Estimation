@@ -42,49 +42,25 @@ class LoadTestCharts extends Component {
                 LoadTestChartsActions.setAllReferenceLinesVisibility.defer(isChecked);
                 break;
             case "switch-line-visibility-SuccessfulRequestsPerSecond":
-                LoadTestChartsActions.setLineVisibility({
-                    chartName: "requests",
-                    lineName: "SuccessfulRequestsPerSecond"
-                });
-                LoadTestChartsActions.setReferenceLinesVisibility.defer({
-                    chartName: "requests",
-                    lineName: "SuccessfulRequestsPerSecond"
-                });
+                LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
+                LoadTestChartsActions.setReferenceLinesVisibility.defer("SuccessfulRequestsPerSecond");
                 break;
             case "switch-line-visibility-FailedRequestsPerSecond":
-                LoadTestChartsActions.setLineVisibility({
-                    chartName: "requests",
-                    lineName: "FailedRequestsPerSecond"
-                });
-                LoadTestChartsActions.setReferenceLinesVisibility.defer({
-                    chartName: "requests",
-                    lineName: "FailedRequestsPerSecond"
-                });
+                LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
+                LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
                 break;
             case "switch-line-visibility-SentKilobytesPerSecond":
-                LoadTestChartsActions.setLineVisibility({
-                    chartName: "throughput",
-                    lineName: "SentKilobytesPerSecond"
-                });
-                LoadTestChartsActions.setReferenceLinesVisibility.defer({
-                    chartName: "throughput",
-                    lineName: "SentKilobytesPerSecond"
-                });
+                LoadTestChartsActions.setLineVisibility.defer("SentKilobytesPerSecond");
+                LoadTestChartsActions.setReferenceLinesVisibility.defer("SentKilobytesPerSecond");
                 break;
             case "switch-line-visibility-ReceivedKilobytesPerSecond":
-                LoadTestChartsActions.setLineVisibility({
-                    chartName: "throughput",
-                    lineName: "ReceivedKilobytesPerSecond"
-                });
-                LoadTestChartsActions.setReferenceLinesVisibility.defer({
-                    chartName: "throughput",
-                    lineName: "ReceivedKilobytesPerSecond"
-                });
+                LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
+                LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
                 break;
             default:
                 const alertMessage = "There is a problem with the switch!";
                 const errorMessage = `There is no switch with id = ${id}`;
-                displayFailureMessage(alertMessage, errorMessage)
+                displayFailureMessage(alertMessage, errorMessage);
                 break;
         }
     }
@@ -106,6 +82,7 @@ class LoadTestCharts extends Component {
             referenceLines = statisticalData.map((item) => {
                 const standardDeviation = Math.sqrt(item.variance);
                 return {
+                    metricName: item.metricName,
                     mean: item.mean,
                     lowerStandardDeviation: item.mean - standardDeviation,
                     upperStandardDeviation: item.mean + standardDeviation
@@ -147,7 +124,8 @@ class LoadTestCharts extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
-                    referenceLinesData={referenceLines.length !== 0 ? [referenceLines[0]] : []}
+                    //referenceLinesData={referenceLines.length !== 0 ? [referenceLines[0]] : []}
+                    referenceLinesData={referenceLines}
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
@@ -160,7 +138,8 @@ class LoadTestCharts extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
-                    referenceLinesData={referenceLines.length !== 0 ? [referenceLines[1], referenceLines[2]] : []}
+                    //referenceLinesData={referenceLines.length !== 0 ? [referenceLines[1], referenceLines[2]] : []}
+                    referenceLinesData={referenceLines}
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
@@ -174,7 +153,8 @@ class LoadTestCharts extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
-                    referenceLinesData={referenceLines.length !== 0 ? [referenceLines[3], referenceLines[4]] : []}
+                    //referenceLinesData={referenceLines.length !== 0 ? [referenceLines[3], referenceLines[4]] : []}
+                    referenceLinesData={referenceLines}
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}

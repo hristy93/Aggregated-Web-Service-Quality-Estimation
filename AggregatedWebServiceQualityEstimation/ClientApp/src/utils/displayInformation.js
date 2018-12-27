@@ -33,5 +33,11 @@ const displaySuccessMessage = (alertMessage, logMessage = null) => {
     alert(alertMessage);
 };
 
+const logActivity = (logMessage) => {
+    if (!isNil(logMessage)) {
+        console.log(logMessage);
+    }
+};
 
-export { displayFailureMessage, displaySuccessMessage};
+
+export { displayFailureMessage, displaySuccessMessage, logActivity};
