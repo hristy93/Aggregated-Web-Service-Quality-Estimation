@@ -1,7 +1,6 @@
 ﻿import React, { Component } from 'react';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import { Button } from 'react-bootstrap';
-import isNil from 'lodash/isNil';
 import LineChart from '../common/LineChart/LineChart';
 import EstimationActions from '../../actions/EstimationActions';
 import EstimationStore from '../../stores/EstimationStore';
@@ -52,7 +51,7 @@ class ApdexScoreEstimation extends Component {
         const isApdexScoreButtonDisabled = !apdexScoreLimit || !metricsInfo["ResponseTime"];
 
         return (
-            <div>
+            <div id="apdex-estimation" style={{ marginTop: "2rem" }}>
                 <Button
                     id="get-apdex-estimation-button"
                     disabled={isApdexScoreButtonDisabled}
@@ -60,18 +59,28 @@ class ApdexScoreEstimation extends Component {
                 >
                     Get Apdex Score Data
                 </Button>
-                <h4> Apdex Score Limit: {apdexScoreLimit} </h4>
-                { isApdexScoreChartVisible && <h4> Average Apdex Score: {averageApdexScore} </h4> }
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={apdexScoreData}
-                    lines={chartsLinesData['apdexScore']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    syncChart={syncCharts}
-                    isVisible={isApdexScoreChartVisible}
-                />
+                <div id="apdex-estimation-header">
+                    <h4><b>Apdex Estimaton Data</b></h4>
+                </div>
+                {
+                    isApdexScoreChartVisible &&
+                    <div id="apdex-estimation-summary">
+                        <h4> Apdex Score Limit: {apdexScoreLimit} </h4>
+                        <h4> Average Apdex Score: {averageApdexScore} </h4>
+                    </div>
+                }
+                <div id="apdex-estimation-data" style={{ marginTop: "1rem" }}>
+                    <LineChart
+                        axisXKey="IntervalStartTime"
+                        data={apdexScoreData}
+                        lines={chartsLinesData['apdexScore']}
+                        brushOnChange={brushOnChange}
+                        brushStartIndex={brushStartIndex}
+                        brushEndIndex={brushEndIndex}
+                        syncChart={syncCharts}
+                        isVisible={isApdexScoreChartVisible}
+                    />
+                </div>
             </div>    
             );
         }

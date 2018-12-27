@@ -11,7 +11,8 @@ class EstimationStore {
         this.state = Immutable.Map({
             statisticalData: [],
             apdexScoreData: [],
-            apdexScoreLimit: 0.05
+            apdexScoreLimit: 0.05,
+            clusterData: {}
         });
     }
 
@@ -41,6 +42,12 @@ class EstimationStore {
         }
     }
 
+    getClusterEstimatorResult = (clusterData) => {
+        if (!isNil(clusterData)) {
+            this.setState(this.state.set("clusterData", clusterData));
+        }
+    }
+
     static getStatisticalData() {
         return this.state.get("statisticalData");
     }
@@ -51,6 +58,10 @@ class EstimationStore {
 
     static getApdexScoreLimit() {
         return this.state.get("apdexScoreLimit");
+    }
+
+    static getClusterData() {
+        return this.state.get("clusterData");
     }
 }
 

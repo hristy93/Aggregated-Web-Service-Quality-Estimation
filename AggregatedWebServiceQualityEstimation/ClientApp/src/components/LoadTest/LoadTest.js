@@ -6,12 +6,10 @@ import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import EstimationForm from '../Estimation/EstimationForm';
 import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';
 import ApdexScoreEstimation from '../Estimation/ApdexScoreEstimation';
+import ClusterEstimation from '../Estimation/ClusterEstimation';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
-import EstimationStore from '../../stores/EstimationStore';
-import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 import LoadTestActions from '../../actions/LoadTestActions';
-import EstimationActions from '../../actions/EstimationActions';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import isNil from 'lodash/isNil';
 import moment from 'moment';
@@ -210,13 +208,7 @@ class LoadTest extends Component {
                     </Col>
                 </Row>
                 <ApdexScoreEstimation brushOnChange={this.handleBrushOnChange} />
-                <Button
-                    id="get-statistical-estimation-button"
-                    disabled={areOperationsDenied}
-                    onClick={EstimationActions.getStatisticalEstimatorResult}
-                >
-                    Get Statistical Data
-                 </Button>
+                <ClusterEstimation disabled={areOperationsDenied} />
                 <StatisticalEstimation />
             </Grid>
         );
