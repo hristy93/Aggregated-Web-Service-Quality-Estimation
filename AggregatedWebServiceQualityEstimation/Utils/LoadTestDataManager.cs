@@ -1,6 +1,8 @@
 ﻿using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
@@ -39,6 +41,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             + "and ComputedValue<> 0";
 
         private IConfiguration _configuration;
+
+        public static Dictionary<string, bool> MetricsUsed { get; private set; }
 
         public LoadTestDataManager(IConfiguration configuration)
         {
@@ -80,6 +84,11 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             }
 
             return result;
+        }
+
+        public void SaveUsedMetrics(Dictionary<string, bool> metricsInfo)
+        {
+            MetricsUsed = metricsInfo;
         }
 
         private string GetTestDataFromDatabase()

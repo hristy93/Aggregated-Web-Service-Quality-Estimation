@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -131,80 +132,6 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
         }
 
-
-        [HttpGet("estimator/cluster")]
-        public IActionResult GetClusterEstimatorResult()
-        {
-            try
-            {
-                var clusterEstimator = new ClusterEstimator(_configuration);
-                clusterEstimator.FindClusterCenter();
-                clusterEstimator.FindClusterDensity();
-                var clusterEstimatorResult = new ClusterEstimatorResult()
-                {
-                    DensestClusterCenterPotential = clusterEstimator.DensestClusterCenterPotential,
-                    DensestClusterDensity = clusterEstimator.DensestClusterDensity,
-                    DensestClusterEstimation = clusterEstimator.DensestClusterEstimation
-                };
-
-                return Ok(clusterEstimatorResult);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        [HttpGet("estimator/statistics")]
-        public IActionResult GetStatisticalEstimatorResult()
-        {
-            try
-            {
-                var statisticalEstimator = new StatisticalEstimator(_configuration);
-                statisticalEstimator.GetFiveNumberSummaries();
-                var fiveNumberSummaries = statisticalEstimator.statisticalData;
-                return Ok(fiveNumberSummaries);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        [HttpGet("estimator/fuzzy-logic")]
-        public IActionResult GetFuzzyLogicEstimatorResult()
-        {
-            try
-            {
-                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_configuration);
-                fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
-                var aggregatedQualityMembershipFunction =
-                    fuzzyLogicEstimator.AggregatedQualityMembershipFunction;
-                return Ok(aggregatedQualityMembershipFunction);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-        [HttpGet("estimator/apdex-score")]
-        public IActionResult GetApdexScoreResult(double apdexScoreLimit, bool fromFile = true)
-        {
-            try
-            {
-                var apdexScoreEstimator = new ApdexScoreEstimator(_configuration);
-                var currentApdexScoreInfo = apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile);
-
-                return Ok(currentApdexScoreInfo);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         [HttpPost("data/upload")]
         public async Task<IActionResult> UploadTestData()
         {
@@ -234,6 +161,94 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             _loadTestDataManager.WriteTestData(fileContent);
 
             return Ok("The file is uploaded successfully!");
+        }
+
+        [HttpGet("estimator/cluster")]
+        public IActionResult GetClusterEstimatorResult()
+        {
+            try
+            {
+                var clusterEstimator = new ClusterEstimator(_loadTestDataManager);
+                clusterEstimator.FindClusterCenter();
+                clusterEstimator.FindClusterDensity();
+                var clusterEstimatorResult = new ClusterEstimatorResult()
+                {
+                    DensestClusterCenterPotential = clusterEstimator.DensestClusterCenterPotential,
+                    DensestClusterDensity = clusterEstimator.DensestClusterDensity,
+                    DensestClusterEstimation = clusterEstimator.DensestClusterEstimation
+                };
+
+                return Ok(clusterEstimatorResult);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("estimator/statistics")]
+        public IActionResult GetStatisticalEstimatorResult()
+        {
+            try
+            {
+                var statisticalEstimator = new StatisticalEstimator(_loadTestDataManager);
+                statisticalEstimator.GetFiveNumberSummaries();
+                var fiveNumberSummaries = statisticalEstimator.statisticalData;
+                return Ok(fiveNumberSummaries);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("estimator/fuzzy-logic")]
+        public IActionResult GetFuzzyLogicEstimatorResult()
+        {
+            try
+            {
+                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_loadTestDataManager);
+                fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
+                var aggregatedQualityMembershipFunction =
+                    fuzzyLogicEstimator.AggregatedQualityMembershipFunction;
+                return Ok(aggregatedQualityMembershipFunction);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpGet("estimator/apdex-score")]
+        public IActionResult GetApdexScoreResult(double apdexScoreLimit, bool fromFile = true)
+        {
+            try
+            {
+                var apdexScoreEstimator = new ApdexScoreEstimator(_loadTestDataManager);
+                var currentApdexScoreInfo = apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile);
+
+                return Ok(currentApdexScoreInfo);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost("metrics")]
+        public IActionResult SaveUsedMetrics([FromBody] Dictionary<string, bool> metricsUsabilityInfo)
+        {
+            try
+            {
+                _loadTestDataManager.SaveUsedMetrics(metricsUsabilityInfo);
+
+                return Ok("The used metrics are saved successfully!");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

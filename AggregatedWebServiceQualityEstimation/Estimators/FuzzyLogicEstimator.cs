@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         public IList<double> AggregatedQualityMembershipFunction;
 
-        public FuzzyLogicEstimator(IConfiguration configuration) : base(configuration)
+        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
         {
             AggregatedQualityMembershipFunction = new List<double>();
             GetMetricsData(byRow: false);

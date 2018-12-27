@@ -1,4 +1,5 @@
 ﻿using AggregatedWebServiceQualityEstimation.Models;
+using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Statistics;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     {
         public IList<StatisticalEstimatorResult> statisticalData { get; private set; }
 
-        public StatisticalEstimator(IConfiguration configuration) : base(configuration)
+        public StatisticalEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
         {
             statisticalData = new List<StatisticalEstimatorResult>();
             GetMetricsData(byRow: false);

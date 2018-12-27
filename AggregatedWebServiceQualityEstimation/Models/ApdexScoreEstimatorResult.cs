@@ -15,6 +15,6 @@ namespace AggregatedWebServiceQualityEstimation.Models
         public string IntervalEndTime { get; set; }
 
         [JsonProperty(PropertyName = "ApdexScore")]
-        public double ApdexScore { get; set;}
+        public double ApdexScore { get; set; }
     }
 }

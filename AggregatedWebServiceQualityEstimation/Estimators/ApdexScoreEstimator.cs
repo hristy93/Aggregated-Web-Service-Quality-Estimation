@@ -1,4 +1,5 @@
 ﻿using AggregatedWebServiceQualityEstimation.Models;
+using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     public class ApdexScoreEstimator : Estimator
     {
         private ApdexScoreEstimatorResult _apdexScoreEstimatorResult;
-        private IConfiguration _configuration;
 
-        public ApdexScoreEstimator(IConfiguration configuration) : base(configuration)
+        public ApdexScoreEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
         {
             //GetMetricsData(byRow: false);
-            _configuration = configuration;
         }
 
         public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile)

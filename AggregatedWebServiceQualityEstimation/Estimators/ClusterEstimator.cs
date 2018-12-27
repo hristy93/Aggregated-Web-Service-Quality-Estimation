@@ -17,7 +17,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         private Vector<double> _clusterCenter;
 
-        public ClusterEstimator(IConfiguration configuration) : base(configuration)
+        public ClusterEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
         {
             GetMetricsData();
         }
@@ -92,7 +92,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                         firstMetricsVector = firstMetricsVector.Normalize(2);
                         secondMetricsVector = _clusterCenter.Normalize(2);
 
-                        distance = Distance.Manhattan(firstMetricsVector, secondMetricsVector);
+                        distance = Distance.Euclidean(firstMetricsVector, secondMetricsVector);
                         distanceSum += distance;
                     }
                 }
