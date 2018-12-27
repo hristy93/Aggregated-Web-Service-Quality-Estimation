@@ -1,5 +1,7 @@
 ﻿import alt from '../alt';
 import LoadTestActions from '../actions/LoadTestActions';
+import EstimationActions from '../actions/EstimationActions';
+import EstimationStore from '../stores/EstimationStore';
 import immutable from 'alt-utils/lib/ImmutableUtil';
 import Immutable from 'immutable';
 import isNil from 'lodash/isNil';
@@ -59,10 +61,19 @@ class LoadTestStore {
     uploadLoadTestData = (result) => {
         if (!isNil(result) && result.isFileUploaded) {
             LoadTestActions.readLoadTestData.defer(true);
+
+            // Get the statistics estimator's result and displaying it in a table
+            EstimationActions.getStatisticalEstimatorResult.defer();
+
+            // Get the apdex estimator's result and displaying it in a chart
+            this.waitFor(EstimationStore);
+            const apdexScoreLimit = EstimationStore.getApdexScoreLimit();
+            EstimationActions.getApdexScoreEstimatorResult.defer(apdexScoreLimit);
         }
     }
 
-    setUrl = (url) => {        if (!isNil(url)) {
+    setUrl = (url) => {
+        if (!isNil(url)) {
             this.setState(this.state.set("url", url));
         } else {
             const alertMessage = "There is a problem with the url!";

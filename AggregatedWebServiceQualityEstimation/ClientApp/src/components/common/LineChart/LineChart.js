@@ -27,6 +27,7 @@ class LineChart extends Component {
         brushStartIndex: PropTypes.number,
         data: PropTypes.instanceOf(Array),
         height: PropTypes.number,
+        isVisible: PropTypes.bool,
         lines: PropTypes.arrayOf(PropTypes.shape({
             axisXKey: PropTypes.string,
             color: PropTypes.string,
@@ -112,13 +113,14 @@ class LineChart extends Component {
             showReferenceLines,
             referenceLinesData,
             toggleLineVisibility,
-            syncChart
+            syncChart,
+            isVisible
         } = this.props;
 
         return (
             <React.Fragment>
                 {
-                    data.length > 0 &&
+                    data.length > 0 && isVisible &&
                     <LineChartRecharts
                         width={width}
                         height={height}

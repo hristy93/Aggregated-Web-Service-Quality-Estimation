@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import LoadTestForm from './LoadTestForm';
 import { Col, Row, Grid, Button, ButtonToolbar, Badge } from 'react-bootstrap';
-import LoadTestCharts from './LoadTestCharts';
+import LoadTestCharts from '../LoadTestCharts/LoadTestCharts';
 import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import EstimationForm from '../Estimation/EstimationForm';
 import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';

@@ -6,6 +6,7 @@ import LineChart from '../common/LineChart/LineChart';
 import EstimationActions from '../../actions/EstimationActions';
 import EstimationStore from '../../stores/EstimationStore';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
+import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 
 const decimalPlacePrecision = 3;
 
@@ -23,6 +24,7 @@ class ApdexScoreEstimation extends Component {
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
             areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
             syncCharts: LoadTestChartsStore.getSyncCharts(),
+            metricsInfo: LoadTestMetricsStore.getMetricsInfo()
         });
     }
 
@@ -37,6 +39,7 @@ class ApdexScoreEstimation extends Component {
             apdexScoreLimit,
             apdexScoreData,
             chartsLinesData,
+            metricsInfo,
             brushStartIndex,
             brushEndIndex,
             brushOnChange,
@@ -45,18 +48,20 @@ class ApdexScoreEstimation extends Component {
 
         const averageApdexScore = (apdexScoreData.map((apdexScoreItem) => apdexScoreItem.ApdexScore)
             .reduce((a, b) => a + b, 0) / apdexScoreData.length).toFixed(decimalPlacePrecision);
+        const isApdexScoreChartVisible = apdexScoreData.length !== 0 && metricsInfo["ResponseTime"];
+        const isApdexScoreButtonDisabled = !apdexScoreLimit || !metricsInfo["ResponseTime"];
 
         return (
             <div>
                 <Button
                     id="get-apdex-estimation-button"
-                    disabled={isNil(apdexScoreLimit)}
+                    disabled={isApdexScoreButtonDisabled}
                     onClick={() => EstimationActions.getApdexScoreEstimatorResult(apdexScoreLimit)}
                 >
                     Get Apdex Score Data
                 </Button>
                 <h4> Apdex Score Limit: {apdexScoreLimit} </h4>
-                { apdexScoreData.length !== 0 && <h4> Average Apdex Score: {averageApdexScore} </h4> }
+                { isApdexScoreChartVisible && <h4> Average Apdex Score: {averageApdexScore} </h4> }
                 <LineChart
                     axisXKey="IntervalStartTime"
                     data={apdexScoreData}
@@ -65,6 +70,7 @@ class ApdexScoreEstimation extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     syncChart={syncCharts}
+                    isVisible={isApdexScoreChartVisible}
                 />
             </div>    
             );

@@ -4,6 +4,7 @@ import Switch from '../common/Switch/Switch';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import EstimationActions from '../../actions/EstimationActions';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
+import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 import EstimationStore from '../../stores/EstimationStore';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import { displayFailureMessage } from '../../utils/displayInformation';
@@ -20,7 +21,8 @@ class LoadTestCharts extends Component {
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
             areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
             syncCharts: LoadTestChartsStore.getSyncCharts(),
-            statisticalData: EstimationStore.getStatisticalData()
+            statisticalData: EstimationStore.getStatisticalData(),
+            metricsInfo: LoadTestMetricsStore.getMetricsInfo()
         });
     }
 
@@ -73,6 +75,7 @@ class LoadTestCharts extends Component {
             brushEndIndex,
             brushOnChange,
             statisticalData,
+            metricsInfo,
             areReferenceLinesVisible,
             syncCharts
         } = this.props;
@@ -89,6 +92,12 @@ class LoadTestCharts extends Component {
                 };
             });
         }
+
+        const isResponseTimeChartVisible = metricsInfo["ResponseTime"];
+        const isRequestsChartVisible = metricsInfo["SuccessfulRequestsPerSecond"] ||
+            metricsInfo["SuccessfulRequestsPerSecond"];
+        const isThroughputChartVisible = metricsInfo["ReceivedKilobytesPerSecond"] ||
+            metricsInfo["SentKilobytesPerSecond"];
 
         return (
             <React.Fragment>
@@ -129,6 +138,7 @@ class LoadTestCharts extends Component {
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
+                    isVisible={isResponseTimeChartVisible}
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
@@ -143,6 +153,7 @@ class LoadTestCharts extends Component {
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
+                    isVisible={isRequestsChartVisible}
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
@@ -158,6 +169,7 @@ class LoadTestCharts extends Component {
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
+                    isVisible={isThroughputChartVisible}
                 />               
             </React.Fragment>
         );
