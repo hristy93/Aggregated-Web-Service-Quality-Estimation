@@ -8,6 +8,7 @@ import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 import EstimationStore from '../../stores/EstimationStore';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import { displayFailureMessage } from '../../utils/displayInformation';
+import '../../styles/components/LoadTestCharts/LoadTestCharts.css';
 
 class LoadTestCharts extends Component {
     static getStores() {

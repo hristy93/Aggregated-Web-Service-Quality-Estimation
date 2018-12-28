@@ -160,14 +160,14 @@ class LoadTest extends Component {
         return (
             <Grid fluid>
                 <Row>
-                    <Col sm={7}>
+                    <Col sm={12}>
                         <LoadTestMetricsForm />
                         <LoadTestForm />
                         <EstimationForm />
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={10}>
+                    <Col sm={12}>
                         <ButtonToolbar style={{ display: 'flex', alignItems: 'center' }}>
                             <Button
                                 id="run-load-test-button"
