@@ -20,29 +20,33 @@ class LoadTestCharts extends Component {
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-            areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
+            //areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
             syncCharts: LoadTestChartsStore.getSyncCharts(),
-            statisticalData: EstimationStore.getStatisticalData(),
-            metricsInfo: LoadTestMetricsStore.getMetricsInfo()
+            metricsInfo: LoadTestMetricsStore.getMetricsInfo(),
+            firstWebServiceEstimationData: EstimationStore.getFirstWebServiceEstimationData(),
+            secondWebServiceEstimationData: EstimationStore.getSecondWebServiceEstimationData(),
+            firstWebServiceLinesData: LoadTestChartsStore.getFirstWebServiceLinesData(),
+            secondWebServiceLinesData: LoadTestChartsStore.getSecondWebServiceLinesData()
         });
     }
 
     handleSwitchOnChange = (isChecked, event, id) => {
+        const { webServiceId } = this.props;
+
         switch (id) {
-            case "switch-sync-charts":
+            case `${webServiceId}-web-service-switch-sync-charts`:
                 LoadTestChartsActions.setChartsSync(isChecked);
                 break;
-            case "switch-show-reference-lines":
+            case `${webServiceId}-web-service-switch-show-reference-lines`:
                 // need to check if the data is the same 
                 //if (this.props.statisticalData.length === 0) {
                 //    EstimationActions.getStatisticalEstimatorResult();
                 //}
-
                 if (isChecked) {
-                    EstimationActions.getStatisticalEstimatorResult();
+                    EstimationActions.getStatisticalEstimatorResult(webServiceId);
                 }
 
-                LoadTestChartsActions.setAllReferenceLinesVisibility.defer(isChecked);
+                LoadTestChartsActions.setAllReferenceLinesVisibility.defer({ areReferenceLinesVisible: isChecked, webServiceId });
                 break;
             case "switch-line-visibility-SuccessfulRequestsPerSecond":
                 LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
@@ -70,26 +74,42 @@ class LoadTestCharts extends Component {
 
     render() {
         const {
+            webServiceId,
             chartsData,
             chartsLinesData,
+            firstWebServiceEstimationData,
+            secondWebServiceEstimationData,
+            firstWebServiceLinesData,
+            secondWebServiceLinesData,
             brushStartIndex,
             brushEndIndex,
             brushOnChange,
-            statisticalData,
             metricsInfo,
-            areReferenceLinesVisible,
             syncCharts
         } = this.props;
+
+        const webServiceEstimationData = webServiceId === "first" ?
+            firstWebServiceEstimationData : secondWebServiceEstimationData;
+        const { statisticalData } = webServiceEstimationData;
+
+        const { areReferenceLinesVisible } = webServiceId === "first" ?
+            firstWebServiceLinesData : secondWebServiceLinesData;
 
         let referenceLines = [];
         if (areReferenceLinesVisible) {
             referenceLines = statisticalData.map((item) => {
                 const standardDeviation = Math.sqrt(item.variance);
+                const innerQuartileDistance = item.upperQuartile - item.lowerQuartile;
+
                 return {
                     metricName: item.metricName,
                     mean: item.mean,
-                    lowerStandardDeviation: item.mean - standardDeviation,
-                    upperStandardDeviation: item.mean + standardDeviation
+                    //lowerStandardDeviation: item.mean - standardDeviation,
+                    //upperStandardDeviation: item.mean + standardDeviation
+                    lowerInnerFenceBound: item.lowerQuartile - innerQuartileDistance * 1.5,
+                    upperInnerFenceBound: item.upperQuartile + innerQuartileDistance * 1.5,
+                    lowerOuterFenceBound: item.lowerQuartile - innerQuartileDistance * 3,
+                    upperOuterFenceBound: item.upperQuartile + innerQuartileDistance * 3
                 };
             });
         }
@@ -101,19 +121,19 @@ class LoadTestCharts extends Component {
             metricsInfo["SentKilobytesPerSecond"];
 
         return (
-            <React.Fragment>
+            <div id={`${webServiceId}-web-service-charts`}>
                 <h4><b>Metrics Charts</b></h4>
                 {
                     chartsData.length > 0 ? (
                         <div id="charts-switches">
                             <Switch
-                                id="switch-sync-charts"
+                                id={`${webServiceId}-web-service-switch-sync-charts`}
                                 text="Synchronize charts:"
                                 isChecked={syncCharts}
                                 onChange={this.handleSwitchOnChange}
                             />
                             <Switch
-                                id="switch-show-reference-lines"
+                                id={`${webServiceId}-web-service-switch-show-reference-lines`}
                                 text="Show reference lines:"
                                 isChecked={areReferenceLinesVisible}
                                 onChange={this.handleSwitchOnChange}
@@ -172,7 +192,7 @@ class LoadTestCharts extends Component {
                     syncChart={syncCharts}
                     isVisible={isThroughputChartVisible}
                 />               
-            </React.Fragment>
+            </div>
         );
     }
 }

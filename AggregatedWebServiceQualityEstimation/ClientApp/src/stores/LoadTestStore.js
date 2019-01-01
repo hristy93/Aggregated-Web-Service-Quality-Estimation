@@ -12,7 +12,12 @@ class LoadTestStore {
         this.bindActions(LoadTestActions);
 
         this.state = Immutable.Map({
-            loadTestData: [],
+            first: Immutable.Map({
+                loadTestData: []
+            }),
+            second: Immutable.Map({
+                loadTestData: []
+            }),
             loadTestDuration: "00:00:30",
             url: "https://jsonplaceholder.typicode.com/todos/1",
             isUrlValid: false,
@@ -34,23 +39,25 @@ class LoadTestStore {
             writingTestData: true
         });
 
-        LoadTestActions.writeLoadTestData.defer();
+        LoadTestActions.writeLoadTestData.defer("first");
+        LoadTestActions.writeLoadTestData.defer("second");
     }
 
-    readLoadTestData = (loadTestData) => {
+    readLoadTestData = ({ loadTestData, webServiceId }) => {
+        console.log("loadTestData", webServiceId, loadTestData);
         if (!isNil(loadTestData)) {
-            this.setState(this.state.set("loadTestData", loadTestData));
+            this.setState(this.state.setIn([webServiceId, "loadTestData"], loadTestData));
         } else {
             const alertMessage = "There is a problem with the load test data!";
             const logMessage = "The load test data is invalid!";
             displayFailureMessage(alertMessage, logMessage);
         }
-       
+
     }
 
-    writeLoadTestData = (result) => {
-        if (!isNil(result) && result.isLoadTestDataWritten) {
-            LoadTestActions.readLoadTestData.defer(true);
+    writeLoadTestData = ({ isLoadTestDataWritten, webServiceId }) => {
+        if (isLoadTestDataWritten) {
+            LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
         }
 
         LoadTestActions.setTestState.defer({
@@ -58,40 +65,19 @@ class LoadTestStore {
         });
     }
 
-    uploadLoadTestData = (result) => {
-        if (!isNil(result) && result.isFileUploaded) {
-            LoadTestActions.readLoadTestData.defer(true);
+    uploadLoadTestData = ({ isFileUploaded, webServiceId }) => {
+        if (isFileUploaded) {
+            LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 
             // Get the statistics estimator's result and displaying it in a table
-            EstimationActions.getStatisticalEstimatorResult.defer();
+            EstimationActions.getStatisticalEstimatorResult.defer(webServiceId);
 
             // Get the apdex estimator's result and displaying it in a chart
             this.waitFor(EstimationStore);
-            const apdexScoreLimit = EstimationStore.getApdexScoreLimit();
-            EstimationActions.getApdexScoreEstimatorResult.defer(apdexScoreLimit);
+            const apdexScoreLimit = EstimationStore.getState().getIn([webServiceId, "apdexScoreLimit"]);
+            EstimationActions.getApdexScoreEstimatorResult.defer({ apdexScoreLimit, webServiceId });
+            EstimationActions.getClusterEstimatorResult.defer(webServiceId);
         }
-    }
-
-    setUrl = (url) => {
-        if (!isNil(url)) {
-            this.setState(this.state.set("url", url));
-        } else {
-            const alertMessage = "There is a problem with the url!";
-            const logMessage = "The url is invalid!";
-            displayFailureMessage(alertMessage, logMessage);
-        }
-    }
-
-    setUrlValidity = (isUrlValid) => {
-        this.setState(this.state.set("isUrlValid", isUrlValid));
-    }
-
-    setRequestType = (requestType) => {
-        this.setState(this.state.set("requestType", requestType));
-    }
-
-    setRequestPostData = (requestPostData) => {
-        this.setState(this.state.set("requestPostData", requestPostData));
     }
 
     setLoadTestDuration = (loadTestDuration) => {
@@ -116,7 +102,9 @@ class LoadTestStore {
     }
 
     clearLoadTestData = () => {
-        this.setState(this.state.set("loadTestData", []));
+        this.setState(this.state
+            .setIn(["first", "loadTestData"], [])
+            .setIn(["second", "loadTestData"], []));
     }
 
     setTimeLeft = (timeLeft) => {
@@ -127,20 +115,12 @@ class LoadTestStore {
         return this.state.get("loadTestData");
     }
 
-    static getUrl() {
-        return this.state.get("url");
+    static getFirstServiceLoadTestData() {
+        return this.state.getIn(["first", "loadTestData"]);
     }
 
-    static getUrlValidity() {
-        return this.state.get("isUrlValid");
-    }
-
-    static getRequestType() {
-        return this.state.get("requestType");
-    }
-
-    static getRequestPostData() {
-        return this.state.get("requestPostData");
+    static getSecondServiceLoadTestData() {
+        return this.state.getIn(["second", "loadTestData"]);
     }
 
     static getLoadTestDuration() {

@@ -9,13 +9,13 @@ class EstimationActions {
         this.generateActions("setApdexScoreLimit", "clearApdexScoreData");
     }
 
-    getClusterEstimatorResult = () => {
+    getClusterEstimatorResult = (webServiceId) => {
         return (dispatch) => {
-            EstimationServices.getClusterEstimatorResult()
+            EstimationServices.getClusterEstimatorResult(webServiceId)
                 .then((response) => {
                     // handle success
-                    const result = response.data;
-                    dispatch(result);
+                    const clusterData = response.data;
+                    dispatch({ clusterData, webServiceId });
                 })
                 .catch((error) => {
                     // handle error
@@ -25,15 +25,15 @@ class EstimationActions {
         };
     }
 
-    getStatisticalEstimatorResult = () => {
+    getStatisticalEstimatorResult = (webServiceId) => {
         return (dispatch) => {
-            EstimationServices.getStatisticalEstimatorResult()
+            EstimationServices.getStatisticalEstimatorResult(webServiceId)
                 .then((response) => {
                     // handle success
                     //console.log(response);
-                    const result = response.data;
+                    const statisticalData = response.data;
 
-                    dispatch(result);
+                    dispatch({ statisticalData, webServiceId });
                 })
                 .catch((error) => {
                     // handle error
@@ -43,15 +43,15 @@ class EstimationActions {
         };
     }
 
-    getFuzzyLogicEstimatorResult = () => {
+    getFuzzyLogicEstimatorResult = (webServiceId) => {
         return (dispatch) => {
-            EstimationServices.getFuzzyLogicEstimatorResult()
+            EstimationServices.getFuzzyLogicEstimatorResult(webServiceId)
                 .then((response) => {
                     // handle success
                     //console.log(response);
-                    const result = response.data;
+                    const fuzzyLogicData = response.data;
 
-                    dispatch(result);
+                    dispatch({ fuzzyLogicData, webServiceId });
                 })
                 .catch((error) => {
                     // handle error
@@ -61,17 +61,17 @@ class EstimationActions {
         };
     }
 
-    getApdexScoreEstimatorResult(apdexScoreLimit) {
+    getApdexScoreEstimatorResult({ apdexScoreLimit, webServiceId }) {
         return (dispatch) => {
-            EstimationServices.getApdexScoreEstimatorResult(apdexScoreLimit)
+            EstimationServices.getApdexScoreEstimatorResult(apdexScoreLimit, webServiceId)
                 .then((response) => {
                     // handle success
                     //console.log(response);
-                    const result = response.data;
-                    result.sort(function (a, b) {
+                    const apdexScoreData = response.data;
+                    apdexScoreData.sort(function (a, b) {
                         return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);
                     });
-                    dispatch(result);
+                    dispatch({ apdexScoreData, webServiceId });
                 })
                 .catch((error) => {
                     // handle error

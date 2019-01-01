@@ -1,16 +1,19 @@
 ﻿import React, { Component } from 'react';
-import LoadTestForm from './LoadTestForm';
 import { Col, Row, Grid, Button, ButtonToolbar, Badge } from 'react-bootstrap';
-import LoadTestCharts from '../LoadTestCharts/LoadTestCharts';
-import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import EstimationForm from '../Estimation/EstimationForm';
 import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';
+import LoadTestForm from './LoadTestForm';
+import WebServiceForm from '../WebService/WebServiceForm';
+import LoadTestCharts from '../LoadTestCharts/LoadTestCharts';
+import StatisticalEstimation from '../Estimation/StatisticalEstimation';
 import ApdexScoreEstimation from '../Estimation/ApdexScoreEstimation';
 import ClusterEstimation from '../Estimation/ClusterEstimation';
+import EstimationContainer from '../Estimation/EstimationContainer';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestActions from '../../actions/LoadTestActions';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
+import WebServicesStore from '../../stores/WebServicesStore';
 import isNil from 'lodash/isNil';
 import moment from 'moment';
 import { displayFailureMessage } from '../../utils/displayInformation';
@@ -19,19 +22,19 @@ let testTimer;
 
 class LoadTest extends Component {
     static getStores() {
-        return [LoadTestStore];
+        return [LoadTestStore, WebServicesStore];
     }
 
     static getPropsFromStores() {
         return ({
-            loadTestData: LoadTestStore.getLoadTestData(),
+            firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
+            secondServiceLoadTestData: LoadTestStore.getSecondServiceLoadTestData(),
             loadTestDuration: LoadTestStore.getLoadTestDuration(),
-            url: LoadTestStore.getUrl(),
-            isUrlValid: LoadTestStore.getUrlValidity(),
-            requestType: LoadTestStore.getRequestType(),
-            requestPostData: LoadTestStore.getRequestPostData(),
+            areUrlsValid: WebServicesStore.getUrlsValidity(),
             testState: LoadTestStore.getTestState(),
-            timeLeft: LoadTestStore.getTimeLeft()
+            timeLeft: LoadTestStore.getTimeLeft(),
+            first: WebServicesStore.getFirstWebServiceData(),
+            second: WebServicesStore.getSecondWebServiceData()
         });
     }
 
@@ -45,34 +48,29 @@ class LoadTest extends Component {
     }
 
     handleRunLoadTestButtonClick = () => {
+        let data = [];
         const {
-            url,
-            requestPostData,
-            loadTestDuration,
-            requestType
+            first,
+            second,
+            loadTestDuration
         } = this.props;
 
-        let data = {};
-        data["url"] = url;
+        const firstWebServiceRequestData = this.putTestRequestData(first, "first");
+        const secondWebServiceRequestData = this.putTestRequestData(second, "second");
 
-        if (requestType === "POST" && !isNil(requestPostData)) {
-            try {
-                const parsedRequestPostData = JSON.parse(requestPostData);
-                data["body"] = parsedRequestPostData;
-            } catch (error) {
-                const alertMessage = "There is a problem with the data in the body! Please check it and try again";
-                displayFailureMessage(alertMessage, error);
-                return;
-            }
-           
+        if (isNil(firstWebServiceRequestData) || isNil(secondWebServiceRequestData)) {
+            return;
         }
 
-        if (!isNil(loadTestDuration)) {
-            data["duration"] = loadTestDuration;
-        }
+        data.push(firstWebServiceRequestData);
+        data.push(secondWebServiceRequestData);
+
+        //if (!isNil(loadTestDuration)) {
+        //    data["duration"] = loadTestDuration;
+        //}
 
         if (!isNil(data)) {
-            LoadTestActions.runLoadTest(data);
+            LoadTestActions.runLoadTest({ data, duration: loadTestDuration });
 
             LoadTestActions.setTestState({
                 started: true,
@@ -86,6 +84,31 @@ class LoadTest extends Component {
         } else {
             displayFailureMessage("There is a problem with the load test!", "The data is invalid!");
         }
+    }
+
+    putTestRequestData(webServiceData, webServiceId) {
+        const {
+            url,
+            requestPostData,
+            requestType
+        } = webServiceData;
+
+        let data = {};
+        data["webServiceId"] = webServiceId;
+        data["url"] = url;
+
+        if (requestType === "POST" && !isNil(requestPostData)) {
+            try {
+                const parsedRequestPostData = JSON.parse(requestPostData);
+                data["body"] = parsedRequestPostData;
+            } catch (error) {
+                const alertMessage = "There is a problem with the data in the body! Please check it and try again";
+                displayFailureMessage(alertMessage, error);
+                return null;
+            }
+        }
+
+        return data;
     }
 
     setTestTimer = (loadTestDuration) => {
@@ -109,10 +132,19 @@ class LoadTest extends Component {
 
             if (diff % 3 === 0) {
                 // Load the test data periodically while the test is running
-                var promise = new Promise((resolve) => {
-                    resolve(LoadTestActions.readLoadTestData.defer(false));
-                });
+                //new Promise((resolve) => {
+                //    resolve(LoadTestActions.readLoadTestData.defer(false, "first"));
+                //});
                 //promise.then(() => EstimationActions.getApdexScoreEstimatorResult.defer(apdexScoreLimit));
+
+                LoadTestActions.readLoadTestData.defer({ fromFile: false, webServiceId: "first" });
+            }
+            if (diff % 5 === 0) {
+                //new Promise((resolve) => {
+                //    resolve(LoadTestActions.readLoadTestData.defer(false, "second"));
+                //});
+
+                LoadTestActions.readLoadTestData.defer({ fromFile: false, webServiceId: "second" });
             }
 
             // If the count down is finished, stop the timer
@@ -126,12 +158,12 @@ class LoadTest extends Component {
         LoadTestActions.cancelLoadTest();
     }
 
-    handleWriteLoadTestDataClick = () => {
-        LoadTestActions.writeLoadTestData();
+    handleWriteLoadTestDataClick = (webServiceId = "first") => {
+        LoadTestActions.writeLoadTestData(webServiceId);
     }
 
-    handleReadLoadTestDataClick = () => {
-        LoadTestActions.readLoadTestData(true);
+    handleReadLoadTestDataClick = (webServiceId = "first") => {
+        LoadTestActions.readLoadTestData({ fromFile: true, webServiceId });
     }
 
     getRunLoadTestButtonText = (testState) => {
@@ -149,9 +181,13 @@ class LoadTest extends Component {
     render() {
         const {
             loadTestData,
-            isUrlValid,
+            firstServiceLoadTestData,
+            secondServiceLoadTestData,
+            areUrlsValid,
             testState,
-            timeLeft
+            timeLeft,
+            first,
+            second
         } = this.props;
 
         const isTestRunning = testState.started && !testState.finished;
@@ -159,11 +195,10 @@ class LoadTest extends Component {
 
         return (
             <Grid fluid>
-                <Row>
-                    <Col sm={12}>
+                <Row className="show-grid">
+                    <Col sm={12} md={3}>
                         <LoadTestMetricsForm />
                         <LoadTestForm />
-                        <EstimationForm />
                     </Col>
                 </Row>
                 <Row>
@@ -172,7 +207,7 @@ class LoadTest extends Component {
                             <Button
                                 id="run-load-test-button"
                                 onClick={this.handleRunLoadTestButtonClick}
-                                disabled={!isUrlValid || areOperationsDenied}
+                                disabled={!areUrlsValid || areOperationsDenied}
                             >
                                 {this.getRunLoadTestButtonText(testState)}
                             </Button>
@@ -190,26 +225,62 @@ class LoadTest extends Component {
                                     </div>
                                 )
                             }
-                            <br />
-                            <Button
-                                id="write-load-test-data-button"
-                                onClick={this.handleWriteLoadTestDataClick}
-                            >
-                                Write Load Test Data
-                            </Button>
-                            <Button
-                                id="read-load-test-data-button"
-                                onClick={this.handleReadLoadTestDataClick}
-                            >
-                                Read Load Test Data
-                            </Button>
                         </ButtonToolbar>
-                        <LoadTestCharts chartsData={loadTestData} brushOnChange={this.handleBrushOnChange} />
                     </Col>
                 </Row>
-                <ApdexScoreEstimation brushOnChange={this.handleBrushOnChange} />
-                <ClusterEstimation disabled={areOperationsDenied} />
-                <StatisticalEstimation />
+                <Row className="show-grid" style={{ marginTop: '2rem' }}>
+                    <Col md={5}>
+                        <WebServiceForm {...first} webServiceId="first" areOperationsDenied={areOperationsDenied} />
+                        <Button
+                            id="write-load-test-data-button"
+                            onClick={() => this.handleWriteLoadTestDataClick("first")}
+                        >
+                            Write Load Test Data
+                            </Button>
+                        <Button
+                            id="read-load-test-data-button"
+                            onClick={() => this.handleReadLoadTestDataClick("first")}
+                        >
+                            Read Load Test Data
+                            </Button>
+                        <LoadTestCharts
+                            webServiceId="first"
+                            chartsData={firstServiceLoadTestData}
+                            brushOnChange={this.handleBrushOnChange}
+                        />
+                        <EstimationContainer
+                            webServiceId="first" 
+                            brushOnChange={this.handleBrushOnChange}
+                            areOperationsDenied={areOperationsDenied}
+                        />
+                    </Col>
+                    <Col md={2} />
+                    <Col md={5}>
+                        <WebServiceForm {...second} webServiceId="second" areOperationsDenied={areOperationsDenied} />
+                        <Button
+                            id="write-load-test-data-button"
+                            onClick={() => this.handleWriteLoadTestDataClick("second")}
+                        >
+                            Write Load Test Data
+                            </Button>
+                        <Button
+                            id="read-load-test-data-button"
+                            onClick={() => this.handleReadLoadTestDataClick("second")}
+                        >
+                            Read Load Test Data
+                            </Button>
+                        <LoadTestCharts
+                            webServiceId="second"
+                            chartsData={secondServiceLoadTestData}
+                            brushOnChange={this.handleBrushOnChange}
+                        />
+                        <EstimationContainer
+                            webServiceId="second"
+                            brushOnChange={this.handleBrushOnChange}
+                            areOperationsDenied={areOperationsDenied}
+                        />
+                    </Col>
+                </Row>
             </Grid>
         );
     }

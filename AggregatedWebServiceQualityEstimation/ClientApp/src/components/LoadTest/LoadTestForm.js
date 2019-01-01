@@ -18,53 +18,9 @@ class LoadTestForm extends Component {
 
     static getPropsFromStores() {
         return ({
-            url: LoadTestStore.getUrl(),
-            isUrlValid: LoadTestStore.getUrlValidity(),
-            requestType: LoadTestStore.getRequestType(),
             loadTestDuration: LoadTestStore.getLoadTestDuration(),
             testState: LoadTestStore.getTestState()
         });
-    }
-
-    checkUrlInputValidity = (inputValue) => {
-        const regex = new RegExp(URLRegexExpression);
-        if (regex.test(inputValue)) {
-            LoadTestActions.setUrlValidity(true);
-        } else {
-            LoadTestActions.setUrlValidity(false);
-        }
-    }
-
-    handleUrlChange = (event) => {
-        const inputValue = event.target.value;
-
-        LoadTestActions.setUrl(inputValue);
-        this.checkUrlInputValidity(inputValue);
-    }
-
-    handleRequestTypeChange = (event) => {
-        const inputValue = event.target.value;
-
-        LoadTestActions.setRequestType(inputValue);
-    }
-
-    handleRequestPostDataChange = (event) => {
-        const inputValue = event.target.value;
-
-        LoadTestActions.setRequestPostData(inputValue);
-    }
-
-    handleFileUploadChange = (event) => {
-        event.preventDefault();
-        const { files } = event.target;
-
-        if (isNil(files)) {
-            displayFailureMessage("No files selected!");
-        } else if (files.length > 1) {
-            displayFailureMessage("More than 1 file selected!");
-        } else {
-            LoadTestActions.uploadLoadTestData(files);
-        }
     }
 
     handleLoadTestDurationChange = (event) => {
@@ -75,9 +31,6 @@ class LoadTestForm extends Component {
 
     render() {
         const {
-            url,
-            isUrlValid,
-            requestType,
             loadTestDuration,
             testState
         } = this.props;
@@ -87,39 +40,6 @@ class LoadTestForm extends Component {
 
         return (
             <form>
-                <FormGroup
-                    controlId="url-input"
-                    validationState={isUrlValid ? "success" : "error"}
-                >
-                    <ControlLabel>Web Service URL</ControlLabel>
-                    <FormControl
-                        type="url"
-                        value={url}
-                        placeholder={url !== "" ? "" : "Enter web service endpoint"}
-                        disabled={areOperationsDenied}
-                        onChange={this.handleUrlChange}
-                    />
-                    <FormControl.Feedback />
-                </FormGroup>
-                <Select
-                    id="request-type"
-                    title="Request Type:"
-                    items={["GET", "POST"]}
-                    disabled={areOperationsDenied}
-                    onChange={this.handleRequestTypeChange}
-                />
-                {
-                    requestType === "POST" && 
-                    <Collapse in={requestType === "POST"}>
-                        <div>
-                            <Textarea
-                                title="Request Body:"
-                                disabled={areOperationsDenied}
-                                onChange={this.handleRequestPostDataChange}
-                            />
-                        </div>
-                    </Collapse>
-                }
                 <FormGroup
                     controlId="load-test-duration-input"                  
                 >
@@ -133,14 +53,6 @@ class LoadTestForm extends Component {
                     />
                     <FormControl.Feedback />
                 </FormGroup>
-                <FileUpload
-                    id="load-test-metrics"
-                    title="Upload .CSV file with metrics:"
-                    buttonText="Add file"
-                    fileType=".csv"
-                    disabled={areOperationsDenied}
-                    onChange={this.handleFileUploadChange}
-                />
             </form>
         );
     }

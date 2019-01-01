@@ -10,31 +10,33 @@ import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 const decimalPlacePrecision = 3;
 
 class ApdexScoreEstimation extends Component {
-    static getStores() {
-        return [LoadTestChartsStore, EstimationStore];
-    }
+    //static getStores() {
+    //    return [LoadTestChartsStore, EstimationStore];
+    //}
 
-    static getPropsFromStores() {
-        return ({
-            apdexScoreLimit: EstimationStore.getApdexScoreLimit(),
-            apdexScoreData: EstimationStore.getApdexScoreData(),
-            chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
-            brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
-            brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-            areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
-            syncCharts: LoadTestChartsStore.getSyncCharts(),
-            metricsInfo: LoadTestMetricsStore.getMetricsInfo()
-        });
-    }
+    //static getPropsFromStores() {
+    //    return ({
+    //        apdexScoreLimit: EstimationStore.getApdexScoreLimit(),
+    //        apdexScoreData: EstimationStore.getApdexScoreData(),
+    //        chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
+    //        brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
+    //        brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
+    //        areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
+    //        syncCharts: LoadTestChartsStore.getSyncCharts(),
+    //        metricsInfo: LoadTestMetricsStore.getMetricsInfo()
+    //    });
+    //}
 
     handleApdexScoreLimitChange = (event) => {
-        const inputValue = event.target.value;
+        const apdexScoreLimit = event.target.value;
+        const { webServiceId } = this.props;
 
-        EstimationActions.setApdexScoreLimit(inputValue);
+        EstimationActions.setApdexScoreLimit({ apdexScoreLimit, webServiceId});
     }
 
     render() {
         const {
+            webServiceId,
             apdexScoreLimit,
             apdexScoreData,
             chartsLinesData,
@@ -55,7 +57,7 @@ class ApdexScoreEstimation extends Component {
                 <Button
                     id="get-apdex-estimation-button"
                     disabled={isApdexScoreButtonDisabled}
-                    onClick={() => EstimationActions.getApdexScoreEstimatorResult(apdexScoreLimit)}
+                    onClick={() => EstimationActions.getApdexScoreEstimatorResult({ apdexScoreLimit, webServiceId })}
                 >
                     Get Apdex Score Data
                 </Button>
@@ -86,4 +88,4 @@ class ApdexScoreEstimation extends Component {
         }
     }
     
-export default connectToStores(ApdexScoreEstimation);
+export default ApdexScoreEstimation;

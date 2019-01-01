@@ -83,7 +83,7 @@ class LineChart extends Component {
                                 key={`reference-line-${linesItem.axisYKey}-${outerIndex}-${innerIndex}`}
                                 label={""}
                                 stroke={linesItem.color}
-                                strokeDasharray="3 3"
+                                strokeDasharray={!key.endsWith("OuterFenceBound") ? "3 3" : "5 5"}
                             />
                         );
                     });

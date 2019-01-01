@@ -2,43 +2,53 @@
 import connectToStores from 'alt-utils/lib/connectToStores';
 import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import EstimationActions from '../../actions/EstimationActions';
-import EstimationStore from '../../stores/EstimationStore';
 
 class EstimationForm extends Component {
-    static getStores() {
-        return [EstimationStore];
-    }
+    //static getStores() {
+    //    return [EstimationStore];
+    //}
 
-    static getPropsFromStores() {
-        return ({
-            apdexScoreLimit: EstimationStore.getApdexScoreLimit()
-        });
-    }
+    //static getPropsFromStores() {
+    //    return ({
+    //        apdexScoreLimit: EstimationStore.getApdexScoreLimit()
+    //    });
+    //}
 
-    handleApdexScoreLimitChange = (event) => {
-        const inputValue = event.target.value;
+    handleApdexScoreLimitChange = (event, webServiceId) => {
+        const apdexScoreLimit = event.target.value;
 
-        EstimationActions.setApdexScoreLimit(inputValue);
+        EstimationActions.setApdexScoreLimit({ apdexScoreLimit, webServiceId});
     }
 
     render() {
-        const { apdexScoreLimit } = this.props;
+        const {
+            webServiceId,
+            apdexScoreLimit,
+            areOperationsDenied
+        } = this.props;
+
         return (
-            <FormGroup
-                controlId="apdex-limit-input"
-            >
-                <ControlLabel>Response Time Limit: </ControlLabel>
-                <FormControl
-                    type="text"
-                    value={apdexScoreLimit}
-                    placeholder={apdexScoreLimit}
-                    //disabled={areOperationsDenied}
-                    onChange={this.handleApdexScoreLimitChange}
-                />
-                <FormControl.Feedback />
-            </FormGroup>
+            <div id={`${webServiceId}-web-service-estimations-options`}>
+                <div id={`${webServiceId}-web-service-estimations-form-header`}>
+                    <h4><b>Estimations Options</b></h4>
+                </div>
+                <div id={`${webServiceId}-web-service-estimations-form-content`}>
+                    <FormGroup>
+                        <ControlLabel>Response Time Limit: </ControlLabel>
+                        <FormControl
+                            id={`${webServiceId}-web-service-estimations-form-input`}
+                            type="text"
+                            value={apdexScoreLimit}
+                            placeholder={apdexScoreLimit}
+                            disabled={areOperationsDenied}
+                            onChange={(event) => this.handleApdexScoreLimitChange(event, webServiceId)}
+                        />
+                        <FormControl.Feedback />
+                    </FormGroup>
+               </div>
+            </div>
         );
     }
 }
 
-export default connectToStores(EstimationForm);
+export default EstimationForm;

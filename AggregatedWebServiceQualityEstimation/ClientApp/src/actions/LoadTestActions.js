@@ -11,9 +11,9 @@ class LoadTestActions {
             "setTestState", "setTimeLeft", "clearLoadTestData");
     }
 
-    runLoadTest = (data) => {
+    runLoadTest = ({ data, duration }) => {
         return (dispatch) => {
-            LoadTestServices.runLoadTest(data)
+            LoadTestServices.runLoadTest(data, duration)
                 .then((response) => {
                     // handle success
                     const alertMessage = response.data;
@@ -66,9 +66,9 @@ class LoadTestActions {
         };
     }
 
-    readLoadTestData = (fromFile) => {
+    readLoadTestData = ({ fromFile, webServiceId }) => {
         return (dispatch) => {
-            LoadTestServices.readLoadTestData(fromFile)
+            LoadTestServices.readLoadTestData(fromFile, webServiceId)
                 .then((response) => {
                     // handle success
                     const result = response.data;
@@ -82,7 +82,8 @@ class LoadTestActions {
                         return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);
                     });
                     parsedResultData = parsedResultData.filter(item => item.IntervalStartTime !== "");
-                    dispatch(parsedResultData);
+                    console.log("parsedResultData", webServiceId, parsedResultData);
+                    dispatch({ loadTestData: parsedResultData, webServiceId });
                 })
                 .catch((error) => {
                     // handle error
@@ -92,15 +93,15 @@ class LoadTestActions {
         };
     }
 
-    writeLoadTestData = () => {
+    writeLoadTestData = (webServiceId) => {
         return (dispatch) => {
-            LoadTestServices.writeLoadTestData()
+            LoadTestServices.writeLoadTestData(webServiceId)
                 .then((response) => {
                     // handle success
                     const alertMessage = response.data;
                     const logMessage = response;
                     displaySuccessMessage(alertMessage, logMessage);
-                    dispatch({ isLoadTestDataWritten: true });
+                    dispatch({ isLoadTestDataWritten: true, webServiceId });
                 })
                 .catch((error) => {
                     // handle error
@@ -111,15 +112,15 @@ class LoadTestActions {
         };
     }
 
-    uploadLoadTestData = (files) => {
+    uploadLoadTestData = ({ files, webServiceId }) => {
         return (dispatch) => {
-            LoadTestServices.uploadLoadTestData(files)
+            LoadTestServices.uploadLoadTestData(files, webServiceId)
                 .then((response) => {
                     // handle success
                     const alertMessage = response.data;
                     const logMessage = response;
                     displaySuccessMessage(alertMessage, logMessage);
-                    dispatch({ isFileUploaded: true });
+                    dispatch({ isFileUploaded: true, webServiceId});
                 })
                 .catch((error) => {
                     // handle error

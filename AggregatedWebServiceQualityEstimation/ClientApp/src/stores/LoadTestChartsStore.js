@@ -47,7 +47,12 @@ class LoadTestChartsStore {
             },
             brushStartIndex: null,
             brushEndIndex: null,
-            areReferenceLinesVisible: false,
+            first: Immutable.Map({
+                areReferenceLinesVisible: false
+            }),
+            second: Immutable.Map({
+                areReferenceLinesVisible: false
+            }),
             syncCharts: false
         });
     }
@@ -60,8 +65,8 @@ class LoadTestChartsStore {
         );
     }
 
-    setAllReferenceLinesVisibility = (areReferenceLinesVisible) => {
-        this.setState(this.state.set("areReferenceLinesVisible", areReferenceLinesVisible));
+    setAllReferenceLinesVisibility = ({ areReferenceLinesVisible, webServiceId }) => {
+        this.setState(this.state.setIn([webServiceId, "areReferenceLinesVisible"], areReferenceLinesVisible));
     }
 
     setLineVisibility = (lineName) => {
@@ -100,8 +105,16 @@ class LoadTestChartsStore {
         return this.state.get("brushEndIndex");
     }
 
-    static getReferenceLinesVisibility() {
-        return this.state.get("areReferenceLinesVisible");
+    static getFirstWebServiceLinesData() {
+        return {
+            areReferenceLinesVisible: this.state.getIn(["first", "areReferenceLinesVisible"])
+        };
+    }
+
+    static getSecondWebServiceLinesData() {
+        return {
+            areReferenceLinesVisible: this.state.getIn(["second", "areReferenceLinesVisible"])
+        };
     }
 
     static getSyncCharts() {

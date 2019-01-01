@@ -9,18 +9,22 @@ import EstimationStore from '../../stores/EstimationStore';
 const decimalPlacePrecision = 3;
 
 class ClusterEstimation extends Component {
-    static getStores() {
-        return [EstimationStore];
-    }
+    //static getStores() {
+    //    return [EstimationStore];
+    //}
 
-    static getPropsFromStores() {
-        return ({
-            clusterData: EstimationStore.getClusterData()
-        });
-    }
+    //static getPropsFromStores() {
+    //    return ({
+    //        clusterData: EstimationStore.getClusterData()
+    //    });
+    //}
 
     render() {
-        const { clusterData } = this.props;
+        const {
+            webServiceId,
+            clusterData,
+            areOperationsDenied
+       } = this.props;
 
         const isClusterDataVisible = !isNil(clusterData) && !isEmpty(clusterData);
 
@@ -28,7 +32,8 @@ class ClusterEstimation extends Component {
             <div id="cluster-estimation" style={{ marginTop: "2rem" }}>
                 <Button
                     id="get-cluster-estimation-button"
-                    onClick={EstimationActions.getClusterEstimatorResult}
+                    disabled={areOperationsDenied}
+                    onClick={() => EstimationActions.getClusterEstimatorResult(webServiceId)}
                 >
                     Get Cluster Data
                 </Button> 
@@ -52,4 +57,4 @@ class ClusterEstimation extends Component {
         }
     }
     
-export default connectToStores(ClusterEstimation);
+export default ClusterEstimation;

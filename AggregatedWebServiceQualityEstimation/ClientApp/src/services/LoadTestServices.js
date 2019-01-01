@@ -1,8 +1,8 @@
 ﻿import axios from 'axios';
 
 class LoadTestServices {
-    static runLoadTest(data) {
-        return axios.post("https://localhost:44342/api/test/run", JSON.stringify(data), {
+    static runLoadTest(data, duration) {
+        return axios.post("https://localhost:44342/api/test/run?duration=" + duration, JSON.stringify(data), {
             headers: {
                 "Content-type": "application/json",
                 "Accept": "application/json"
@@ -18,24 +18,24 @@ class LoadTestServices {
         return axios.get("https://localhost:44342/api/test/status");
     }
 
-    static uploadLoadTestData(files) {
+    static uploadLoadTestData(files, webServiceId = "first") {
         const file = new Blob([files[0]], { type: 'text/csv' });
 
         const formData = new FormData();
         formData.append('file', file, file.filename);
 
-        return axios.post("https://localhost:44342/api/test/data/upload", formData);
+        return axios.post("https://localhost:44342/api/test/data/upload?webServiceId=" + webServiceId, formData);
     }
 
-    static writeLoadTestData() {
-        return axios.get("https://localhost:44342/api/test/data/write");
+    static writeLoadTestData(webServiceId = "first") {
+        return axios.get("https://localhost:44342/api/test/data/write?webServiceId=" + webServiceId);
     }
 
-    static readLoadTestData(fromFile) {
+    static readLoadTestData(fromFile, webServiceId = "first") {
         if (fromFile) {
-            return axios.get("https://localhost:44342/api/test/data/read?fromFile=true");
+            return axios.get("https://localhost:44342/api/test/data/read?fromFile=true&webServiceId=" + webServiceId);
         } else {
-            return axios.get("https://localhost:44342/api/test/data/read?fromFile=false");
+            return axios.get("https://localhost:44342/api/test/data/read?fromFile=false&webServiceId=" + webServiceId);
         }
     }
 }
