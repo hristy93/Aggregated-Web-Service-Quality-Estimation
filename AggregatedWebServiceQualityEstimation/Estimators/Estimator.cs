@@ -19,9 +19,9 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             _loadTestDataManager = loadTestDataManager;
         }
 
-        protected void GetMetricsData(bool byRow = true, bool fromFile = true, bool isFiltered = true)
+        protected void GetMetricsData(string webServiceId, bool byRow = true, bool fromFile = true, bool isFiltered = true)
         {
-            var fileOutput = _loadTestDataManager.ReadTestData(fromFile);
+            var fileOutput = _loadTestDataManager.ReadTestData(webServiceId, fromFile);
             var fileLines = fileOutput.Split(Environment.NewLine);
             var fileLinesTransformed = fileLines.Select(x => x.Split(','));
             var metricsUsed = LoadTestDataManager.MetricsUsed;

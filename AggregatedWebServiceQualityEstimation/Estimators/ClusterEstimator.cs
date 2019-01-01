@@ -17,9 +17,9 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         private Vector<double> _clusterCenter;
 
-        public ClusterEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        public ClusterEstimator(ITestDataManager loadTestDataManager, string webServiceId) : base(loadTestDataManager)
         {
-            GetMetricsData();
+            GetMetricsData(webServiceId);
         }
 
         public void FindClusterCenter()

@@ -34,28 +34,26 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpPost("run")]
-        public IActionResult StartTest([FromBody] PostData data)
+        public IActionResult StartTest(string duration, [FromBody] List<WebServiceData> data)
         {
             try
             {
-                var deserializedData = data;
-
-                var url = deserializedData.Url;
-                if (url == null)
+                foreach (var webServiceItem in data)
                 {
-                    return BadRequest("The url of the request is invalid!");
+                    var webServiceId = webServiceItem.WebServiceId;
+                    var url = webServiceItem.Url;
+                    if (url == null)
+                    {
+                        return BadRequest("The url of the request is invalid!");
+                    }
+
+                    var requestPostData = webServiceItem.Body;
+                    var isPostRequest = requestPostData != null;
+
+                    _loadTestModifier.EditRequestBodyData(requestPostData?.ToString(), isPostRequest, webServiceId);
+                    _loadTestModifier.EditUrl(url, isPostRequest, webServiceId); 
                 }
 
-                var requestPostData = deserializedData.Value;
-                var isPostRequest = requestPostData != null;
-                if (isPostRequest)
-                {
-                    _loadTestModifier.EditRequestBodyData(requestPostData.ToString());
-                }
-
-                _loadTestModifier.EditUrl(url, isPostRequest);
-
-                var duration = data.Duration;
                 if (duration != null)
                 {
                     var isDurationValid = _loadTestModifier.EditDuration(duration);
@@ -64,6 +62,10 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     {
                         return BadRequest("The duration of the test is invalid!");
                     }
+                }
+                else
+                {
+                    return BadRequest("The duration of the request is missing!");
                 }
 
                 _loadTestRunner.InitiateTest();
@@ -105,11 +107,11 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpGet("data/write")]
-        public IActionResult WriteTestData()
+        public IActionResult WriteTestData(string webServiceId)
         {
             try
             {
-                _loadTestDataManager.WriteTestData();
+                _loadTestDataManager.WriteTestData(webServiceId);
                 return Ok("The load test data was written successfully!");
             }
             catch (Exception ex)
@@ -119,11 +121,11 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpGet("data/read")]
-        public IActionResult ReadTestData(bool fromFile)
+        public IActionResult ReadTestData(bool fromFile, string webServiceId)
         {
             try
             {
-                var result = _loadTestDataManager.ReadTestData(fromFile);
+                var result = _loadTestDataManager.ReadTestData(webServiceId, fromFile);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -133,7 +135,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpPost("data/upload")]
-        public async Task<IActionResult> UploadTestData()
+        public IActionResult UploadTestData(string webServiceId)
         {
             IFormFile file = Request.Form.Files.FirstOrDefault();
             string fileContent = null;
@@ -158,17 +160,17 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 throw new InvalidOperationException("The file is not processed correctly!");
             }
 
-            _loadTestDataManager.WriteTestData(fileContent);
+            _loadTestDataManager.WriteTestData(fileContent, webServiceId);
 
             return Ok("The file is uploaded successfully!");
         }
 
         [HttpGet("estimator/cluster")]
-        public IActionResult GetClusterEstimatorResult()
+        public IActionResult GetClusterEstimatorResult(string webServiceId)
         {
             try
             {
-                var clusterEstimator = new ClusterEstimator(_loadTestDataManager);
+                var clusterEstimator = new ClusterEstimator(_loadTestDataManager, webServiceId);
                 clusterEstimator.FindClusterCenter();
                 clusterEstimator.FindClusterDensity();
                 var clusterEstimatorResult = new ClusterEstimatorResult()
@@ -187,11 +189,11 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpGet("estimator/statistics")]
-        public IActionResult GetStatisticalEstimatorResult()
+        public IActionResult GetStatisticalEstimatorResult(string webServiceId)
         {
             try
             {
-                var statisticalEstimator = new StatisticalEstimator(_loadTestDataManager);
+                var statisticalEstimator = new StatisticalEstimator(_loadTestDataManager, webServiceId);
                 statisticalEstimator.GetFiveNumberSummaries();
                 var fiveNumberSummaries = statisticalEstimator.statisticalData;
                 return Ok(fiveNumberSummaries);
@@ -203,11 +205,11 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         }
 
         [HttpGet("estimator/fuzzy-logic")]
-        public IActionResult GetFuzzyLogicEstimatorResult()
+        public IActionResult GetFuzzyLogicEstimatorResult(string webServiceId)
         {
             try
             {
-                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_loadTestDataManager);
+                var fuzzyLogicEstimator = new FuzzyLogicEstimator(_loadTestDataManager, webServiceId);
                 fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
                 var aggregatedQualityMembershipFunction =
                     fuzzyLogicEstimator.AggregatedQualityMembershipFunction;
@@ -221,12 +223,12 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
 
         [HttpGet("estimator/apdex-score")]
-        public IActionResult GetApdexScoreResult(double apdexScoreLimit, bool fromFile = true)
+        public IActionResult GetApdexScoreResult(double apdexScoreLimit, string webServiceId, bool fromFile = true)
         {
             try
             {
-                var apdexScoreEstimator = new ApdexScoreEstimator(_loadTestDataManager);
-                var currentApdexScoreInfo = apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile);
+                var apdexScoreEstimator = new ApdexScoreEstimator(_loadTestDataManager, webServiceId);
+                var currentApdexScoreInfo = apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile, webServiceId);
 
                 return Ok(currentApdexScoreInfo);
             }

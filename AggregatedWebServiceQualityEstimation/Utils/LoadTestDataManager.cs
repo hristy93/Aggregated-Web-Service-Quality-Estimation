@@ -11,10 +11,11 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 {
     public class LoadTestDataManager : ITestDataManager
     {
-        public readonly string loadTestFilePath = "loadTestResults.csv";
+        public readonly string loadTestFirstServiceFilePath = "loadTestResults-1.csv";
+        public readonly string loadTestSecondServiceFilePath = "loadTestResults-2.csv";
 
         private readonly string _combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond,
-            SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime from LoadTestDataForAllCharts";
+            SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime from LoadTestDataForAllChartsDualServices";
 
         private readonly string _responceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
@@ -49,18 +50,19 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             _configuration = configuration;
         }
 
-        public void WriteTestData()
+        public void WriteTestData(string webServiceId)
         {
-            var testData = GetTestDataFromDatabase();
-            WriteTestData(testData);
+            var testData = GetTestDataFromDatabase(webServiceId);
+            WriteTestData(testData, webServiceId);
         }
 
-        public void WriteTestData(string testData)
+        public void WriteTestData(string testData, string webServiceId)
         {
+            var loadTestFilePath = webServiceId == "first" ? loadTestFirstServiceFilePath : loadTestSecondServiceFilePath;
             File.WriteAllText(loadTestFilePath, testData);
         }
 
-        public string ReadTestData(bool fromFile = true)
+        public string ReadTestData(string webServiceId, bool fromFile = true)
         {
             string result = "";
 
@@ -68,6 +70,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             {
                 if (fromFile)
                 {
+                    var loadTestFilePath = webServiceId == "first" ? loadTestFirstServiceFilePath : loadTestSecondServiceFilePath;
                     using (StreamReader myFile = new StreamReader(loadTestFilePath))
                     {
                         result = myFile.ReadToEnd();
@@ -75,7 +78,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 }
                 else
                 {
-                    result = GetTestDataFromDatabase();
+                    result = GetTestDataFromDatabase(webServiceId);
                 }
             }
             catch (Exception ex)
@@ -88,20 +91,21 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 
         public void SaveUsedMetrics(Dictionary<string, bool> metricsInfo)
         {
-            MetricsUsed = metricsInfo;
+                MetricsUsed = metricsInfo;
         }
 
-        private string GetTestDataFromDatabase()
+        private string GetTestDataFromDatabase(string webServiceId)
         {
             StringBuilder testDataBuilder = new StringBuilder();
             string connectionString = _configuration.GetValue<string>("ConnectionString");
             string headers;
             string result;
+            string webServiceName = webServiceId == "first" ? "FirstWebService" : "SecondWebService";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand(_combinedQuery, connection)
+                SqlCommand command = new SqlCommand(_combinedQuery + $" where RequestUri = '{webServiceName}'", connection)
                 {
                     CommandTimeout = 200
                 };

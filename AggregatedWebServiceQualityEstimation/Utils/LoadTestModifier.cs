@@ -10,50 +10,98 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         readonly string WebServicePerformanceTestDocumentPath = @"../PerformanceAndLoadTests/WebServicePerformanceTest.webtest";
         readonly string WebServiceLoadTestDocumentPath = @"../PerformanceAndLoadTests/WebServiceLoadTest.loadtest";
 
-        public void EditUrl(string url, bool isPost)
+        public void EditUrl(string url, bool isPost, string webServiceId)
         {
 
             XmlDocument document = new XmlDocument();
             document.Load(WebServicePerformanceTestDocumentPath);
 
-            XmlNode node = document.LastChild.FirstChild.FirstChild;
-            node.Attributes["Url"].Value = url;
+            XmlNode requestNode = webServiceId == "first" ?
+                document.LastChild.FirstChild.FirstChild :
+                document.LastChild.FirstChild.ChildNodes[1];
+
+            requestNode.Attributes["Url"].Value = url;
 
             if (isPost)
             {
-                node.Attributes["Method"].Value = "POST";
+                requestNode.Attributes["Method"].Value = "POST";
             }
             else
             {
-                node.Attributes["Method"].Value = "GET";
+                requestNode.Attributes["Method"].Value = "GET";
             }
 
             document.Save(WebServicePerformanceTestDocumentPath);
         }
 
-        public void EditRequestBodyData(string data)
+        public void EditRequestBodyData(string data, bool isPostRequest, string webServiceId)
         {
             XmlDocument document = new XmlDocument();
             document.Load(WebServicePerformanceTestDocumentPath);
-            XmlNode node = document.LastChild.LastChild;
-            XmlElement postBodyElement = document.CreateElement("FormPostHttpBody");
-            XmlElement formPostParameterElement;
 
-            JObject jsonObject = JObject.Parse(data);
-            foreach (JProperty jsonProperty in (JToken)jsonObject)
+            XmlElement postBodyElement;
+            XmlNode requestNode = webServiceId == "first" ?
+                document.LastChild.FirstChild.FirstChild :
+                document.LastChild.FirstChild.ChildNodes[1];
+            //document.LastChild.FirstChild :
+            //document.LastChild.LastChild;
+
+            if (isPostRequest)
             {
-                var name = jsonProperty.Name;
-                var value = jsonProperty.Value.ToString();
-                formPostParameterElement = document.CreateElement("FormPostParameter");
-                formPostParameterElement.SetAttribute("Name", name);
-                formPostParameterElement.SetAttribute("Value", value);
-                formPostParameterElement.SetAttribute("RecordedValue", "");
-                formPostParameterElement.SetAttribute("CorrelationBinding", "");
-                formPostParameterElement.SetAttribute("UrlEncode", "True");
-                postBodyElement.AppendChild(formPostParameterElement);
-            }
+                XmlElement formPostParameterElement = null;
+                if (requestNode.ChildNodes.Count == 0)
+                {
+                    postBodyElement = document.CreateElement("FormPostHttpBody");
+                }
+                else
+                {
+                    postBodyElement = requestNode.FirstChild as XmlElement;
+                }
 
-            node.AppendChild(postBodyElement);
+                int childNodeIndex = 0;
+                JObject jsonObject = JObject.Parse(data);
+                foreach (JProperty jsonProperty in (JToken)jsonObject)
+                {
+                    var name = jsonProperty.Name;
+                    var value = jsonProperty.Value.ToString();
+
+                    if (requestNode.ChildNodes.Count == 0)
+                    {
+                        formPostParameterElement = document.CreateElement("FormPostParameter");
+                    }
+                    else
+                    {
+                        formPostParameterElement = postBodyElement.ChildNodes[childNodeIndex] as XmlElement;
+                    }
+
+                    formPostParameterElement.SetAttribute("Name", name);
+                    formPostParameterElement.SetAttribute("Value", value);
+                    formPostParameterElement.SetAttribute("RecordedValue", "");
+                    formPostParameterElement.SetAttribute("CorrelationBinding", "");
+                    formPostParameterElement.SetAttribute("UrlEncode", "True");
+
+                    childNodeIndex += 1;
+
+                    if (requestNode.ChildNodes.Count == 0)
+                    {
+                        postBodyElement.AppendChild(formPostParameterElement);
+                    }
+                }
+
+                if (requestNode.ChildNodes.Count == 0)
+                {
+                    requestNode.AppendChild(postBodyElement);
+                }
+            }
+            else
+            {
+                var postBodyNode = requestNode.FirstChild;
+                if (postBodyNode?.Name == "FormPostHttpBody")
+                {
+                    requestNode.RemoveChild(postBodyNode);
+                }     
+            }
+           
             document.Save(WebServicePerformanceTestDocumentPath);
         }
 

@@ -2,15 +2,15 @@
 
 namespace AggregatedWebServiceQualityEstimation.Models
 {
-    public class PostData
+    public class WebServiceData
     {
+        [JsonProperty(PropertyName = "webServiceId")]
+        public string WebServiceId { get; set; }
+
         [JsonProperty(PropertyName = "url")]
         public string Url { get; set; }
 
         [JsonProperty(PropertyName = "body")]
-        public object Value { get; set; }
-
-        [JsonProperty(PropertyName = "duration")]
-        public string Duration { get; set; }
+        public object Body { get; set; }
     }
 }

@@ -14,10 +14,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     {
         public IList<StatisticalEstimatorResult> statisticalData { get; private set; }
 
-        public StatisticalEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        public StatisticalEstimator(ITestDataManager loadTestDataManager, string webServiceId) : base(loadTestDataManager)
         {
             statisticalData = new List<StatisticalEstimatorResult>();
-            GetMetricsData(byRow: false);
+            GetMetricsData(webServiceId, byRow: false);
             MetricsData = MetricsData.Skip(2).ToList();
         }
 

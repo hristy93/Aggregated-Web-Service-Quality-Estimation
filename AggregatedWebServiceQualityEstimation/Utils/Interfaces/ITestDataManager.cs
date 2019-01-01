@@ -4,9 +4,9 @@ namespace AggregatedWebServiceQualityEstimation.Utils.Interfaces
 {
     public interface ITestDataManager
     {
-        void WriteTestData();
-        void WriteTestData(string testData);
-        string ReadTestData(bool fromFile);
+        void WriteTestData(string webServiceId);
+        void WriteTestData(string testData, string webServiceId);
+        string ReadTestData(string webServiceId, bool fromFile);
         void SaveUsedMetrics(Dictionary<string, bool> metricsInfo);
     }
 }

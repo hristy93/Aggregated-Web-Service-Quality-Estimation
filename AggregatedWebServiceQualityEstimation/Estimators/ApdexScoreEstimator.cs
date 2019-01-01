@@ -11,15 +11,15 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     {
         private ApdexScoreEstimatorResult _apdexScoreEstimatorResult;
 
-        public ApdexScoreEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        public ApdexScoreEstimator(ITestDataManager loadTestDataManager, string webServiceId) : base(loadTestDataManager)
         {
             //GetMetricsData(byRow: false);
         }
 
-        public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile)
+        public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile, string webServiceId)
         {
             var result = new List<ApdexScoreEstimatorResult>();
-            GetMetricsData(byRow: false, fromFile: fromFile);
+            GetMetricsData(webServiceId, byRow: false, fromFile: fromFile);
             var intervals = MetricsData.Take(2).ToList();
             var responseTimeData = MetricsData[2]?.Skip(1).ToList();
 

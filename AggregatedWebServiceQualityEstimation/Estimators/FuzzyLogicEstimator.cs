@@ -19,10 +19,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         public IList<double> AggregatedQualityMembershipFunction;
 
-        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager, string webServiceId) : base(loadTestDataManager)
         {
             AggregatedQualityMembershipFunction = new List<double>();
-            GetMetricsData(byRow: false);
+            GetMetricsData(webServiceId, byRow: false);
             MetricsData = MetricsData.Skip(2).ToList();
         }
 

@@ -2,9 +2,8 @@
 {
     public interface ITestModifier
     {
-        void EditUrl(string url, bool isPost);
-        void EditRequestBodyData(string data);
-
+        void EditUrl(string url, bool isPost, string webServiceId);
+        void EditRequestBodyData(string data, bool isPostRequest, string webServiceId);
         bool EditDuration(string duration);
     }
 }
