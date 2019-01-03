@@ -1,4 +1,5 @@
-﻿using AggregatedWebServiceQualityEstimation.Utils;
+﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Utils;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
@@ -17,50 +18,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         public Estimator(ITestDataManager loadTestDataManager)
         {
             _loadTestDataManager = loadTestDataManager;
-        }
-
-        protected void GetMetricsData(string webServiceId, bool byRow = true, bool fromFile = true, bool isFiltered = true)
-        {
-            var fileOutput = _loadTestDataManager.ReadTestData(webServiceId, fromFile);
-            var fileLines = fileOutput.Split(Environment.NewLine);
-            var fileLinesTransformed = fileLines.Select(x => x.Split(','));
-            var metricsUsed = LoadTestDataManager.MetricsUsed;
-
-            if (byRow)
-            {
-                if (isFiltered && metricsUsed.Count != 0)
-                {
-                    var metricsNames = fileLinesTransformed.ToList()[0];
-                    var metricsIndexes = metricsNames
-                        .Where(item => item.StartsWith("Interval") || metricsUsed[item])
-                        .Select(item => metricsNames.ToList().IndexOf(item));
-                    var filteredMetricsData = fileLinesTransformed
-                        .Select(metricsInfo => metricsInfo
-                        .Where(item => metricsIndexes.Contains(metricsInfo.ToList().IndexOf(item))).ToArray())
-                        .ToList();
-                    MetricsData = filteredMetricsData.Skip(1).ToList();
-                }
-                else
-                {
-                    MetricsData = fileLinesTransformed.Skip(1).ToList();
-                }
-            }
-            else
-            {
-                MetricsData = fileLinesTransformed
-                    .SelectMany(inner => inner.Select((item, index) => new { item, index }))
-                    .GroupBy(i => i.index, i => i.item)
-                    .Select(g => g.ToArray())
-                    .ToList();
-
-                if (isFiltered && metricsUsed != null)
-                {
-                    var filteredMetricsData = MetricsData
-                        .Where(metric => metric[0].StartsWith("Interval") || metricsUsed[metric[0]])
-                        .ToList();
-                    MetricsData = filteredMetricsData;
-                } 
-            }
         }
     }
 }

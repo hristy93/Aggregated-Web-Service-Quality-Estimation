@@ -1,4 +1,5 @@
-﻿using AggregatedWebServiceQualityEstimation.Utils;
+﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Utils;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
@@ -9,17 +10,25 @@ using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
-    public class ClusterEstimator : Estimator
+    public class ClusterEstimator : IClusterEstimator, IMetricsData
     {
         public double DensestClusterCenterPotential { get; private set; }
         public double DensestClusterDensity { get; private set; }
         public double DensestClusterEstimation => DensestClusterCenterPotential / MetricsData.Count;
 
-        private Vector<double> _clusterCenter;
+        public IList<string[]> MetricsData { get; set; }
 
-        public ClusterEstimator(ITestDataManager loadTestDataManager, string webServiceId) : base(loadTestDataManager)
+        private Vector<double> _clusterCenter;
+        private readonly ITestDataManager _loadTestDataManager;
+
+        public ClusterEstimator(ITestDataManager loadTestDataManager, string webServiceId)
         {
-            GetMetricsData(webServiceId);
+            _loadTestDataManager = loadTestDataManager;
+        }
+
+        public void GetMetricsData(string webServiceId, bool fromFile = false, bool byRow = false)
+        {
+            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId);
         }
 
         public void FindClusterCenter()

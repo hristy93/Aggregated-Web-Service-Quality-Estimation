@@ -1,4 +1,5 @@
-﻿using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
-    public class FuzzyLogicEstimator : Estimator
+    public class FuzzyLogicEstimator : IFuzzyLogicEstimator, IMetricsData
     {
         private readonly IDictionary<string, bool> isGreaterBetter = new Dictionary<string, bool> {
             ["ResponseTime"] = false,
@@ -16,14 +17,23 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             ["SentKilobytesPerSecond"] = true,
             ["ReceivedKilobytesPerSecond"] = true,
         };
+        private readonly ITestDataManager loadTestDataManager;
 
-        public IList<double> AggregatedQualityMembershipFunction;
+        public IList<double> AggregatedQualityMembershipFunction { get; set; }
 
-        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager, string webServiceId) : base(loadTestDataManager)
+        private ITestDataManager _loadTestDataManager;
+
+        public IList<string[]> MetricsData { get; set; }
+
+        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager)
         {
             AggregatedQualityMembershipFunction = new List<double>();
-            GetMetricsData(webServiceId, byRow: false);
-            MetricsData = MetricsData.Skip(2).ToList();
+            _loadTestDataManager = loadTestDataManager;
+        }
+
+        public void GetMetricsData(string webServiceId, bool fromFile = false, bool byRow = false)
+        {
+            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false)?.Skip(2).ToList();
         }
 
         public void GetAggregatedQualityMembershipFunction()

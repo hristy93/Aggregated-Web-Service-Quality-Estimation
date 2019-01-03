@@ -1,10 +1,11 @@
 ﻿using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace AggregatedWebServiceQualityEstimation.Utils
@@ -43,7 +44,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 
         private IConfiguration _configuration;
 
-        public static Dictionary<string, bool> MetricsUsed { get; private set; }
+        private static Dictionary<string, bool> _metricsUsed;
 
         public LoadTestDataManager(IConfiguration configuration)
         {
@@ -82,16 +83,80 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 throw ex;
             }
 
             return result;
         }
 
+        public string UploadTestData(IFormFile file)
+        {
+            string fileContent = null;
+
+            using (MemoryStream data = new MemoryStream())
+            {
+                using (Stream fileStream = file.OpenReadStream())
+                {
+                    fileStream.CopyTo(data);
+                    var buffer = data.ToArray();
+                    fileContent = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                }
+            }
+
+            return fileContent;
+        }
+
+
         public void SaveUsedMetrics(Dictionary<string, bool> metricsInfo)
         {
-                MetricsUsed = metricsInfo;
+            _metricsUsed = metricsInfo;
+        }
+
+        public IList<string[]> GetMetricsData(string webServiceId, bool byRow = true, bool fromFile = true, bool isFiltered = true)
+        {
+            var fileOutput = ReadTestData(webServiceId, fromFile);
+            var fileLines = fileOutput.Split(Environment.NewLine);
+            var fileLinesTransformed = fileLines.Select(x => x.Split(','));
+            IList<string[]> metricsData;
+
+            if (byRow)
+            {
+                if (isFiltered && _metricsUsed.Count != 0)
+                {
+                    var metricsNames = fileLinesTransformed.ToList()[0];
+                    var metricsIndexes = metricsNames
+                        .Where(item => item.StartsWith("Interval") || _metricsUsed[item])
+                        .Select(item => metricsNames.ToList().IndexOf(item));
+                    var filteredMetricsData = fileLinesTransformed
+                        .Select(metricsInfo => metricsInfo
+                        .Where(item => metricsIndexes.Contains(metricsInfo.ToList().IndexOf(item))).ToArray())
+                        .ToList();
+                    metricsData = filteredMetricsData.Skip(1).ToList();
+                }
+                else
+                {
+                    metricsData = fileLinesTransformed.Skip(1).ToList();
+                }
+            }
+            else
+            {
+                metricsData = fileLinesTransformed
+                    .SelectMany(inner => inner.Select((item, index) => new { item, index }))
+                    .GroupBy(i => i.index, i => i.item)
+                    .Select(g => g.ToArray())
+                    .ToList();
+
+                if (isFiltered && _metricsUsed != null)
+                {
+                    var filteredMetricsData = metricsData
+                        .Where(metric => metric[0].StartsWith("Interval") || _metricsUsed[metric[0]])
+                        .ToList();
+                    metricsData = filteredMetricsData;
+                }
+            }
+
+            return metricsData;
         }
 
         private string GetTestDataFromDatabase(string webServiceId)
