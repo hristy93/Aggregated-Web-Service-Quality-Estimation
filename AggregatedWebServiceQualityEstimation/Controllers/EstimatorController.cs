@@ -25,10 +25,11 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         private ITestDataManager _loadTestDataManager;
 
         public EstimatorController(ITestDataManager loadTestDataManager, IApdexScoreEstimator apdexScoreEstimator,
-            IFuzzyLogicEstimator fuzzyLogicEstimator, IStatisticalEstimator statisticalEstimator)
+            IClusterEstimator clusterEstimator, IFuzzyLogicEstimator fuzzyLogicEstimator, IStatisticalEstimator statisticalEstimator)
         {
             _loadTestDataManager = loadTestDataManager;
             _apdexScoreEstimator = apdexScoreEstimator;
+            _clusterEstimator = clusterEstimator;
             _fuzzyLogicEstimator = fuzzyLogicEstimator;
             _statisticalEstimator = statisticalEstimator;
         }
@@ -48,7 +49,6 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                _clusterEstimator = new ClusterEstimator(_loadTestDataManager, webServiceId);
                 (_clusterEstimator as IMetricsData)?.GetMetricsData(webServiceId);
 
                 _clusterEstimator.FindClusterCenter();
@@ -65,7 +65,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -84,16 +84,15 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                _statisticalEstimator = new StatisticalEstimator(_loadTestDataManager);
                 (_statisticalEstimator as IMetricsData)?.GetMetricsData(webServiceId);
 
-                _statisticalEstimator.GetFiveNumberSummaries();
+                _statisticalEstimator.GetStatisticalData();
                 var fiveNumberSummaries = _statisticalEstimator.StatisticalData;
                 return Ok(fiveNumberSummaries);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -112,7 +111,6 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                _fuzzyLogicEstimator = new FuzzyLogicEstimator(_loadTestDataManager);
                 (_fuzzyLogicEstimator as IMetricsData)?.GetMetricsData(webServiceId);
 
                 _fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
@@ -122,7 +120,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -143,7 +141,6 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                _apdexScoreEstimator = new ApdexScoreEstimator(_loadTestDataManager);
                 (_apdexScoreEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile);
 
                 var currentApdexScoreInfo = _apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile, webServiceId);
@@ -152,7 +149,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
     }

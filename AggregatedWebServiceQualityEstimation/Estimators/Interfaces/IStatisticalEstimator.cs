@@ -7,6 +7,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators.Interfaces
     {
         IList<StatisticalEstimatorResult> StatisticalData { get; }
 
-        void GetFiveNumberSummaries();
+        void GetStatisticalData();
     }
 }

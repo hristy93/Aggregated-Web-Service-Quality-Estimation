@@ -29,7 +29,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false)?.Skip(2).ToList();
         }
 
-        public void GetFiveNumberSummaries()
+        public void GetStatisticalData()
         {
             try
             {
