@@ -85,10 +85,10 @@ class EstimationContainer extends Component {
 
         return (
             <div id={`${webServiceId}-estimations`}>
-                <EstimationForm { ...estimationFormProps}/>
-                <ApdexScoreEstimation { ...apdexScoreEstimatorProps } />
+                <EstimationForm {...estimationFormProps}/>
+                <ApdexScoreEstimation {...apdexScoreEstimatorProps} />
                 <ClusterEstimation {...clusterEstimatorProps} />
-                <StatisticalEstimation {...statisticsEstimatorProps } />
+                <StatisticalEstimation {...statisticsEstimatorProps} />
             </div>
         );
     }

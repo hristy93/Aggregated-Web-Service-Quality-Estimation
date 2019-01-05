@@ -17,7 +17,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             ["SentKilobytesPerSecond"] = true,
             ["ReceivedKilobytesPerSecond"] = true,
         };
-        private readonly ITestDataManager loadTestDataManager;
 
         public IList<double> AggregatedQualityMembershipFunction { get; set; }
 

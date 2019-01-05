@@ -112,7 +112,6 @@ namespace Backend.UnitTests.Controllers
         [Fact]
         public void WriteTestData_Success()
         {
-            const string expectedValue = "loadTestData";
             const string webServiceId = "first";
 
             _loadTestDataManager.Setup(testDataManager => testDataManager.WriteTestData(webServiceId));
