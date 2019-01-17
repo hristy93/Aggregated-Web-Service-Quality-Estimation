@@ -15,8 +15,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         public readonly string loadTestFirstServiceFilePath = "loadTestResults-1.csv";
         public readonly string loadTestSecondServiceFilePath = "loadTestResults-2.csv";
 
-        private readonly string _combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond,
-            SentKilobytesPerSecond, IntervalStartTime, IntervalEndTime from LoadTestDataForAllChartsDualServices";
+        private readonly string _combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond, 
+            IntervalStartTime, IntervalEndTime from LoadTestDataForAllChartsDualServices";
 
         private readonly string _responceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
             + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
@@ -126,7 +126,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 {
                     var metricsNames = fileLinesTransformed.ToList()[0];
                     var metricsIndexes = metricsNames
-                        .Where(item => item.StartsWith("Interval") || _metricsUsed[item])
+                        .Where(item => item.StartsWith("Interval") ||
+                        (_metricsUsed.ContainsKey(item) && _metricsUsed[item]))
                         .Select(item => metricsNames.ToList().IndexOf(item));
                     var filteredMetricsData = fileLinesTransformed
                         .Select(metricsInfo => metricsInfo
@@ -150,7 +151,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 if (isFiltered && _metricsUsed != null)
                 {
                     var filteredMetricsData = metricsData
-                        .Where(metric => metric[0].StartsWith("Interval") || _metricsUsed[metric[0]])
+                        .Where(metric => metric[0].StartsWith("Interval") || 
+                        (_metricsUsed.ContainsKey(metric[0]) && _metricsUsed[metric[0]]))
                         .ToList();
                     metricsData = filteredMetricsData;
                 }
@@ -179,8 +181,10 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 {
                     try
                     {
+                        //headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,FailedRequestsPerSecond"
+                        //    + ",SentKilobytesPerSecond,ReceivedKilobytesPerSecond";
                         headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,FailedRequestsPerSecond"
-                            + ",SentKilobytesPerSecond,ReceivedKilobytesPerSecond";
+                            + ",ReceivedKilobytesPerSecond";
                         testDataBuilder.AppendLine(headers);
 
                         while (reader.Read())
@@ -190,10 +194,10 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                             var responseTime = FixDecimalNumberSeparator(reader["ResponseTime"].ToString());
                             var successfulRequestsPerSecond = FixDecimalNumberSeparator(reader["SuccessfulRequestsPerSecond"].ToString());
                             var failedRequestsPerSecond = FixDecimalNumberSeparator(reader["FailedRequestsPerSecond"].ToString());
-                            var sentKilobytesPerSecond = FixDecimalNumberSeparator(reader["SentKilobytesPerSecond"].ToString());
+                            //var sentKilobytesPerSecond = FixDecimalNumberSeparator(reader["SentKilobytesPerSecond"].ToString());
                             var receivedKilobytesPerSecond = FixDecimalNumberSeparator(reader["ReceivedKilobytesPerSecond"].ToString());
                             result = $"{startTime}, {endTime}, {responseTime}, {successfulRequestsPerSecond}, {failedRequestsPerSecond}," +
-                                $" {sentKilobytesPerSecond}, {receivedKilobytesPerSecond}";
+                                $" {receivedKilobytesPerSecond}";
 
                             testDataBuilder.AppendLine(result);
                         }

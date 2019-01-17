@@ -1,5 +1,6 @@
 ﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -14,7 +15,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             ["ResponseTime"] = false,
             ["SuccessfulRequestsPerSecond"] = true,
             ["FailedRequestsPerSecond"] = false,
-            ["SentKilobytesPerSecond"] = true,
+            //["SentKilobytesPerSecond"] = true,
             ["ReceivedKilobytesPerSecond"] = true,
         };
 
@@ -60,7 +61,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     }
                     else
                     {
-                        inverseValue = metrics.Count();
+                        inverseValue = metrics.Count() - 1;
                     }
 
                     metricsVectorDistinctGroupCount = metricsVector

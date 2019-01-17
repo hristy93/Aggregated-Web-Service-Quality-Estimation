@@ -56,10 +56,10 @@ class LoadTestCharts extends Component {
                 LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
                 LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
                 break;
-            case "switch-line-visibility-SentKilobytesPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("SentKilobytesPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("SentKilobytesPerSecond");
-                break;
+            //case "switch-line-visibility-SentKilobytesPerSecond":
+            //    LoadTestChartsActions.setLineVisibility.defer("SentKilobytesPerSecond");
+            //    LoadTestChartsActions.setReferenceLinesVisibility.defer("SentKilobytesPerSecond");
+            //    break;
             case "switch-line-visibility-ReceivedKilobytesPerSecond":
                 LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
                 LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
@@ -95,30 +95,36 @@ class LoadTestCharts extends Component {
         const { areReferenceLinesVisible } = webServiceId === "first" ?
             firstWebServiceLinesData : secondWebServiceLinesData;
 
-        let referenceLines = [];
+        let referenceLinesData = [];
         if (areReferenceLinesVisible) {
-            referenceLines = statisticalData.map((item) => {
+            referenceLinesData = statisticalData.map((item) => {
                 const standardDeviation = Math.sqrt(item.variance);
                 const innerQuartileDistance = item.upperQuartile - item.lowerQuartile;
 
                 return {
                     metricName: item.metricName,
+
+                    // Use mean and stdev
                     mean: item.mean,
-                    //lowerStandardDeviation: item.mean - standardDeviation,
-                    //upperStandardDeviation: item.mean + standardDeviation
-                    lowerInnerFenceBound: item.lowerQuartile - innerQuartileDistance * 1.5,
-                    upperInnerFenceBound: item.upperQuartile + innerQuartileDistance * 1.5,
-                    lowerOuterFenceBound: item.lowerQuartile - innerQuartileDistance * 3,
-                    upperOuterFenceBound: item.upperQuartile + innerQuartileDistance * 3
+                    lowerInnerFenceBound: item.mean - standardDeviation,
+                    upperInnerFenceBound: item.mean + standardDeviation,
+                    lowerOuterFenceBound: item.mean - standardDeviation * 2,
+                    upperOuterFenceBound: item.mean + standardDeviation * 2,
+
+                    // Use median and IQR
+                    //median: item.median,
+                    //lowerInnerFenceBound: item.lowerQuartile - innerQuartileDistance * 1.5,
+                    //upperInnerFenceBound: item.upperQuartile + innerQuartileDistance * 1.5,
+                    //lowerOuterFenceBound: item.lowerQuartile - innerQuartileDistance * 3,
+                    //upperOuterFenceBound: item.upperQuartile + innerQuartileDistance * 3
                 };
             });
         }
 
         const isResponseTimeChartVisible = metricsInfo["ResponseTime"];
         const isRequestsChartVisible = metricsInfo["SuccessfulRequestsPerSecond"] ||
-            metricsInfo["SuccessfulRequestsPerSecond"];
-        const isThroughputChartVisible = metricsInfo["ReceivedKilobytesPerSecond"] ||
-            metricsInfo["SentKilobytesPerSecond"];
+            metricsInfo["FailedRequestsPerSecond"];
+        const isThroughputChartVisible = metricsInfo["ReceivedKilobytesPerSecond"];
 
         return (
             <div id={`${webServiceId}-web-service-charts`}>
@@ -154,8 +160,8 @@ class LoadTestCharts extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLines.length !== 0 ? [referenceLines[0]] : []}
-                    referenceLinesData={referenceLines}
+                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[0]] : []}
+                    referenceLinesData={referenceLinesData}
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
@@ -169,8 +175,8 @@ class LoadTestCharts extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLines.length !== 0 ? [referenceLines[1], referenceLines[2]] : []}
-                    referenceLinesData={referenceLines}
+                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[1], referenceLinesData[2]] : []}
+                    referenceLinesData={referenceLinesData}
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}
@@ -185,8 +191,8 @@ class LoadTestCharts extends Component {
                     brushStartIndex={brushStartIndex}
                     brushEndIndex={brushEndIndex}
                     showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLines.length !== 0 ? [referenceLines[3], referenceLines[4]] : []}
-                    referenceLinesData={referenceLines}
+                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[3], referenceLinesData[4]] : []}
+                    referenceLinesData={referenceLinesData}
                     //legendOnClick={this.handleLegendOnClick}
                     toggleLineVisibility={this.handleSwitchOnChange}
                     syncChart={syncCharts}

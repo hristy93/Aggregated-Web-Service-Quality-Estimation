@@ -16,8 +16,8 @@ class LoadTestMetricsStore {
                 "ResponseTime": true,
                 "SuccessfulRequestsPerSecond": true,
                 "FailedRequestsPerSecond": true,
-                "ReceivedKilobytesPerSecond": true,
-                "SentKilobytesPerSecond": true
+                "ReceivedKilobytesPerSecond": true
+                //"SentKilobytesPerSecond": true
             }
         });
     }

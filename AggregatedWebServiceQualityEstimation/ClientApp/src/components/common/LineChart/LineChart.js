@@ -70,6 +70,16 @@ class LineChart extends Component {
         referenceLinesData: []
     };
 
+    getReferenceLineStrokeDash = (metricName) => {
+        if (metricName.endsWith("OuterFenceBound")) {
+            return "6 6";
+        } else if (metricName.endsWith("InnerFenceBound")) {
+            return "4 4";
+        } else {
+            return "3 3";
+        }
+    }
+
     referenceLinesRenderer = (referenceLinesData, lines) => {
         if (!isNil(referenceLinesData) && referenceLinesData.length !== 0) {
             const result = lines.map((linesItem, outerIndex) => {
@@ -83,7 +93,7 @@ class LineChart extends Component {
                                 key={`reference-line-${linesItem.axisYKey}-${outerIndex}-${innerIndex}`}
                                 label={""}
                                 stroke={linesItem.color}
-                                strokeDasharray={!key.endsWith("OuterFenceBound") ? "3 3" : "5 5"}
+                                strokeDasharray={this.getReferenceLineStrokeDash(key)}
                             />
                         );
                     });

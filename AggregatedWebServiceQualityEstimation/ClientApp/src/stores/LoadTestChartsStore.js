@@ -32,12 +32,13 @@ class LoadTestChartsStore {
                     color: "#6319FF",
                     isLineVisible: true,
                     areReferenceLinesVisible: true
-                }, {
-                    axisYKey: "SentKilobytesPerSecond",
-                    color: "#E85D18",
-                    isLineVisible: true,
-                    areReferenceLinesVisible: true
                 }],
+                //}, {
+                //    axisYKey: "SentKilobytesPerSecond",
+                //    color: "#E85D18",
+                //    isLineVisible: true,
+                //    areReferenceLinesVisible: true
+                //}],
                 apdexScore: [{
                     axisYKey: "ApdexScore",
                     color: "#00FFFF",
