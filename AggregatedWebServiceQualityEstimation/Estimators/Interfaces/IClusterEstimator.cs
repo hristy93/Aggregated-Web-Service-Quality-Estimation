@@ -1,12 +1,16 @@
-﻿namespace AggregatedWebServiceQualityEstimation.Estimators.Interfaces
+﻿using System.Collections.Generic;
+
+namespace AggregatedWebServiceQualityEstimation.Estimators.Interfaces
 {
     public interface IClusterEstimator
     {
-        double DensestClusterCenterPotential { get; }
-        double DensestClusterDensity { get; }
-        double DensestClusterEstimation { get; }
+        IList<double> ClustersCentersPotentials { get; }
+        IList<IList<double>> ClustersCenters { get; }
+        IList<double> ClustersDensities { get; }
+        IList<double> ClustersSpreads { get; }
+        //double DensestClusterEstimation { get; }
 
-        void FindClusterCenter();
-        void FindClusterDensity();
+        void FindDensestClusterCenter();
+        void FindClustersDensities();
     }
 }

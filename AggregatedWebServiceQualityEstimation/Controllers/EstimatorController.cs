@@ -49,17 +49,27 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
+                var clusterEstimatorResult = new List<ClusterEstimatorResult>();
                 (_clusterEstimator as IMetricsData)?.GetMetricsData(webServiceId);
 
-                _clusterEstimator.FindClusterCenter();
-                _clusterEstimator.FindClusterDensity();
-
-                var clusterEstimatorResult = new ClusterEstimatorResult()
+                if ((_clusterEstimator as IMetricsData)?.MetricsData[0].Skip(2).Count() > 1)
                 {
-                    DensestClusterCenterPotential = _clusterEstimator.DensestClusterCenterPotential,
-                    DensestClusterDensity = _clusterEstimator.DensestClusterDensity,
-                    DensestClusterEstimation = _clusterEstimator.DensestClusterEstimation
-                };
+                    _clusterEstimator.FindDensestClusterCenter();
+                    _clusterEstimator.FindClustersDensities();
+
+                    for (int i = 0; i < _clusterEstimator.ClustersCenters.Count; i++)
+                    {
+                        var clusterData = new ClusterEstimatorResult()
+                        {
+                            Potential = _clusterEstimator.ClustersCentersPotentials[i],
+                            Center = _clusterEstimator.ClustersCenters[i],
+                            Density = _clusterEstimator.ClustersDensities[i],
+                            Spread = _clusterEstimator.ClustersSpreads[i],
+                        };
+
+                        clusterEstimatorResult.Add(clusterData);
+                    }
+                }
 
                 return Ok(clusterEstimatorResult);
             }
