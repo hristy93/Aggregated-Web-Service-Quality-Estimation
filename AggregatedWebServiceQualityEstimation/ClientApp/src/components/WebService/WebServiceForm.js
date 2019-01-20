@@ -86,7 +86,7 @@ class WebServiceForm extends Component {
                 <Select
                     id="request-type"
                     title="Request Type:"
-                    items={["GET", "POST"]}
+                    items={["Receive data (GET)", "Send data (POST)"]}
                     disabled={areOperationsDenied}
                     onChange={this.handleRequestTypeChange}
                 />

@@ -153,8 +153,10 @@ class LoadTestCharts extends Component {
                 }
                 <LineChart
                     axisXKey="IntervalStartTime"
+                    //axisXLabel="Time Intervals"
                     data={chartsData}
                     axisYUnit="s"
+                    //axisYLabel="Response Time"
                     lines={chartsLinesData['responseTime']}
                     brushOnChange={brushOnChange}
                     brushStartIndex={brushStartIndex}
@@ -169,7 +171,10 @@ class LoadTestCharts extends Component {
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
+                    //axisXLabel="Time Intervals"
                     data={chartsData}
+                    axisYUnit="rps"
+                    //axisYLabel="Requests Per Second"
                     lines={chartsLinesData['requests']}
                     brushOnChange={brushOnChange}
                     brushStartIndex={brushStartIndex}
@@ -184,7 +189,9 @@ class LoadTestCharts extends Component {
                 />
                 <LineChart
                     axisXKey="IntervalStartTime"
+                    //axisXLabel="Time Intervals"
                     data={chartsData}
+                    //axisYLabel="Throughput"
                     axisYUnit="KBps"
                     lines={chartsLinesData['throughput']}
                     brushOnChange={brushOnChange}

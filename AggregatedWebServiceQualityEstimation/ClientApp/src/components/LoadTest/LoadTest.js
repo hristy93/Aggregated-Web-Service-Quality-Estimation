@@ -236,20 +236,20 @@ class LoadTest extends Component {
                             onClick={() => this.handleWriteLoadTestDataClick("first")}
                         >
                             Write Load Test Data
-                            </Button>
+                        </Button>
                         <Button
                             id="read-load-test-data-button"
                             onClick={() => this.handleReadLoadTestDataClick("first")}
                         >
                             Read Load Test Data
-                            </Button>
+                        </Button>
                         <LoadTestCharts
                             webServiceId="first"
                             chartsData={firstServiceLoadTestData}
                             brushOnChange={this.handleBrushOnChange}
                         />
                         <EstimationContainer
-                            webServiceId="first" 
+                            webServiceId="first"
                             brushOnChange={this.handleBrushOnChange}
                             areOperationsDenied={areOperationsDenied}
                         />
@@ -262,13 +262,13 @@ class LoadTest extends Component {
                             onClick={() => this.handleWriteLoadTestDataClick("second")}
                         >
                             Write Load Test Data
-                            </Button>
+                        </Button>
                         <Button
                             id="read-load-test-data-button"
                             onClick={() => this.handleReadLoadTestDataClick("second")}
                         >
                             Read Load Test Data
-                            </Button>
+                        </Button>
                         <LoadTestCharts
                             webServiceId="second"
                             chartsData={secondServiceLoadTestData}
