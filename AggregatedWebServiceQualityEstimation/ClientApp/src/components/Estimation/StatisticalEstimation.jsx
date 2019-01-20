@@ -5,7 +5,7 @@ import EstimationStore from '../../stores/EstimationStore';
 import EstimationActions from '../../actions/EstimationActions';
 import startCase from 'lodash/startCase';
 
-const decimalPlacePrecision = 3;
+const decimalPlacePrecision = 2;
 
 class StatisticalEstimation extends Component {
     //static getStores() {
@@ -22,10 +22,13 @@ class StatisticalEstimation extends Component {
         const {
             webServiceId,
             statisticalData,
-            areOperationsDenied
+            areOperationsDenied,
+            loadTestData
         } = this.props;
 
         const statisticMetricNames = statisticalData.length === 0 ? [] : statisticalData[0];
+        const failedRequestCount = loadTestData.filter(item => parseInt(item.FailedRequestsPerSecond) !== 0).length;
+        const successRate = (loadTestData.length - failedRequestCount) / loadTestData.length;
 
         return (
             <div id="statistical-estimation" style={{ marginTop: "2rem" }}>
@@ -40,6 +43,28 @@ class StatisticalEstimation extends Component {
                     <h4><b>Statistical Data</b></h4>
                 </div>
                 <div id="statistical-data" style={{ marginTop: "1rem" }}>
+                    <div>
+                    {
+                        statisticalData.map((statisticalItem) => {
+                            return (
+                                <div key={`${statisticalItem.metricName}-percentile-data`}>
+                                    <h4> {startCase(statisticalItem.metricName)} </h4>
+                                    {
+                                        statisticalItem.metricName.toLocaleLowerCase().includes("success") &&
+                                        <p> Success Rate: {(successRate * 100).toFixed(decimalPlacePrecision)}% </p>
+                                    }
+                                    {
+                                        statisticalItem.metricName.toLocaleLowerCase().includes("fail") &&
+                                        <p> Failure Rate: {((1 - successRate) * 100).toFixed(decimalPlacePrecision)}% </p>
+                                    }
+                                    95% over {statisticalItem.percentile95.toFixed(decimalPlacePrecision)} ({(statisticalItem.percentageAbovePercentile95 * 100).toFixed(decimalPlacePrecision)}%) <br />
+                                    99% over {statisticalItem.percentile99.toFixed(decimalPlacePrecision)} ({(statisticalItem.percentageAbovePercentile99 * 100).toFixed(decimalPlacePrecision)}%) <br />
+                                    <br />
+                                </div>
+                            );
+                        })
+                    }
+                    </div>
                     <Table
                         responsive
                         striped
@@ -51,11 +76,13 @@ class StatisticalEstimation extends Component {
                             <tr>
                             {
                                 Object.keys(statisticMetricNames).map((item) => {
+                                    if (!item.toLocaleLowerCase().includes("percentile")) {
                                         return (
                                             <th key={item}>
                                                 {startCase(item)}
                                             </th>
                                         );
+                                    }
                                 })
                             }
                             </tr>

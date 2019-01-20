@@ -6,6 +6,7 @@ using MathNet.Numerics.Statistics;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 {
     public class StatisticalEstimator : IStatisticalEstimator, IMetricsData
     {
+        private readonly CultureInfo _cultureInfo = new CultureInfo("en");
         private readonly ITestDataManager _loadTestDataManager;
 
         public IList<StatisticalEstimatorResult> StatisticalData { get; private set; }
@@ -42,12 +44,23 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 {
                     metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
                         .Skip(1)
-                        .Select(x => Double.Parse(x.Replace('.', ','))));
+                        .Select(x => Double.Parse(x, _cultureInfo)));
                         //.Select(x => Math.Round(x, 3)));
 
                     fiveNumberSummary = Statistics.FiveNumberSummary(metricsVector.ToArray());
                     mean = Statistics.Mean(metricsVector);
                     variance = Statistics.Variance(metricsVector);
+
+                    var percentile95 = Statistics.Percentile(metricsVector, 95);
+                    var percentile99 = Statistics.Percentile(metricsVector, 99);
+
+                    var abovePercentile95Count = metricsVector
+                        .Where(item => item >= percentile95).Count();
+                    var abovePercentile99Count = metricsVector
+                       .Where(item => item >= percentile99).Count();
+
+                    var percentageAbovePercentile95 = (double) abovePercentile95Count / metricsVector.Count;
+                    var percentageAbovePercentile99 = (double) abovePercentile99Count / metricsVector.Count;
 
                     statisticalEstimatorResult = new StatisticalEstimatorResult()
                     {
@@ -58,7 +71,11 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                         UpperQuartile = fiveNumberSummary[3],
                         Max = fiveNumberSummary[4],
                         Mean = mean,
-                        Variance = variance
+                        Variance = variance,
+                        Percentile95 = percentile95,
+                        Percentile99 = percentile99,
+                        PercentageAbovePercentile95 = percentageAbovePercentile95,
+                        PercentageAbovePercentile99 = percentageAbovePercentile99
                     };
 
                     StatisticalData.Add(statisticalEstimatorResult);

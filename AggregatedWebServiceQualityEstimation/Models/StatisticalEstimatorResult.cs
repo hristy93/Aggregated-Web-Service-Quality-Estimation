@@ -15,5 +15,9 @@ namespace AggregatedWebServiceQualityEstimation.Models
         public double Max { get; set; }
         public double Mean { get; set; }
         public double Variance { get; set; }
+        public double Percentile95 { get; set; }
+        public double Percentile99 { get; set; }
+        public double PercentageAbovePercentile95 { get; set; }
+        public double PercentageAbovePercentile99 { get; set; }
     }
 }

@@ -7,6 +7,7 @@ import ClusterEstimation from './ClusterEstimation';
 import EstimationActions from '../../actions/EstimationActions';
 import EstimationStore from '../../stores/EstimationStore';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
+import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 
 class EstimationContainer extends Component {
@@ -18,6 +19,8 @@ class EstimationContainer extends Component {
         return ({
             firstWebServiceEstimationData: EstimationStore.getFirstWebServiceEstimationData(),
             secondWebServiceEstimationData: EstimationStore.getSecondWebServiceEstimationData(),
+            firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
+            secondServiceLoadTestData: LoadTestStore.getSecondServiceLoadTestData(),
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
@@ -36,6 +39,8 @@ class EstimationContainer extends Component {
         const {
             firstWebServiceEstimationData,
             secondWebServiceEstimationData,
+            firstServiceLoadTestData,
+            secondServiceLoadTestData,
             webServiceId,
             chartsLinesData,
             metricsInfo,
@@ -52,6 +57,8 @@ class EstimationContainer extends Component {
             clusterData,
             statisticalData
         } = webServiceId === "first" ? firstWebServiceEstimationData : secondWebServiceEstimationData;
+
+        const loadTestData = webServiceId === "first" ? firstServiceLoadTestData : secondServiceLoadTestData;
 
         const estimationFormProps = {
             webServiceId,
@@ -80,7 +87,8 @@ class EstimationContainer extends Component {
         const statisticsEstimatorProps = {
             webServiceId,
             statisticalData,
-            areOperationsDenied
+            areOperationsDenied,
+            loadTestData
         };
 
         return (

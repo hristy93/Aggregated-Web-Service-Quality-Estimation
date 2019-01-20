@@ -44,7 +44,13 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 
         private IConfiguration _configuration;
 
-        private static Dictionary<string, bool> _metricsUsed;
+        private static Dictionary<string, bool> _metricsUsed = new Dictionary<string, bool>()
+        {
+            ["ResponseTime"] = true,
+            ["SuccessfulRequestsPerSecond"] = true,
+            ["FailedRequestsPerSecond"] = true,
+            ["ReceivedKilobytesPerSecond"] = true,
+        };
 
         public LoadTestDataManager(IConfiguration configuration)
         {
