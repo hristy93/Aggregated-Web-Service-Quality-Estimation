@@ -49,12 +49,13 @@ class LoadTestChartsStore {
             brushStartIndex: null,
             brushEndIndex: null,
             first: Immutable.Map({
-                areReferenceLinesVisible: false
+                areReferenceLinesVisible: false,
+                syncCharts: false
             }),
             second: Immutable.Map({
-                areReferenceLinesVisible: false
-            }),
-            syncCharts: false
+                areReferenceLinesVisible: false,
+                syncCharts: false
+            })
         });
     }
 
@@ -90,8 +91,8 @@ class LoadTestChartsStore {
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
 
-    setChartsSync(syncCharts) {
-        this.setState(this.state.set("syncCharts", syncCharts));
+    setChartsSync({ syncCharts, webServiceId }) {
+        this.setState(this.state.setIn([webServiceId, "syncCharts"], syncCharts));
     }
 
     static getChartsLinesData() {
@@ -106,20 +107,18 @@ class LoadTestChartsStore {
         return this.state.get("brushEndIndex");
     }
 
-    static getFirstWebServiceLinesData() {
+    static getFirstWebServiceChartsData() {
         return {
+            syncCharts: this.state.getIn(["first", "syncCharts"]),
             areReferenceLinesVisible: this.state.getIn(["first", "areReferenceLinesVisible"])
         };
     }
 
-    static getSecondWebServiceLinesData() {
+    static getSecondWebServiceChartsData() {
         return {
+            syncCharts: this.state.getIn(["second", "syncCharts"]),
             areReferenceLinesVisible: this.state.getIn(["second", "areReferenceLinesVisible"])
         };
-    }
-
-    static getSyncCharts() {
-        return this.state.get("syncCharts");
     }
 }
 

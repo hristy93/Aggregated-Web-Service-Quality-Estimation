@@ -18,10 +18,11 @@ class EstimationContainer extends Component {
         return ({
             firstWebServiceEstimationData: EstimationStore.getFirstWebServiceEstimationData(),
             secondWebServiceEstimationData: EstimationStore.getSecondWebServiceEstimationData(),
+            firstWebServiceChartsData: LoadTestChartsStore.getFirstWebServiceChartsData(),
+            secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-            syncCharts: LoadTestChartsStore.getSyncCharts(),
             metricsInfo: LoadTestMetricsStore.getMetricsInfo()
         });
     }
@@ -36,15 +37,19 @@ class EstimationContainer extends Component {
         const {
             firstWebServiceEstimationData,
             secondWebServiceEstimationData,
+            firstWebServiceChartsData,
+            secondWebServiceChartsData,
             webServiceId,
             chartsLinesData,
             metricsInfo,
             brushStartIndex,
             brushEndIndex,
             brushOnChange,
-            syncCharts,
             areOperationsDenied
         } = this.props;
+
+        const { syncCharts } = webServiceId === "first" ?
+            firstWebServiceChartsData : secondWebServiceChartsData;
 
         const {
             apdexScoreLimit,

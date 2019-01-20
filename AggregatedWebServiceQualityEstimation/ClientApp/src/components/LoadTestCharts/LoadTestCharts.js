@@ -20,13 +20,11 @@ class LoadTestCharts extends Component {
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-            //areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
-            syncCharts: LoadTestChartsStore.getSyncCharts(),
             metricsInfo: LoadTestMetricsStore.getMetricsInfo(),
             firstWebServiceEstimationData: EstimationStore.getFirstWebServiceEstimationData(),
             secondWebServiceEstimationData: EstimationStore.getSecondWebServiceEstimationData(),
-            firstWebServiceLinesData: LoadTestChartsStore.getFirstWebServiceLinesData(),
-            secondWebServiceLinesData: LoadTestChartsStore.getSecondWebServiceLinesData()
+            firstWebServiceChartsData: LoadTestChartsStore.getFirstWebServiceChartsData(),
+            secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
         });
     }
 
@@ -35,7 +33,7 @@ class LoadTestCharts extends Component {
 
         switch (id) {
             case `${webServiceId}-web-service-switch-sync-charts`:
-                LoadTestChartsActions.setChartsSync(isChecked);
+                LoadTestChartsActions.setChartsSync({ syncCharts: isChecked, webServiceId: webServiceId });
                 break;
             case `${webServiceId}-web-service-switch-show-reference-lines`:
                 // need to check if the data is the same 
@@ -79,21 +77,20 @@ class LoadTestCharts extends Component {
             chartsLinesData,
             firstWebServiceEstimationData,
             secondWebServiceEstimationData,
-            firstWebServiceLinesData,
-            secondWebServiceLinesData,
+            firstWebServiceChartsData,
+            secondWebServiceChartsData,
             brushStartIndex,
             brushEndIndex,
             brushOnChange,
-            metricsInfo,
-            syncCharts
+            metricsInfo
         } = this.props;
 
         const webServiceEstimationData = webServiceId === "first" ?
             firstWebServiceEstimationData : secondWebServiceEstimationData;
         const { statisticalData } = webServiceEstimationData;
 
-        const { areReferenceLinesVisible } = webServiceId === "first" ?
-            firstWebServiceLinesData : secondWebServiceLinesData;
+        const { syncCharts, areReferenceLinesVisible } = webServiceId === "first" ?
+            firstWebServiceChartsData : secondWebServiceChartsData;
 
         let referenceLinesData = [];
         if (areReferenceLinesVisible) {
