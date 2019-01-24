@@ -61,9 +61,9 @@ class ApdexScoreEstimation extends Component {
                 >
                     Get Apdex Score Data
                 </Button>
-                <div id="apdex-estimation-header">
+                {/*<div id="apdex-estimation-header">
                     <h4><b>Apdex Estimaton Data</b></h4>
-                </div>
+                </div>*/}
                 {
                     isApdexScoreChartVisible &&
                     <div id="apdex-estimation-summary">

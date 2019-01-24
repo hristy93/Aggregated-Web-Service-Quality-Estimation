@@ -29,9 +29,9 @@ class EstimationForm extends Component {
 
         return (
             <div id={`${webServiceId}-web-service-estimations-options`}>
-                <div id={`${webServiceId}-web-service-estimations-form-header`}>
+                {/*<div id={`${webServiceId}-web-service-estimations-form-header`}>
                     <h4><b>Estimations Options</b></h4>
-                </div>
+                </div>*/}
                 <div id={`${webServiceId}-web-service-estimations-form-content`}>
                     <FormGroup>
                         <ControlLabel>Response Time Limit: </ControlLabel>
@@ -41,6 +41,7 @@ class EstimationForm extends Component {
                             value={apdexScoreLimit}
                             placeholder={apdexScoreLimit}
                             disabled={areOperationsDenied}
+                            style={{width: '20%'}}
                             onChange={(event) => this.handleApdexScoreLimitChange(event, webServiceId)}
                         />
                         <FormControl.Feedback />

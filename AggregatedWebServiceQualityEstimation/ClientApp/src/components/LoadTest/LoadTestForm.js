@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { FormGroup, ControlLabel, FormControl, Collapse} from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Collapse } from 'react-bootstrap';
 import Select from '../common/Select/Select';
 import Textarea from '../common/Textarea/Textarea';
 import FileUpload from '../common/FileUpload/FileUpload';
@@ -49,6 +49,7 @@ class LoadTestForm extends Component {
                         value={loadTestDuration}
                         placeholder={loadTestDuration !== "" ? "" : "Enter test duration"}
                         disabled={areOperationsDenied}
+                        style={{ width: '20%' }}
                         onChange={this.handleLoadTestDurationChange}
                     />
                     <FormControl.Feedback />

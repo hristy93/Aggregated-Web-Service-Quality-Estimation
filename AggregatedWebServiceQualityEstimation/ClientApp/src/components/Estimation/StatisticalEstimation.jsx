@@ -36,9 +36,9 @@ class StatisticalEstimation extends Component {
                 >
                     Get Statistical Data
                  </Button>
-                <div id="statistical-header">
-                    <h4><b>Statistical Data</b></h4>
-                </div>
+                {/*<div id="statistical-header">
+                    <h4><b>Statistical Estimation Data</b></h4>
+                </div>*/}
                 <div id="statistical-data" style={{ marginTop: "1rem" }}>
                     <Table
                         responsive

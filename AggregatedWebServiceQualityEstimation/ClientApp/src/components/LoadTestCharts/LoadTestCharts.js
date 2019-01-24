@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 import LineChart from '../common/LineChart/LineChart';
 import Switch from '../common/Switch/Switch';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
@@ -148,53 +149,64 @@ class LoadTestCharts extends Component {
                             </div>
                     )
                 }
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={chartsData}
-                    axisYUnit="s"
-                    lines={chartsLinesData['responseTime']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[0]] : []}
-                    referenceLinesData={referenceLinesData}
-                    //legendOnClick={this.handleLegendOnClick}
-                    toggleLineVisibility={this.handleSwitchOnChange}
-                    syncChart={syncCharts}
-                    isVisible={isResponseTimeChartVisible}
-                />
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={chartsData}
-                    lines={chartsLinesData['requests']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[1], referenceLinesData[2]] : []}
-                    referenceLinesData={referenceLinesData}
-                    //legendOnClick={this.handleLegendOnClick}
-                    toggleLineVisibility={this.handleSwitchOnChange}
-                    syncChart={syncCharts}
-                    isVisible={isRequestsChartVisible}
-                />
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={chartsData}
-                    axisYUnit="KBps"
-                    lines={chartsLinesData['throughput']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[3], referenceLinesData[4]] : []}
-                    referenceLinesData={referenceLinesData}
-                    //legendOnClick={this.handleLegendOnClick}
-                    toggleLineVisibility={this.handleSwitchOnChange}
-                    syncChart={syncCharts}
-                    isVisible={isThroughputChartVisible}
-                />               
+                {
+                    chartsData.length !== 0 &&
+                    <ListGroup>
+                        <ListGroupItem>
+                            <LineChart
+                                axisXKey="IntervalStartTime"
+                                data={chartsData}
+                                axisYUnit="s"
+                                lines={chartsLinesData['responseTime']}
+                                brushOnChange={brushOnChange}
+                                brushStartIndex={brushStartIndex}
+                                brushEndIndex={brushEndIndex}
+                                showReferenceLines={areReferenceLinesVisible}
+                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[0]] : []}
+                                referenceLinesData={referenceLinesData}
+                                //legendOnClick={this.handleLegendOnClick}
+                                toggleLineVisibility={this.handleSwitchOnChange}
+                                syncChart={syncCharts}
+                                isVisible={isResponseTimeChartVisible}
+                            />
+                        </ListGroupItem>
+                        <ListGroupItem style={{ marginTop: '2rem' }}>
+                            <LineChart
+                                axisXKey="IntervalStartTime"
+                                data={chartsData}
+                                lines={chartsLinesData['requests']}
+                                brushOnChange={brushOnChange}
+                                brushStartIndex={brushStartIndex}
+                                brushEndIndex={brushEndIndex}
+                                showReferenceLines={areReferenceLinesVisible}
+                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[1], referenceLinesData[2]] : []}
+                                referenceLinesData={referenceLinesData}
+                                //legendOnClick={this.handleLegendOnClick}
+                                toggleLineVisibility={this.handleSwitchOnChange}
+                                syncChart={syncCharts}
+                                isVisible={isRequestsChartVisible}
+                            />
+                        </ListGroupItem>
+                        <ListGroupItem style={{ marginTop: '2rem' }}>
+                            <LineChart
+                                axisXKey="IntervalStartTime"
+                                data={chartsData}
+                                axisYUnit="KBps"
+                                lines={chartsLinesData['throughput']}
+                                brushOnChange={brushOnChange}
+                                brushStartIndex={brushStartIndex}
+                                brushEndIndex={brushEndIndex}
+                                showReferenceLines={areReferenceLinesVisible}
+                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[3], referenceLinesData[4]] : []}
+                                referenceLinesData={referenceLinesData}
+                                //legendOnClick={this.handleLegendOnClick}
+                                toggleLineVisibility={this.handleSwitchOnChange}
+                                syncChart={syncCharts}
+                                isVisible={isThroughputChartVisible}
+                            />
+                        </ListGroupItem>
+                    </ListGroup>
+                }
             </div>
         );
     }
