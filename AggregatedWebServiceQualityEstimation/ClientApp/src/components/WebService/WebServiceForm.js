@@ -88,6 +88,7 @@ class WebServiceForm extends Component {
                     title="Request Type:"
                     items={["GET", "POST"]}
                     disabled={areOperationsDenied}
+                    style={{ width: '25%'}}
                     onChange={this.handleRequestTypeChange}
                 />
                 {
@@ -103,14 +104,14 @@ class WebServiceForm extends Component {
                         </div>
                     </Collapse>
                 }
-                <FileUpload
+                {/*<FileUpload
                     id={`file-upload-${webServiceId}-web-service`}
                     title="Upload .CSV file with metrics:"
                     buttonText="Add file"
                     fileType=".csv"
                     disabled={areOperationsDenied}
                     onChange={(event) => this.handleFileUploadChange(event, webServiceId)}
-                />
+                />*/}
             </form>
         );
     }

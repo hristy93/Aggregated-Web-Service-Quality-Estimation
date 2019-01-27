@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 import LineChart from '../common/LineChart/LineChart';
 import Switch from '../common/Switch/Switch';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
@@ -20,13 +21,11 @@ class LoadTestCharts extends Component {
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-            //areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
-            syncCharts: LoadTestChartsStore.getSyncCharts(),
             metricsInfo: LoadTestMetricsStore.getMetricsInfo(),
             firstWebServiceEstimationData: EstimationStore.getFirstWebServiceEstimationData(),
             secondWebServiceEstimationData: EstimationStore.getSecondWebServiceEstimationData(),
-            firstWebServiceLinesData: LoadTestChartsStore.getFirstWebServiceLinesData(),
-            secondWebServiceLinesData: LoadTestChartsStore.getSecondWebServiceLinesData()
+            firstWebServiceChartsData: LoadTestChartsStore.getFirstWebServiceChartsData(),
+            secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
         });
     }
 
@@ -35,7 +34,7 @@ class LoadTestCharts extends Component {
 
         switch (id) {
             case `${webServiceId}-web-service-switch-sync-charts`:
-                LoadTestChartsActions.setChartsSync(isChecked);
+                LoadTestChartsActions.setChartsSync({ syncCharts: isChecked, webServiceId: webServiceId });
                 break;
             case `${webServiceId}-web-service-switch-show-reference-lines`:
                 // need to check if the data is the same 
@@ -79,21 +78,20 @@ class LoadTestCharts extends Component {
             chartsLinesData,
             firstWebServiceEstimationData,
             secondWebServiceEstimationData,
-            firstWebServiceLinesData,
-            secondWebServiceLinesData,
+            firstWebServiceChartsData,
+            secondWebServiceChartsData,
             brushStartIndex,
             brushEndIndex,
             brushOnChange,
-            metricsInfo,
-            syncCharts
+            metricsInfo
         } = this.props;
 
         const webServiceEstimationData = webServiceId === "first" ?
             firstWebServiceEstimationData : secondWebServiceEstimationData;
         const { statisticalData } = webServiceEstimationData;
 
-        const { areReferenceLinesVisible } = webServiceId === "first" ?
-            firstWebServiceLinesData : secondWebServiceLinesData;
+        const { syncCharts, areReferenceLinesVisible } = webServiceId === "first" ?
+            firstWebServiceChartsData : secondWebServiceChartsData;
 
         let referenceLinesData = [];
         if (areReferenceLinesVisible) {
@@ -151,53 +149,64 @@ class LoadTestCharts extends Component {
                             </div>
                     )
                 }
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={chartsData}
-                    axisYUnit="s"
-                    lines={chartsLinesData['responseTime']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[0]] : []}
-                    referenceLinesData={referenceLinesData}
-                    //legendOnClick={this.handleLegendOnClick}
-                    toggleLineVisibility={this.handleSwitchOnChange}
-                    syncChart={syncCharts}
-                    isVisible={isResponseTimeChartVisible}
-                />
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={chartsData}
-                    lines={chartsLinesData['requests']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[1], referenceLinesData[2]] : []}
-                    referenceLinesData={referenceLinesData}
-                    //legendOnClick={this.handleLegendOnClick}
-                    toggleLineVisibility={this.handleSwitchOnChange}
-                    syncChart={syncCharts}
-                    isVisible={isRequestsChartVisible}
-                />
-                <LineChart
-                    axisXKey="IntervalStartTime"
-                    data={chartsData}
-                    axisYUnit="KBps"
-                    lines={chartsLinesData['throughput']}
-                    brushOnChange={brushOnChange}
-                    brushStartIndex={brushStartIndex}
-                    brushEndIndex={brushEndIndex}
-                    showReferenceLines={areReferenceLinesVisible}
-                    //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[3], referenceLinesData[4]] : []}
-                    referenceLinesData={referenceLinesData}
-                    //legendOnClick={this.handleLegendOnClick}
-                    toggleLineVisibility={this.handleSwitchOnChange}
-                    syncChart={syncCharts}
-                    isVisible={isThroughputChartVisible}
-                />               
+                {
+                    chartsData.length !== 0 &&
+                    <ListGroup>
+                        <ListGroupItem>
+                            <LineChart
+                                axisXKey="IntervalStartTime"
+                                data={chartsData}
+                                axisYUnit="s"
+                                lines={chartsLinesData['responseTime']}
+                                brushOnChange={brushOnChange}
+                                brushStartIndex={brushStartIndex}
+                                brushEndIndex={brushEndIndex}
+                                showReferenceLines={areReferenceLinesVisible}
+                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[0]] : []}
+                                referenceLinesData={referenceLinesData}
+                                //legendOnClick={this.handleLegendOnClick}
+                                toggleLineVisibility={this.handleSwitchOnChange}
+                                syncChart={syncCharts}
+                                isVisible={isResponseTimeChartVisible}
+                            />
+                        </ListGroupItem>
+                        <ListGroupItem style={{ marginTop: '2rem' }}>
+                            <LineChart
+                                axisXKey="IntervalStartTime"
+                                data={chartsData}
+                                lines={chartsLinesData['requests']}
+                                brushOnChange={brushOnChange}
+                                brushStartIndex={brushStartIndex}
+                                brushEndIndex={brushEndIndex}
+                                showReferenceLines={areReferenceLinesVisible}
+                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[1], referenceLinesData[2]] : []}
+                                referenceLinesData={referenceLinesData}
+                                //legendOnClick={this.handleLegendOnClick}
+                                toggleLineVisibility={this.handleSwitchOnChange}
+                                syncChart={syncCharts}
+                                isVisible={isRequestsChartVisible}
+                            />
+                        </ListGroupItem>
+                        <ListGroupItem style={{ marginTop: '2rem' }}>
+                            <LineChart
+                                axisXKey="IntervalStartTime"
+                                data={chartsData}
+                                axisYUnit="KBps"
+                                lines={chartsLinesData['throughput']}
+                                brushOnChange={brushOnChange}
+                                brushStartIndex={brushStartIndex}
+                                brushEndIndex={brushEndIndex}
+                                showReferenceLines={areReferenceLinesVisible}
+                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[3], referenceLinesData[4]] : []}
+                                referenceLinesData={referenceLinesData}
+                                //legendOnClick={this.handleLegendOnClick}
+                                toggleLineVisibility={this.handleSwitchOnChange}
+                                syncChart={syncCharts}
+                                isVisible={isThroughputChartVisible}
+                            />
+                        </ListGroupItem>
+                    </ListGroup>
+                }
             </div>
         );
     }

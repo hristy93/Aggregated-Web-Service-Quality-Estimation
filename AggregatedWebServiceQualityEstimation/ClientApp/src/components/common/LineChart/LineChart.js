@@ -54,7 +54,7 @@ class LineChart extends Component {
     };
 
     static defaultProps = {
-        width: 700,
+        width: 670,
         height: 250,
         margin: {
             top: 5,

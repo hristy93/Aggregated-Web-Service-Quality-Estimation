@@ -37,9 +37,9 @@ class ClusterEstimation extends Component {
                 >
                     Get Cluster Data
                 </Button> 
-                <div id="cluster-estimation-header">
+                {/*<div id="cluster-estimation-header">
                     <h4><b>Cluster Estimaton Data</b></h4>
-                </div>
+                </div>*/}
                 {
                     isClusterDataVisible && 
                     <div id="cluster-estimation-data" style={{ marginTop: "1rem" }}>
