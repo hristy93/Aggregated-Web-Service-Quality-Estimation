@@ -7,7 +7,7 @@ import isNil from 'lodash/isNil';
 import immutable from 'alt-utils/lib/ImmutableUtil';
 import Immutable from 'immutable';
 
-class MetricsStore {
+class LoadTestMetricsStore {
     constructor() {
         this.bindActions(LoadTestMetricsActions);
 
@@ -16,8 +16,8 @@ class MetricsStore {
                 "ResponseTime": true,
                 "SuccessfulRequestsPerSecond": true,
                 "FailedRequestsPerSecond": true,
-                "ReceivedKilobytesPerSecond": true,
-                "SentKilobytesPerSecond": true
+                "ReceivedKilobytesPerSecond": true
+                //"SentKilobytesPerSecond": true
             }
         });
     }
@@ -39,10 +39,17 @@ class MetricsStore {
 
     saveMetricsUsabilityInfo = () => {
         this.waitFor(LoadTestStore);
-        const loadTestData = LoadTestStore.getLoadTestData();
 
-        if (!isNil(loadTestData) && loadTestData.length !== 0) {
-            EstimationActions.getStatisticalEstimatorResult();
+        const firstServiceloadTestData = LoadTestStore.getFirstServiceLoadTestData();
+
+        if (!isNil(firstServiceloadTestData) && firstServiceloadTestData.length !== 0) {
+            EstimationActions.getStatisticalEstimatorResult("first");
+        }
+
+        const secondServiceloadTestData = LoadTestStore.getSecondServiceLoadTestData();
+
+        if (!isNil(secondServiceloadTestData) && secondServiceloadTestData.length !== 0) {
+            EstimationActions.getStatisticalEstimatorResult("second");
         }
     }
 
@@ -51,4 +58,4 @@ class MetricsStore {
     }
 }
 
-export default alt.createStore(immutable(MetricsStore));
+export default alt.createStore(immutable(LoadTestMetricsStore));

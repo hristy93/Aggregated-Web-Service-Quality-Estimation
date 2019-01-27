@@ -39,7 +39,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             }
             catch (Exception ex)
             {
-
+                throw;
             }
         }
 

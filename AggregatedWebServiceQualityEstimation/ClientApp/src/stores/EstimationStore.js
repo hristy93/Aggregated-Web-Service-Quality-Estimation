@@ -9,26 +9,34 @@ class EstimationStore {
         this.bindActions(EstimationActions);
 
         this.state = Immutable.Map({
-            statisticalData: [],
-            apdexScoreData: [],
-            apdexScoreLimit: 0.05,
-            clusterData: {}
+            first: Immutable.Map({
+                statisticalData: [],
+                apdexScoreData: [],
+                apdexScoreLimit: 0.05,
+                clusterData: {}
+            }),
+            second: Immutable.Map({
+                statisticalData: [],
+                apdexScoreData: [],
+                apdexScoreLimit: 0.05,
+                clusterData: {}
+            })
         });
     }
 
-    getStatisticalEstimatorResult = (statisticalData) => {
-        this.setState(this.state.set("statisticalData", statisticalData));
+    getStatisticalEstimatorResult = ({ statisticalData, webServiceId }) => {
+        this.setState(this.state.setIn([webServiceId, "statisticalData"], statisticalData));
     }
 
-    clearApdexScoreData = () => {
-        this.setState(this.state.set("apdexScoreData", []));
+    clearApdexScoreData = (webServiceId) => {
+        this.setState(this.state.set([webServiceId, "apdexScoreData"], []));
     }
 
-    setApdexScoreLimit = (apdexScoreLimit) => {
-        this.setState(this.state.set("apdexScoreLimit", apdexScoreLimit));
+    setApdexScoreLimit = ({ apdexScoreLimit, webServiceId }) => {
+        this.setState(this.state.setIn([webServiceId, "apdexScoreLimit"], apdexScoreLimit));
     }
 
-    getApdexScoreEstimatorResult = (apdexScoreData) => {
+    getApdexScoreEstimatorResult = ({ apdexScoreData, webServiceId }) => {
         if (!isNil(apdexScoreData)) {
             //const currentApdexScoreData = this.state.get("apdexScoreData");
 
@@ -38,31 +46,24 @@ class EstimationStore {
             //    console.log(currentApdexScoreItem);
             //}
 
-        this.setState(this.state.set("apdexScoreData", apdexScoreData));
+            this.setState(this.state.setIn([webServiceId, "apdexScoreData"], apdexScoreData));
         }
     }
 
-    getClusterEstimatorResult = (clusterData) => {
+    getClusterEstimatorResult = ({ clusterData, webServiceId }) => {
         if (!isNil(clusterData)) {
-            this.setState(this.state.set("clusterData", clusterData));
+            this.setState(this.state.setIn([webServiceId, "clusterData"], clusterData));
         }
     }
 
-    static getStatisticalData() {
-        return this.state.get("statisticalData");
+    static getFirstWebServiceEstimationData() {
+        return this.state.get("first").toJS();
     }
 
-    static getApdexScoreData() {
-        return this.state.get("apdexScoreData");
+    static getSecondWebServiceEstimationData() {
+        return this.state.get("second").toJS();
     }
 
-    static getApdexScoreLimit() {
-        return this.state.get("apdexScoreLimit");
-    }
-
-    static getClusterData() {
-        return this.state.get("clusterData");
-    }
 }
 
 export default alt.createStore(immutable(EstimationStore));

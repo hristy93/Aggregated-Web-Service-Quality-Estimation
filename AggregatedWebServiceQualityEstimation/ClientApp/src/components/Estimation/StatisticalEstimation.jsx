@@ -8,26 +8,31 @@ import startCase from 'lodash/startCase';
 const decimalPlacePrecision = 3;
 
 class StatisticalEstimation extends Component {
-    static getStores() {
-        return [EstimationStore];
-    }
+    //static getStores() {
+    //    return [EstimationStore];
+    //}
 
-    static getPropsFromStores() {
-        return ({
-            statisticalData: EstimationStore.getStatisticalData()
-        });
-    }
+    //static getPropsFromStores() {
+    //    return ({
+    //        statisticalData: EstimationStore.getStatisticalData()
+    //    });
+    //}
 
     render() {
-        const { statisticalData } = this.props;
+        const {
+            webServiceId,
+            statisticalData,
+            areOperationsDenied
+        } = this.props;
+
         const statisticMetricNames = statisticalData.length === 0 ? [] : statisticalData[0];
 
         return (
             <div id="statistical-estimation" style={{ marginTop: "2rem" }}>
                 <Button
                     id="get-statistical-estimation-button"
-                    //disabled={areOperationsDenied}
-                    onClick={EstimationActions.getStatisticalEstimatorResult}
+                    disabled={areOperationsDenied}
+                    onClick={() => EstimationActions.getStatisticalEstimatorResult(webServiceId)}
                 >
                     Get Statistical Data
                  </Button>
@@ -96,4 +101,4 @@ class StatisticalEstimation extends Component {
     }
 }
 
-export default connectToStores(StatisticalEstimation);
+export default StatisticalEstimation;

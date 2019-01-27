@@ -21,6 +21,7 @@ class LoadTestMetricsForm extends Component {
 
     componentDidMount() {
         const { metricsInfo } = this.props;
+
         LoadTestMetricsActions.saveMetricsUsabilityInfo(metricsInfo);
     }
 

@@ -1,4 +1,5 @@
-﻿using AggregatedWebServiceQualityEstimation.Models;
+﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Statistics;
@@ -10,18 +11,25 @@ using System.Threading.Tasks;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
-    public class StatisticalEstimator : Estimator
+    public class StatisticalEstimator : IStatisticalEstimator, IMetricsData
     {
-        public IList<StatisticalEstimatorResult> statisticalData { get; private set; }
+        private readonly ITestDataManager _loadTestDataManager;
 
-        public StatisticalEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        public IList<StatisticalEstimatorResult> StatisticalData { get; private set; }
+        public IList<string[]> MetricsData { get; set; }
+
+        public StatisticalEstimator(ITestDataManager loadTestDataManager) 
         {
-            statisticalData = new List<StatisticalEstimatorResult>();
-            GetMetricsData(byRow: false);
-            MetricsData = MetricsData.Skip(2).ToList();
+            StatisticalData = new List<StatisticalEstimatorResult>();
+            _loadTestDataManager = loadTestDataManager;
         }
 
-        public void GetFiveNumberSummaries()
+        public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
+        {
+            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false)?.Skip(2).ToList();
+        }
+
+        public void GetStatisticalData()
         {
             try
             {
@@ -53,7 +61,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                         Variance = variance
                     };
 
-                    statisticalData.Add(statisticalEstimatorResult);
+                    StatisticalData.Add(statisticalEstimatorResult);
                 }
             }
             catch (Exception ex)

@@ -1,4 +1,6 @@
-﻿using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -7,23 +9,31 @@ using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
-    public class FuzzyLogicEstimator : Estimator
+    public class FuzzyLogicEstimator : IFuzzyLogicEstimator, IMetricsData
     {
         private readonly IDictionary<string, bool> isGreaterBetter = new Dictionary<string, bool> {
             ["ResponseTime"] = false,
             ["SuccessfulRequestsPerSecond"] = true,
             ["FailedRequestsPerSecond"] = false,
-            ["SentKilobytesPerSecond"] = true,
+            //["SentKilobytesPerSecond"] = true,
             ["ReceivedKilobytesPerSecond"] = true,
         };
 
-        public IList<double> AggregatedQualityMembershipFunction;
+        public IList<double> AggregatedQualityMembershipFunction { get; set; }
 
-        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        private ITestDataManager _loadTestDataManager;
+
+        public IList<string[]> MetricsData { get; set; }
+
+        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager)
         {
             AggregatedQualityMembershipFunction = new List<double>();
-            GetMetricsData(byRow: false);
-            MetricsData = MetricsData.Skip(2).ToList();
+            _loadTestDataManager = loadTestDataManager;
+        }
+
+        public void GetMetricsData(string webServiceId, bool fromFile = false, bool byRow = false)
+        {
+            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false)?.Skip(2).ToList();
         }
 
         public void GetAggregatedQualityMembershipFunction()
@@ -51,7 +61,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     }
                     else
                     {
-                        inverseValue = metrics.Count();
+                        inverseValue = metrics.Count() - 1;
                     }
 
                     metricsVectorDistinctGroupCount = metricsVector
@@ -69,7 +79,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
     }

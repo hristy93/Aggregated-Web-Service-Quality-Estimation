@@ -1,3 +1,7 @@
+using AggregatedWebServiceQualityEstimation.Utils;
+using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using AggregatedWebServiceQualityEstimation.Estimators;
+using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -20,13 +24,23 @@ namespace AggregatedWebServiceQualityEstimation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            // Add DI services
+            services.AddTransient<ITestRunner, LoadTestRunner>();
+            services.AddSingleton<ITestDataManager, LoadTestDataManager>();
+            services.AddTransient<ITestModifier, LoadTestModifier>();
+
+            services.AddTransient<IApdexScoreEstimator, ApdexScoreEstimator>();
+            services.AddTransient<IClusterEstimator, ClusterEstimator>();
+            services.AddTransient<IFuzzyLogicEstimator, FuzzyLogicEstimator>();
+            services.AddTransient<IStatisticalEstimator, StatisticalEstimator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

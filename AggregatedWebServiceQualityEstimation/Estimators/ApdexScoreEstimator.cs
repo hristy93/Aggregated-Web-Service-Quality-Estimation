@@ -1,4 +1,5 @@
-﻿using AggregatedWebServiceQualityEstimation.Models;
+﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -7,19 +8,26 @@ using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
-    public class ApdexScoreEstimator : Estimator
+    public class ApdexScoreEstimator : IApdexScoreEstimator, IMetricsData
     {
         private ApdexScoreEstimatorResult _apdexScoreEstimatorResult;
+        private ITestDataManager _loadTestDataManager;
 
-        public ApdexScoreEstimator(ITestDataManager loadTestDataManager) : base(loadTestDataManager)
+        public IList<string[]> MetricsData { get; set; }
+
+        public ApdexScoreEstimator(ITestDataManager loadTestDataManager)
         {
-            //GetMetricsData(byRow: false);
+            _loadTestDataManager = loadTestDataManager;
         }
 
-        public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile)
+        public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
+        {
+            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false, fromFile: fromFile);
+        }
+
+        public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile, string webServiceId)
         {
             var result = new List<ApdexScoreEstimatorResult>();
-            GetMetricsData(byRow: false, fromFile: fromFile);
             var intervals = MetricsData.Take(2).ToList();
             var responseTimeData = MetricsData[2]?.Skip(1).ToList();
 
