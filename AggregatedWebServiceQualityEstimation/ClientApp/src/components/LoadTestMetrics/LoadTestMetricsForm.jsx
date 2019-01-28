@@ -36,21 +36,21 @@ class LoadTestMetricsForm extends Component {
         const { metricsInfo } = this.props;
 
         return (
-            <form>
+            <form id="form-metrics-usability">
                 <FormGroup>
-                <ControlLabel>Metrics:</ControlLabel>
+                    <ControlLabel id="label-metrics-usability">Metrics:</ControlLabel>
                     {
                         Object.keys(metricsInfo).map((metricName) => {
                             const isUsed = metricsInfo[metricName];
                             if (metricsIgnoreList.indexOf(metricName) < 0) {
                                 return (
                                     <div
-                                        key={`metric-usability-item-${metricName}`}
-                                        id={`metric-usability-item-${metricName}`}
+                                        key={`metrics-usability-item-${metricName}`}
+                                        id={`metrics-usability-item-${metricName}`}
                                     >
                                         <Checkbox
                                             inline
-                                            id={`checkbox-metric-usability-${metricName}`}
+                                            id={`checkbox-metrics-usability-${metricName}`}
                                             name={metricName}
                                             checked={isUsed}
                                             onChange={this.handleCheckBoxChange}

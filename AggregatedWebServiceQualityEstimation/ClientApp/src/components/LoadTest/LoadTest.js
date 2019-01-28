@@ -1,19 +1,27 @@
 ﻿import React, { Component } from 'react';
-import { Col, Row, Grid, Button, ButtonToolbar, Badge } from 'react-bootstrap';
-import EstimationForm from '../Estimation/EstimationForm';
+import {
+    Col,
+    Row,
+    Grid,
+    Button,
+    ButtonToolbar,
+    Badge,
+    Panel,
+    PanelGroup,
+    Tooltip
+} from 'react-bootstrap';
 import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';
 import LoadTestForm from './LoadTestForm';
 import WebServiceForm from '../WebService/WebServiceForm';
 import LoadTestCharts from '../LoadTestCharts/LoadTestCharts';
-import StatisticalEstimation from '../Estimation/StatisticalEstimation';
-import ApdexScoreEstimation from '../Estimation/ApdexScoreEstimation';
-import ClusterEstimation from '../Estimation/ClusterEstimation';
 import EstimationContainer from '../Estimation/EstimationContainer';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
+import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
 import LoadTestActions from '../../actions/LoadTestActions';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import WebServicesStore from '../../stores/WebServicesStore';
+import FileUpload from '../common/FileUpload/FileUpload';
 import isNil from 'lodash/isNil';
 import moment from 'moment';
 import { displayFailureMessage } from '../../utils/displayInformation';
@@ -29,6 +37,8 @@ class LoadTest extends Component {
         return ({
             firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
             secondServiceLoadTestData: LoadTestStore.getSecondServiceLoadTestData(),
+            firstWebServiceChartsData: LoadTestChartsStore.getFirstWebServiceChartsData(),
+            secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
             loadTestDuration: LoadTestStore.getLoadTestDuration(),
             areUrlsValid: WebServicesStore.getUrlsValidity(),
             testState: LoadTestStore.getTestState(),
@@ -166,23 +176,45 @@ class LoadTest extends Component {
         LoadTestActions.readLoadTestData({ fromFile: true, webServiceId });
     }
 
-    getRunLoadTestButtonText = (testState) => {
+    handleFileUploadChange = (event, webServiceId) => {
+        event.preventDefault();
+        const { files } = event.target;
+
+        if (isNil(files)) {
+            displayFailureMessage("No files selected!");
+        } else if (files.length > 1) {
+            displayFailureMessage("More than 1 file selected!");
+        } else {
+            LoadTestActions.uploadLoadTestData({ files, webServiceId });
+        }
+    }
+
+    getLoadTestStateMessage = (testState) => {
         if (!isNil(testState)) {
-            if (!testState.started && !testState.writingTestData) {
-                return "Run Load Test";
-            } else if (testState.started && !testState.finished) {
-                return "Load Test Running";
+            if (testState.started && !testState.finished) {
+                return "Running...";
             } else if (testState.writingTestData) {
                 return "Writing test data ...";
             }
         }
     }
 
+    renderValidateInputsTooltip = (
+            <Tooltip
+                id="tooltip-run-load-test"
+                placement="top"
+                className="in"
+            >
+                <strong>Enter or check the web service URLs!</strong>
+            </Tooltip>
+        );
+
     render() {
         const {
-            loadTestData,
             firstServiceLoadTestData,
             secondServiceLoadTestData,
+            firstWebServiceChartsData,
+            secondWebServiceChartsData,
             areUrlsValid,
             testState,
             timeLeft,
@@ -192,93 +224,273 @@ class LoadTest extends Component {
 
         const isTestRunning = testState.started && !testState.finished;
         const areOperationsDenied = testState.writingTestData || isTestRunning;
+        const isRunLoadTestButtonDisabled = !areUrlsValid || areOperationsDenied;
 
         return (
             <Grid fluid>
                 <Row className="show-grid">
-                    <Col sm={12} md={3}>
-                        <LoadTestMetricsForm />
-                        <LoadTestForm />
+                    <Col md={6}>
+                        <Panel id="panel-first-web-service-form" bsStyle="primary">
+                            <Panel.Heading id="panel-heading-first-web-service-form">
+                                <Panel.Title id="panel-title-first-web-service-form">
+                                    <b>First Web Service Form</b>
+                                </Panel.Title>
+                            </Panel.Heading>
+                            <Panel.Body id="panel-body-first-web-service-form">
+                                <WebServiceForm
+                                    webServiceId="first"
+                                    {...first}
+                                    areOperationsDenied={areOperationsDenied}
+                                />
+                            </Panel.Body>
+                        </Panel>
+                    </Col>
+                    <Col md={6}>
+                        <Panel id="panel-second-web-service-form" bsStyle="primary">
+                            <Panel.Heading id="panel-heading-second-web-service-form">
+                                <Panel.Title id="panel-title-second-web-service-form">
+                                    <b>Second Web Service Form</b>
+                                </Panel.Title>
+                            </Panel.Heading>
+                            <Panel.Body id="panel-body-second-web-service-form">
+                                <WebServiceForm
+                                    webServiceId="second"
+                                    {...second}
+                                    areOperationsDenied={areOperationsDenied}
+                                />
+                            </Panel.Body>
+                        </Panel>
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12}>
-                        <ButtonToolbar style={{ display: 'flex', alignItems: 'center' }}>
-                            <Button
-                                id="run-load-test-button"
-                                onClick={this.handleRunLoadTestButtonClick}
-                                disabled={!areUrlsValid || areOperationsDenied}
+                    {/*<Col sm={12} md={4} mdOffset={4}>*/}
+                    <Col md={12}>
+                        <Row>
+                            <Panel
+                                id="panel-configs"
+                                bsStyle="primary"
+                                style={{ margin: '0 1.5rem' }}
                             >
-                                {this.getRunLoadTestButtonText(testState)}
-                            </Button>
-                            <Button
-                                id="cancel-load-test-button"
-                                onClick={this.handleCancelLoadTestButtonClick}
-                                disabled={!isTestRunning}
-                            >
-                                Cancel Test
-                            </Button>
-                            {
-                                isTestRunning && !isNil(timeLeft) && (
-                                    <div style={{marginLeft: '1rem'}}>
-                                        Time Left: <Badge>{timeLeft}</Badge>
-                                    </div>
-                                )
-                            }
-                        </ButtonToolbar>
+                                <Panel.Heading id="panel-heading-configs">
+                                    <Panel.Title id="panel-title-configs">
+                                        <b>Configurations</b>
+                                    </Panel.Title>
+                                </Panel.Heading >
+                                <Panel.Body id="panel-body-configs">
+                                    <Col md={6}>
+                                        <Panel id="panel-metrics" bsStyle="info">
+                                            <Panel.Heading id="panel-heading-metrics">
+                                                <Panel.Title id="panel-title-metrics"> 
+                                                    <b>Metrics Used</b>
+                                                </Panel.Title>
+                                            </Panel.Heading >
+                                            <Panel.Body id="panel-body-metrics">
+                                                <LoadTestMetricsForm />
+                                            </Panel.Body>
+                                        </Panel>
+                                    </Col>
+                                    <Col md={6}>
+                                        <PanelGroup
+                                            id="panel-group"
+                                            accordion 
+                                            defaultActiveKey="1"
+                                        >
+                                            <Panel
+                                                id="panel-metrics-data-source"
+                                                bsStyle="info"
+                                                eventKey="1"
+                                            >
+                                                <Panel.Heading id="panel-heading-metrics-data-source">
+                                                    <Panel.Title id="panel-title-metrics-data-source" toggle>
+                                                        <b>Metrics From Tests</b>
+                                                    </Panel.Title>
+                                                </Panel.Heading >
+                                                <Panel.Body id="panel-body-metrics-data-source" collapsible>
+                                                    <LoadTestForm />
+                                                    <ButtonToolbar>
+                                                        {/*<OverlayTrigger
+                                                            trigger={'hover'}
+                                                            placement="bottom"
+                                                            overlay={this.renderValidateInputsTooltip}
+                                                        >*/}
+                                                            <Button
+                                                                id="run-load-test-button"
+                                                                onClick={this.handleRunLoadTestButtonClick}
+                                                                disabled={isRunLoadTestButtonDisabled}
+                                                            >
+                                                                Run Load Test
+                                                            </Button>
+                                                        {/*</OverlayTrigger>*/}
+                                                        <Button
+                                                            id="cancel-load-test-button"
+                                                            onClick={this.handleCancelLoadTestButtonClick}
+                                                            disabled={!isTestRunning}
+                                                        >
+                                                            Cancel Test
+                                                        </Button>
+                                                        <Button
+                                                            id="write-load-test-data-button"
+                                                            onClick={() => this.handleWriteLoadTestDataClick("first")}
+                                                        >
+                                                            Write Load Test Data
+                                                        </Button>
+                                                        <Button
+                                                            id="read-load-test-data-button"
+                                                            onClick={() => this.handleReadLoadTestDataClick("first")}
+                                                        >
+                                                            Read Load Test Data
+                                                         </Button>
+                                                        <br />
+                                                        <Button
+                                                            id="write-load-test-data-button"
+                                                            onClick={() => this.handleWriteLoadTestDataClick("second")}
+                                                        >
+                                                            Write Load Test Data
+                                                        </Button>
+                                                        <Button
+                                                            id="read-load-test-data-button"
+                                                            onClick={() => this.handleReadLoadTestDataClick("second")}
+                                                        >
+                                                            Read Load Test Data
+                                                         </Button>
+                                                    </ButtonToolbar>
+                                                    {
+                                                        (testState.started || testState.writingTestData) &&
+                                                        <h4> Test State: {this.getLoadTestStateMessage(testState)} </h4>
+                                                    }
+                                                    {' '}
+                                                    {
+                                                        isTestRunning && !isNil(timeLeft) &&
+                                                        <div style={{ marginLeft: '1rem' }}>
+                                                            Time Left: <Badge>{timeLeft}</Badge>
+                                                        </div>
+                                                    }
+                                                </Panel.Body>
+                                            </Panel>
+                                            <Panel
+                                                id="panel-metrics-data-source"
+                                                bsStyle="info"
+                                                eventKey="2"
+                                            >
+                                                <Panel.Heading id="panel-heading-metrics-data-source">
+                                                    <Panel.Title id="panel-title-metrics-data-source" toggle> 
+                                                        <b>Metrics From SCV File</b>
+                                                    </Panel.Title>
+                                                </Panel.Heading >
+                                                <Panel.Body id="panel-body-metrics-data-source" collapsible>
+                                                    <FileUpload
+                                                        id={`file-upload-first-web-service`}
+                                                        title="Metrics for the first web service:"
+                                                        buttonText="Add file"
+                                                        fileType=".csv"
+                                                        disabled={areOperationsDenied}
+                                                        onChange={(event) => this.handleFileUploadChange(event, "first")}
+                                                    />
+                                                    <FileUpload
+                                                        id={`file-upload-second-web-service`}
+                                                        title="Metrics for the second web service:"
+                                                        buttonText="Add file"
+                                                        fileType=".csv"
+                                                        disabled={areOperationsDenied}
+                                                        onChange={(event) => this.handleFileUploadChange(event, "second")}
+                                                    />
+                                                </Panel.Body>
+                                            </Panel>
+                                        </PanelGroup>
+                                    </Col>
+                                </Panel.Body>
+                            </Panel>
+                        </Row>
                     </Col>
                 </Row>
                 <Row className="show-grid" style={{ marginTop: '2rem' }}>
-                    <Col md={5}>
-                        <WebServiceForm {...first} webServiceId="first" areOperationsDenied={areOperationsDenied} />
-                        <Button
-                            id="write-load-test-data-button"
-                            onClick={() => this.handleWriteLoadTestDataClick("first")}
-                        >
-                            Write Load Test Data
-                        </Button>
-                        <Button
-                            id="read-load-test-data-button"
-                            onClick={() => this.handleReadLoadTestDataClick("first")}
-                        >
-                            Read Load Test Data
-                        </Button>
-                        <LoadTestCharts
-                            webServiceId="first"
-                            chartsData={firstServiceLoadTestData}
-                            brushOnChange={this.handleBrushOnChange}
-                        />
-                        <EstimationContainer
-                            webServiceId="first"
-                            brushOnChange={this.handleBrushOnChange}
-                            areOperationsDenied={areOperationsDenied}
-                        />
+                    <Col md={6}>
+                        <PanelGroup id="panel-group-first-web-service">
+                            <Panel
+                                id="panel-first-web-service-charts"
+                                bsStyle="primary"
+                                expanded={firstWebServiceChartsData.isPanelOpen || firstServiceLoadTestData.length !== 0}
+                                onToggle={() => LoadTestChartsActions.togglePanel({
+                                    isPanelOpen: !firstWebServiceChartsData.isPanelOpen,
+                                    webServiceId: "first"
+                                })}
+                                eventKey="1"
+                            >
+                                <Panel.Heading id="panel-heading-first-web-service-charts">
+                                    <Panel.Title id="panel-title-first-web-service-charts" toggle>
+                                        <b> First Web Service Metrics Charts</b>
+                                    </Panel.Title> 
+                                </Panel.Heading>
+                                <Panel.Body id="panel-body-first-web-service-charts" collapsible>
+                                    <LoadTestCharts
+                                        webServiceId="first"
+                                        chartsData={firstServiceLoadTestData}
+                                        brushOnChange={this.handleBrushOnChange}
+                                    />
+                                </Panel.Body>
+                            </Panel>
+                            <Panel
+                                bsStyle="primary"
+                                eventKey="2"
+                            >
+                                <Panel.Heading>
+                                    <Panel.Title toggle>
+                                        <b>First Web Service Estimations</b>
+                                    </Panel.Title>
+                                </Panel.Heading>
+                                <Panel.Body collapsible>
+                                    <EstimationContainer
+                                        webServiceId="first" 
+                                        brushOnChange={this.handleBrushOnChange}
+                                        areOperationsDenied={areOperationsDenied}
+                                    />
+                                </Panel.Body>
+                            </Panel>
+                        </PanelGroup>
                     </Col>
-                    <Col md={2} />
-                    <Col md={5}>
-                        <WebServiceForm {...second} webServiceId="second" areOperationsDenied={areOperationsDenied} />
-                        <Button
-                            id="write-load-test-data-button"
-                            onClick={() => this.handleWriteLoadTestDataClick("second")}
-                        >
-                            Write Load Test Data
-                        </Button>
-                        <Button
-                            id="read-load-test-data-button"
-                            onClick={() => this.handleReadLoadTestDataClick("second")}
-                        >
-                            Read Load Test Data
-                        </Button>
-                        <LoadTestCharts
-                            webServiceId="second"
-                            chartsData={secondServiceLoadTestData}
-                            brushOnChange={this.handleBrushOnChange}
-                        />
-                        <EstimationContainer
-                            webServiceId="second"
-                            brushOnChange={this.handleBrushOnChange}
-                            areOperationsDenied={areOperationsDenied}
-                        />
+                    <Col md={6}>       
+                        <PanelGroup id="panel-group-second-web-service">
+                            <Panel
+                                id="panel-second-web-service-charts"
+                                bsStyle="primary"
+                                expanded={secondWebServiceChartsData.isPanelOpen || secondServiceLoadTestData.length !== 0}
+                                onToggle={() => LoadTestChartsActions.togglePanel({
+                                    isPanelOpen: !firstWebServiceChartsData.isPanelOpen,
+                                    webServiceId: "second"
+                                })}
+                                eventKey="1"
+                            >
+                                <Panel.Heading>
+                                    <Panel.Title toggle>
+                                        <b>Second Web Service Metrics Charts</b>
+                                    </Panel.Title>
+                                </Panel.Heading>
+                                <Panel.Body collapsible>
+                                    <LoadTestCharts
+                                        webServiceId="second"
+                                        chartsData={secondServiceLoadTestData}
+                                        brushOnChange={this.handleBrushOnChange}
+                                    />
+                                </Panel.Body>
+                            </Panel>
+                            <Panel
+                                bsStyle="primary"
+                                eventKey="2"
+                            >
+                                <Panel.Heading>
+                                    <Panel.Title toggle>
+                                        <b>Second Web Service Estimations</b>
+                                    </Panel.Title>
+                                </Panel.Heading>
+                                <Panel.Body collapsible>
+                                    <EstimationContainer
+                                        webServiceId="second"
+                                        brushOnChange={this.handleBrushOnChange}
+                                        areOperationsDenied={areOperationsDenied}
+                                    />
+                                </Panel.Body>
+                             </Panel>
+                        </PanelGroup>
                     </Col>
                 </Row>
             </Grid>

@@ -10,23 +10,6 @@ import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 const decimalPlacePrecision = 2;
 
 class ApdexScoreEstimation extends Component {
-    //static getStores() {
-    //    return [LoadTestChartsStore, EstimationStore];
-    //}
-
-    //static getPropsFromStores() {
-    //    return ({
-    //        apdexScoreLimit: EstimationStore.getApdexScoreLimit(),
-    //        apdexScoreData: EstimationStore.getApdexScoreData(),
-    //        chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
-    //        brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
-    //        brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-    //        areReferenceLinesVisible: LoadTestChartsStore.getReferenceLinesVisibility(),
-    //        syncCharts: LoadTestChartsStore.getSyncCharts(),
-    //        metricsInfo: LoadTestMetricsStore.getMetricsInfo()
-    //    });
-    //}
-
     handleApdexScoreLimitChange = (event) => {
         const apdexScoreLimit = event.target.value;
         const { webServiceId } = this.props;
@@ -55,24 +38,22 @@ class ApdexScoreEstimation extends Component {
         return (
             <div id="apdex-estimation" style={{ marginTop: "2rem" }}>
                 <Button
-                    id="get-apdex-estimation-button"
+                    id={`button-get-apdex-estimation-${webServiceId}-web-service`}
                     disabled={isApdexScoreButtonDisabled}
                     onClick={() => EstimationActions.getApdexScoreEstimatorResult({ apdexScoreLimit, webServiceId })}
                 >
                     Get Apdex Score Data
                 </Button>
-                <div id="apdex-estimation-header">
-                    <h4><b>Apdex Estimaton Data</b></h4>
-                </div>
                 {
                     isApdexScoreChartVisible &&
-                    <div id="apdex-estimation-summary">
+                    <div id={`apdex-estimation-summary-${webServiceId}-web-service`}>
                         <h4> Apdex Score Limit: {apdexScoreLimit} </h4>
                         <h4> Average Apdex Score: {averageApdexScore}% </h4>
                     </div>
                 }
                 <div id="apdex-estimation-data" style={{ marginTop: "1rem" }}>
                     <LineChart
+                        id={`apdex-estimation-chart-${webServiceId}-web-service`}
                         axisXKey="IntervalStartTime"
                         //axisXLabel="Time Intervals"
                         data={apdexScoreData}

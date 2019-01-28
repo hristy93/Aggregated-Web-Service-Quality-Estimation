@@ -33,12 +33,6 @@ class LoadTestChartsStore {
                     isLineVisible: true,
                     areReferenceLinesVisible: true
                 }],
-                //}, {
-                //    axisYKey: "SentKilobytesPerSecond",
-                //    color: "#E85D18",
-                //    isLineVisible: true,
-                //    areReferenceLinesVisible: true
-                //}],
                 apdexScore: [{
                     axisYKey: "ApdexScore",
                     color: "#00FFFF",
@@ -49,12 +43,15 @@ class LoadTestChartsStore {
             brushStartIndex: null,
             brushEndIndex: null,
             first: Immutable.Map({
-                areReferenceLinesVisible: false
+                areReferenceLinesVisible: false,
+                syncCharts: false,
+                isPanelOpen: false
             }),
             second: Immutable.Map({
-                areReferenceLinesVisible: false
-            }),
-            syncCharts: false
+                areReferenceLinesVisible: false,
+                syncCharts: false,
+                isPanelOpen: false
+            })
         });
     }
 
@@ -90,8 +87,13 @@ class LoadTestChartsStore {
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
 
-    setChartsSync(syncCharts) {
-        this.setState(this.state.set("syncCharts", syncCharts));
+    setChartsSync({ syncCharts, webServiceId }) {
+        this.setState(this.state.setIn([webServiceId, "syncCharts"], syncCharts));
+    }
+
+    togglePanel({ isPanelOpen, webServiceId }) {
+        const test = this.state.getIn([webServiceId, "isPanelOpen"]);
+        this.setState(this.state.setIn([webServiceId, "isPanelOpen"], isPanelOpen));
     }
 
     static getChartsLinesData() {
@@ -106,20 +108,20 @@ class LoadTestChartsStore {
         return this.state.get("brushEndIndex");
     }
 
-    static getFirstWebServiceLinesData() {
+    static getFirstWebServiceChartsData() {
         return {
-            areReferenceLinesVisible: this.state.getIn(["first", "areReferenceLinesVisible"])
+            syncCharts: this.state.getIn(["first", "syncCharts"]),
+            areReferenceLinesVisible: this.state.getIn(["first", "areReferenceLinesVisible"]),
+            isPanelOpen: this.state.getIn(["first", "isPanelOpen"])
         };
     }
 
-    static getSecondWebServiceLinesData() {
+    static getSecondWebServiceChartsData() {
         return {
-            areReferenceLinesVisible: this.state.getIn(["second", "areReferenceLinesVisible"])
+            syncCharts: this.state.getIn(["second", "syncCharts"]),
+            areReferenceLinesVisible: this.state.getIn(["second", "areReferenceLinesVisible"]),
+            isPanelOpen: this.state.getIn(["first", "isPanelOpen"])
         };
-    }
-
-    static getSyncCharts() {
-        return this.state.get("syncCharts");
     }
 }
 

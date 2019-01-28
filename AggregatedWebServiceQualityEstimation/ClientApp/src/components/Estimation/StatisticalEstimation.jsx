@@ -8,15 +8,6 @@ import startCase from 'lodash/startCase';
 const decimalPlacePrecision = 2;
 
 class StatisticalEstimation extends Component {
-    //static getStores() {
-    //    return [EstimationStore];
-    //}
-
-    //static getPropsFromStores() {
-    //    return ({
-    //        statisticalData: EstimationStore.getStatisticalData()
-    //    });
-    //}
 
     render() {
         const {
@@ -31,9 +22,12 @@ class StatisticalEstimation extends Component {
         const successRate = (loadTestData.length - failedRequestCount) / loadTestData.length;
 
         return (
-            <div id="statistical-estimation" style={{ marginTop: "2rem" }}>
+            <div
+                id={`statistical-estimation-${webServiceId}-web-service`}
+                style={{ marginTop: "2rem" }}
+            >
                 <Button
-                    id="get-statistical-estimation-button"
+                    id={`button-get-statistical-estimation-data-${webServiceId}-web-service`}
                     disabled={areOperationsDenied}
                     onClick={() => EstimationActions.getStatisticalEstimatorResult(webServiceId)}
                 >
@@ -66,13 +60,14 @@ class StatisticalEstimation extends Component {
                     }
                     </div>
                     <Table
+                        id={`table-statistical-estimation-${webServiceId}-web-service`}
                         responsive
                         striped
                         bordered
                         condensed
                         hover
                     >
-                        <thead>
+                        <thead id={`table-head-statistical-estimation-${webServiceId}-web-service`}>
                             <tr>
                             {
                                 Object.keys(statisticMetricNames).map((item) => {
@@ -87,7 +82,7 @@ class StatisticalEstimation extends Component {
                             }
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id={`table-body-statistical-estimation-${webServiceId}-web-service`}>>
                         {
                                 statisticalData.map((item) => {
                                 return (

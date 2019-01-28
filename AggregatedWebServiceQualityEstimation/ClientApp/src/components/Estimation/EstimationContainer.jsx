@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { Panel, PanelGroup, ListGroup, ListGroupItem } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import StatisticalEstimation from './StatisticalEstimation';
 import ApdexScoreEstimation from './ApdexScoreEstimation';
@@ -24,7 +25,6 @@ class EstimationContainer extends Component {
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
-            syncCharts: LoadTestChartsStore.getSyncCharts(),
             metricsInfo: LoadTestMetricsStore.getMetricsInfo()
         });
     }
@@ -47,9 +47,11 @@ class EstimationContainer extends Component {
             brushStartIndex,
             brushEndIndex,
             brushOnChange,
-            syncCharts,
             areOperationsDenied
         } = this.props;
+
+        const { syncCharts } = webServiceId === "first" ?
+            firstWebServiceChartsData : secondWebServiceChartsData;
 
         const {
             apdexScoreLimit,
@@ -92,12 +94,94 @@ class EstimationContainer extends Component {
         };
 
         return (
-            <div id={`${webServiceId}-estimations`}>
-                <EstimationForm {...estimationFormProps}/>
-                <ApdexScoreEstimation {...apdexScoreEstimatorProps} />
-                <ClusterEstimation {...clusterEstimatorProps} />
-                <StatisticalEstimation {...statisticsEstimatorProps} />
-            </div>
+            <PanelGroup id={`panel-group-${webServiceId}-estimations`}>
+                <Panel
+                    id={`panel-estimation-options-${webServiceId}-web-service`}
+                    bsStyle="info"
+                    defaultExpanded
+                >
+                    <Panel.Heading id={`panel-heading-estimation-options-${webServiceId}-web-service`}>
+                        <Panel.Title
+                            id={`panel-title-estimation-options-${webServiceId}-web-service`}
+                            toggle
+                        >
+                            <b>Estimations Options</b>
+                        </Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body
+                        id={`panel-body-estimation-options-${webServiceId}-web-service`}
+                        collapsible
+                    >
+                        <EstimationForm {...estimationFormProps} />
+                    </Panel.Body>
+                </Panel>
+               
+                <Panel
+                    id={`panel-apdex-score-estimation-${webServiceId}-web-service`}
+                    bsStyle="info"
+                    style={{ marginTop: '2.5rem' }}
+                    defaultExpanded
+                >
+                    <Panel.Heading id={`panel-heading-apdex-score-estimation-${webServiceId}-web-service`}>
+                        <Panel.Title
+                            id={`panel-title-apdex-score-estimation-${webServiceId}-web-service`}
+                            toggle
+                        >
+                            <b>Apdex Score Estimation Data</b>
+                        </Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body
+                        id={`panel-body-apdex-score-estimation-${webServiceId}-web-service`}
+                        collapsible
+                    >
+                        <ApdexScoreEstimation {...apdexScoreEstimatorProps} />
+                    </Panel.Body>
+                </Panel>
+
+                <Panel
+                    id={`panel-cluster-estimation-${webServiceId}-web-service`}
+                    bsStyle="info"
+                    style={{ marginTop: '2rem' }}
+                    defaultExpanded
+                >
+                    <Panel.Heading id={`panel-heading-cluster-estimation-${webServiceId}-web-service`}>
+                        <Panel.Title
+                            id={`panel-title-cluster-estimation-${webServiceId}-web-service`}
+                            toggle
+                        >
+                            <b>Cluster Estimation Data</b>
+                        </Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body
+                        id={`panel-body-cluster-estimation-${webServiceId}-web-service`}
+                        collapsible
+                    >
+                        <ClusterEstimation {...clusterEstimatorProps} />
+                    </Panel.Body>
+                </Panel>
+
+                <Panel
+                    id={`panel-statistical-estimation-${webServiceId}-web-service`}
+                    bsStyle="info"
+                    style={{ marginTop: '2rem' }}
+                    defaultExpanded
+                >
+                    <Panel.Heading id={`panel-heading-statistical-estimation-${webServiceId}-web-service`}>
+                        <Panel.Title
+                            id={`panel-title-statistical-estimation-${webServiceId}-web-service`}
+                            toggle
+                        >
+                            <b>Statistical Estimation Data</b>
+                        </Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body
+                        id={`panel-body-statistical-estimation-${webServiceId}-web-service`}
+                        collapsible
+                    >
+                        <StatisticalEstimation {...statisticsEstimatorProps} />
+                    </Panel.Body>
+                </Panel>
+            </PanelGroup>
         );
     }
 }

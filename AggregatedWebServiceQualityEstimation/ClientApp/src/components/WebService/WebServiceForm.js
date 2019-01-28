@@ -2,10 +2,8 @@
 import { FormGroup, ControlLabel, FormControl, Collapse} from 'react-bootstrap';
 import Select from '../common/Select/Select';
 import Textarea from '../common/Textarea/Textarea';
-import FileUpload from '../common/FileUpload/FileUpload';
 import WebServicesActions from '../../actions/WebServicesActions';
 import LoadTestActions from '../../actions/LoadTestActions';
-import WebServicesStore from '../../stores/WebServicesStore';
 import { displayFailureMessage } from '../../utils/displayInformation';
 import isNil from 'lodash/isNil';
 
@@ -70,10 +68,12 @@ class WebServiceForm extends Component {
         return (
             <form>
                 <FormGroup
-                    controlId="url-input"
+                    controlId={`input-request-url-${webServiceId}-web-service`}
                     validationState={isUrlValid ? "success" : "error"}
                 >
-                    <ControlLabel>Web Service URL</ControlLabel>
+                    <ControlLabel id={`label-request-url-${webServiceId}-web-service`}>
+                        Web Service URL
+                    </ControlLabel>
                     <FormControl
                         type="url"
                         value={url}
@@ -84,10 +84,11 @@ class WebServiceForm extends Component {
                     <FormControl.Feedback />
                 </FormGroup>
                 <Select
-                    id="request-type"
+                    id={`request-type-${webServiceId}-web-service`}
                     title="Request Type:"
                     items={["Receive data (GET)", "Send data (POST)"]}
                     disabled={areOperationsDenied}
+                    style={{ width: '25%'}}
                     onChange={this.handleRequestTypeChange}
                 />
                 {
@@ -95,7 +96,7 @@ class WebServiceForm extends Component {
                     <Collapse in={requestType === "POST"}>
                         <div>
                             <Textarea
-                                id="textarea-request-body"
+                                id={`textarea-request-body-${webServiceId}-web-service`}
                                 title="Request Body:"
                                 disabled={areOperationsDenied}
                                 onChange={this.handleRequestPostDataChange}
@@ -103,14 +104,6 @@ class WebServiceForm extends Component {
                         </div>
                     </Collapse>
                 }
-                <FileUpload
-                    id={`file-upload-${webServiceId}-web-service`}
-                    title="Upload .CSV file with metrics:"
-                    buttonText="Add file"
-                    fileType=".csv"
-                    disabled={areOperationsDenied}
-                    onChange={(event) => this.handleFileUploadChange(event, webServiceId)}
-                />
             </form>
         );
     }

@@ -53,13 +53,12 @@ class LineChart extends Component {
         syncChart: PropTypes.bool.isRequired,
         toggleLineVisibility: PropTypes.func,
         width: PropTypes.number
-        //legendOnClick: PropTypes.func,
     };
 
     static defaultProps = {
         axisXLabel: "",
         axisYLabel: "",
-        width: 700,
+        width: 670,
         height: 250,
         margin: {
             top: 5,
@@ -124,7 +123,6 @@ class LineChart extends Component {
             axisYUnit,
             axisYLabel,
             brushOnChange,
-            //legendOnClick,
             brushStartIndex,
             brushEndIndex,
             showReferenceLines,
@@ -176,7 +174,7 @@ class LineChart extends Component {
                             startIndex={brushStartIndex}
                             endIndex={brushEndIndex}
                             onChange={brushOnChange}
-                    />
+                        />
                     </LineChartRecharts>
                 }
                 {/*

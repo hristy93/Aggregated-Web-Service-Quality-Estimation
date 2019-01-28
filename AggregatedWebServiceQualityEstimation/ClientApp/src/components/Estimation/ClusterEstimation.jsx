@@ -11,15 +11,6 @@ import isNumber from 'lodash/isNumber';
 const decimalPlacePrecision = 2;
 
 class ClusterEstimation extends Component {
-    //static getStores() {
-    //    return [EstimationStore];
-    //}
-
-    //static getPropsFromStores() {
-    //    return ({
-    //        clusterData: EstimationStore.getClusterData()
-    //    });
-    //}
 
     clusterEstimatonRenderer = (clusterData) => {
         const result = clusterData.map((item, index) => {
@@ -82,17 +73,17 @@ class ClusterEstimation extends Component {
         }
 
         return (
-            <div id="cluster-estimation" style={{ marginTop: "2rem" }}>
+            <div
+                id={`cluster-estimation-${webServiceId}-web-service`}
+                style={{ marginTop: "2rem" }}
+            >
                 <Button
-                    id="get-cluster-estimation-button"
+                    id={`button-get=cluster-estimation-${webServiceId}-web-service`}
                     disabled={areOperationsDenied}
                     onClick={() => EstimationActions.getClusterEstimatorResult(webServiceId)}
                 >
                     Get Cluster Data
                 </Button> 
-                <div id="cluster-estimation-header">
-                    <h4><b>Cluster Estimaton Data</b></h4>
-                </div>
                 {
                     isClusterDataVisible && 
                     <div id="cluster-estimation-data" style={{ marginTop: "1rem" }}>
