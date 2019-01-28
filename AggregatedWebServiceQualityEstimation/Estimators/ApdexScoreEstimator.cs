@@ -4,12 +4,14 @@ using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
     public class ApdexScoreEstimator : IApdexScoreEstimator, IMetricsData
     {
+        private readonly CultureInfo _cultureInfo = new CultureInfo("en");
         private ApdexScoreEstimatorResult _apdexScoreEstimatorResult;
         private ITestDataManager _loadTestDataManager;
 
@@ -67,7 +69,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             {
                 foreach (var item in responseTimeData)
                 {
-                    if (Double.TryParse(item.Replace('.', ','), out double parsedItem))
+                    if (Double.TryParse(item, NumberStyles.Float, _cultureInfo, out double parsedItem))
                     {
                         if (parsedItem <= apdexScoreLimit)
                         {
@@ -86,7 +88,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 {
                     IntervalStartTime = intervalStartTime,
                     IntervalEndTime = intervalEndTime,
-                    ApdexScore = apdexScore
+                    ApdexScore = apdexScore * 100
                 };
             }
 

@@ -11,16 +11,19 @@ import {
     Legend,
     Line,
     Brush,
-    ReferenceLine
+    ReferenceLine,
+    Label
 } from 'recharts';
 
 class LineChart extends Component {
     static propTypes = {
         axisXKey: PropTypes.string.isRequired,
+        axisXLabel: PropTypes.string,
         axisXPadding: PropTypes.shape({
             right: PropTypes.number,
             left: PropTypes.number
         }),
+        axisYLabel: PropTypes.string,
         axisYUnit: PropTypes.string,
         brushEndIndex: PropTypes.number,
         brushOnChange: PropTypes.func.isRequired,       
@@ -53,13 +56,15 @@ class LineChart extends Component {
     };
 
     static defaultProps = {
+        axisXLabel: "",
+        axisYLabel: "",
         width: 670,
         height: 250,
         margin: {
             top: 5,
             right: 20,
             left: 20,
-            bottom: 5
+            bottom: 15
         },
         axisXPadding: {
             left: 30,
@@ -113,8 +118,10 @@ class LineChart extends Component {
             margin,
             axisXPadding,
             axisXKey,
+            axisXLabel,
             lines,
             axisYUnit,
+            axisYLabel,
             brushOnChange,
             brushStartIndex,
             brushEndIndex,
@@ -137,8 +144,13 @@ class LineChart extends Component {
                         syncId={syncChart ? "sync" : null}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey={axisXKey} padding={axisXPadding} />
-                        <YAxis unit={axisYUnit} />
+                        <XAxis dataKey={axisXKey} padding={axisXPadding}>
+                            <Label value={axisXLabel} offset={0} position="insideBottom" />
+                        </XAxis>
+                        <YAxis
+                            unit={axisYUnit}
+                            label={{ value: `${axisYLabel}`, angle: -90, position: 'insideLeft' }}
+                        />
                         <Tooltip />
                         <Legend />
                         {

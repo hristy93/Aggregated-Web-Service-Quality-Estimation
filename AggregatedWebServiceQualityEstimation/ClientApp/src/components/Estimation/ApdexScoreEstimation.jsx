@@ -7,7 +7,7 @@ import EstimationStore from '../../stores/EstimationStore';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
 import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 
-const decimalPlacePrecision = 3;
+const decimalPlacePrecision = 2;
 
 class ApdexScoreEstimation extends Component {
     handleApdexScoreLimitChange = (event) => {
@@ -48,14 +48,17 @@ class ApdexScoreEstimation extends Component {
                     isApdexScoreChartVisible &&
                     <div id={`apdex-estimation-summary-${webServiceId}-web-service`}>
                         <h4> Apdex Score Limit: {apdexScoreLimit} </h4>
-                        <h4> Average Apdex Score: {averageApdexScore} </h4>
+                        <h4> Average Apdex Score: {averageApdexScore}% </h4>
                     </div>
                 }
                 <div id="apdex-estimation-data" style={{ marginTop: "1rem" }}>
                     <LineChart
                         id={`apdex-estimation-chart-${webServiceId}-web-service`}
                         axisXKey="IntervalStartTime"
+                        //axisXLabel="Time Intervals"
                         data={apdexScoreData}
+                        //axisYLabel="Apdex Score"
+                        axisYUnit="%"
                         lines={chartsLinesData['apdexScore']}
                         brushOnChange={brushOnChange}
                         brushStartIndex={brushStartIndex}
