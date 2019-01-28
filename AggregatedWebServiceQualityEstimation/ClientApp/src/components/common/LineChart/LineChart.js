@@ -50,7 +50,6 @@ class LineChart extends Component {
         syncChart: PropTypes.bool.isRequired,
         toggleLineVisibility: PropTypes.func,
         width: PropTypes.number
-        //legendOnClick: PropTypes.func,
     };
 
     static defaultProps = {
@@ -117,7 +116,6 @@ class LineChart extends Component {
             lines,
             axisYUnit,
             brushOnChange,
-            //legendOnClick,
             brushStartIndex,
             brushEndIndex,
             showReferenceLines,

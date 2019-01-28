@@ -8,19 +8,12 @@ import {
     Badge,
     Panel,
     PanelGroup,
-    ListGroup,
-    ListGroupItem,
-    OverlayTrigger,
     Tooltip
 } from 'react-bootstrap';
-import EstimationForm from '../Estimation/EstimationForm';
 import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';
 import LoadTestForm from './LoadTestForm';
 import WebServiceForm from '../WebService/WebServiceForm';
 import LoadTestCharts from '../LoadTestCharts/LoadTestCharts';
-import StatisticalEstimation from '../Estimation/StatisticalEstimation';
-import ApdexScoreEstimation from '../Estimation/ApdexScoreEstimation';
-import ClusterEstimation from '../Estimation/ClusterEstimation';
 import EstimationContainer from '../Estimation/EstimationContainer';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import LoadTestStore from '../../stores/LoadTestStore';
@@ -218,7 +211,6 @@ class LoadTest extends Component {
 
     render() {
         const {
-            loadTestData,
             firstServiceLoadTestData,
             secondServiceLoadTestData,
             firstWebServiceChartsData,
@@ -233,8 +225,6 @@ class LoadTest extends Component {
         const isTestRunning = testState.started && !testState.finished;
         const areOperationsDenied = testState.writingTestData || isTestRunning;
         const isRunLoadTestButtonDisabled = !areUrlsValid || areOperationsDenied;
-        //const firstWebServiceChartsStyle = firstServiceLoadTestData.length ? { width: 'fit-content' } : {};
-        //const secondWebServiceChartsStyle = secondServiceLoadTestData.length ? { marinLeft: '-9rem' } : {};
 
         return (
             <Grid fluid>
@@ -296,15 +286,6 @@ class LoadTest extends Component {
                                             </Panel.Heading >
                                             <Panel.Body id="panel-body-metrics">
                                                 <LoadTestMetricsForm />
-                                
-                                                {/*<ListGroup>
-                                                    <ListGroupItem>
-                                                        <LoadTestMetricsForm />
-                                                    </ListGroupItem>
-                                                    <ListGroupItem>
-                                                        <LoadTestForm />
-                                                    </ListGroupItem>
-                                                </ListGroup>*/}
                                             </Panel.Body>
                                         </Panel>
                                     </Col>
@@ -347,14 +328,20 @@ class LoadTest extends Component {
                                                         >
                                                             Cancel Test
                                                         </Button>
-                                                        {/*
-                                                            isTestRunning && !isNil(timeLeft) && (
-                                                                <div style={{marginLeft: '1rem'}}>
-                                                                    Time Left: <Badge>{timeLeft}</Badge>
-                                                                </div>
-                                                            )
-                                                        */}
-                                                        {/*<Button
+                                                        <Button
+                                                            id="write-load-test-data-button"
+                                                            onClick={() => this.handleWriteLoadTestDataClick("first")}
+                                                        >
+                                                            Write Load Test Data
+                                                        </Button>
+                                                        <Button
+                                                            id="read-load-test-data-button"
+                                                            onClick={() => this.handleReadLoadTestDataClick("first")}
+                                                        >
+                                                            Read Load Test Data
+                                                         </Button>
+                                                        <br />
+                                                        <Button
                                                             id="write-load-test-data-button"
                                                             onClick={() => this.handleWriteLoadTestDataClick("second")}
                                                         >
@@ -365,7 +352,7 @@ class LoadTest extends Component {
                                                             onClick={() => this.handleReadLoadTestDataClick("second")}
                                                         >
                                                             Read Load Test Data
-                                                         </Button>*/}
+                                                         </Button>
                                                     </ButtonToolbar>
                                                     {
                                                         (testState.started || testState.writingTestData) &&
@@ -416,44 +403,6 @@ class LoadTest extends Component {
                         </Row>
                     </Col>
                 </Row>
-                {/*<Row>
-                    <Col md={6}>
-                        <Panel bsStyle="primary">
-                            <Panel.Heading><b>Tests Controls </b></Panel.Heading>
-                            <Panel.Body>
-                                <ButtonToolbar>
-                                    <Button
-                                        id="run-load-test-button"
-                                        onClick={this.handleRunLoadTestButtonClick}
-                                        disabled={!areUrlsValid || areOperationsDenied}
-                                    >
-                                        Run Load Test
-                                    </Button>
-                                    <Button
-                                        id="cancel-load-test-button"
-                                        onClick={this.handleCancelLoadTestButtonClick}
-                                        disabled={!isTestRunning}
-                                    >
-                                        Cancel Test
-                                    </Button>
-                                </ButtonToolbar>
-                            </Panel.Body>
-                            <Panel.Footer>
-                                {
-                                    (testState.started || testState.writingTestData) && 
-                                    <h4> Test State: {this.getLoadTestStateMessage(testState)} </h4>
-                                }
-    
-                                {
-                                     isTestRunning && !isNil(timeLeft) && 
-                                     <div style={{marginLeft: '1rem'}}>
-                                         Time Left: <Badge>{timeLeft}</Badge>
-                                     </div>
-                                }
-                            </Panel.Footer>
-                        </Panel>
-                    </Col>
-                </Row>*/}
                 <Row className="show-grid" style={{ marginTop: '2rem' }}>
                     <Col md={6}>
                         <PanelGroup id="panel-group-first-web-service">
@@ -511,7 +460,6 @@ class LoadTest extends Component {
                                 })}
                                 eventKey="1"
                             >
-                                {/*margin-left: -6rem; width: fit-content;*/}
                                 <Panel.Heading>
                                     <Panel.Title toggle>
                                         <b>Second Web Service Metrics Charts</b>

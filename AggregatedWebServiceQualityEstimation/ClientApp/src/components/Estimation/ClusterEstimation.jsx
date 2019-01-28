@@ -9,16 +9,6 @@ import EstimationStore from '../../stores/EstimationStore';
 const decimalPlacePrecision = 3;
 
 class ClusterEstimation extends Component {
-    //static getStores() {
-    //    return [EstimationStore];
-    //}
-
-    //static getPropsFromStores() {
-    //    return ({
-    //        clusterData: EstimationStore.getClusterData()
-    //    });
-    //}
-
     render() {
         const {
             webServiceId,
@@ -29,20 +19,23 @@ class ClusterEstimation extends Component {
         const isClusterDataVisible = !isNil(clusterData) && !isEmpty(clusterData);
 
         return (
-            <div id="cluster-estimation" style={{ marginTop: "2rem" }}>
+            <div
+                id={`cluster-estimation-${webServiceId}-web-service`}
+                style={{ marginTop: "2rem" }}
+            >
                 <Button
-                    id="get-cluster-estimation-button"
+                    id={`button-get=cluster-estimation-${webServiceId}-web-service`}
                     disabled={areOperationsDenied}
                     onClick={() => EstimationActions.getClusterEstimatorResult(webServiceId)}
                 >
                     Get Cluster Data
                 </Button> 
-                {/*<div id="cluster-estimation-header">
-                    <h4><b>Cluster Estimaton Data</b></h4>
-                </div>*/}
                 {
                     isClusterDataVisible && 
-                    <div id="cluster-estimation-data" style={{ marginTop: "1rem" }}>
+                    <div
+                        id={`cluster-estimation-data-${webServiceId}-web-service`}
+                        style={{ marginTop: "1rem" }}
+                    >
                         {
                             Object.keys(clusterData).map((key, index) => {
                                 return (

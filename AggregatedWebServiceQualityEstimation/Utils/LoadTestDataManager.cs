@@ -181,8 +181,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                 {
                     try
                     {
-                        //headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,FailedRequestsPerSecond"
-                        //    + ",SentKilobytesPerSecond,ReceivedKilobytesPerSecond";
                         headers = "IntervalStartTime,IntervalEndTime,ResponseTime,SuccessfulRequestsPerSecond,FailedRequestsPerSecond"
                             + ",ReceivedKilobytesPerSecond";
                         testDataBuilder.AppendLine(headers);
@@ -194,7 +192,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                             var responseTime = FixDecimalNumberSeparator(reader["ResponseTime"].ToString());
                             var successfulRequestsPerSecond = FixDecimalNumberSeparator(reader["SuccessfulRequestsPerSecond"].ToString());
                             var failedRequestsPerSecond = FixDecimalNumberSeparator(reader["FailedRequestsPerSecond"].ToString());
-                            //var sentKilobytesPerSecond = FixDecimalNumberSeparator(reader["SentKilobytesPerSecond"].ToString());
                             var receivedKilobytesPerSecond = FixDecimalNumberSeparator(reader["ReceivedKilobytesPerSecond"].ToString());
                             result = $"{startTime}, {endTime}, {responseTime}, {successfulRequestsPerSecond}, {failedRequestsPerSecond}," +
                                 $" {receivedKilobytesPerSecond}";

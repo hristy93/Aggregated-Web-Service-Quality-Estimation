@@ -38,14 +38,6 @@ class EstimationStore {
 
     getApdexScoreEstimatorResult = ({ apdexScoreData, webServiceId }) => {
         if (!isNil(apdexScoreData)) {
-            //const currentApdexScoreData = this.state.get("apdexScoreData");
-
-            //for (let apdexScoreItem of apdexScoreData) {
-            //    currentApdexScoreData.push(apdexScoreItem);
-            //    this.setState(this.state.set("apdexScoreData", currentApdexScoreData));
-            //    console.log(currentApdexScoreItem);
-            //}
-
             this.setState(this.state.setIn([webServiceId, "apdexScoreData"], apdexScoreData));
         }
     }

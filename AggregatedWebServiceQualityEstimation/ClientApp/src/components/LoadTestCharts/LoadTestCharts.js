@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import LineChart from '../common/LineChart/LineChart';
 import Switch from '../common/Switch/Switch';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
@@ -55,10 +55,6 @@ class LoadTestCharts extends Component {
                 LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
                 LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
                 break;
-            //case "switch-line-visibility-SentKilobytesPerSecond":
-            //    LoadTestChartsActions.setLineVisibility.defer("SentKilobytesPerSecond");
-            //    LoadTestChartsActions.setReferenceLinesVisibility.defer("SentKilobytesPerSecond");
-            //    break;
             case "switch-line-visibility-ReceivedKilobytesPerSecond":
                 LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
                 LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
@@ -162,9 +158,7 @@ class LoadTestCharts extends Component {
                                 brushStartIndex={brushStartIndex}
                                 brushEndIndex={brushEndIndex}
                                 showReferenceLines={areReferenceLinesVisible}
-                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[0]] : []}
                                 referenceLinesData={referenceLinesData}
-                                //legendOnClick={this.handleLegendOnClick}
                                 toggleLineVisibility={this.handleSwitchOnChange}
                                 syncChart={syncCharts}
                                 isVisible={isResponseTimeChartVisible}
@@ -179,9 +173,7 @@ class LoadTestCharts extends Component {
                                 brushStartIndex={brushStartIndex}
                                 brushEndIndex={brushEndIndex}
                                 showReferenceLines={areReferenceLinesVisible}
-                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[1], referenceLinesData[2]] : []}
                                 referenceLinesData={referenceLinesData}
-                                //legendOnClick={this.handleLegendOnClick}
                                 toggleLineVisibility={this.handleSwitchOnChange}
                                 syncChart={syncCharts}
                                 isVisible={isRequestsChartVisible}
@@ -197,9 +189,7 @@ class LoadTestCharts extends Component {
                                 brushStartIndex={brushStartIndex}
                                 brushEndIndex={brushEndIndex}
                                 showReferenceLines={areReferenceLinesVisible}
-                                //referenceLinesData={referenceLinesData.length !== 0 ? [referenceLinesData[3], referenceLinesData[4]] : []}
                                 referenceLinesData={referenceLinesData}
-                                //legendOnClick={this.handleLegendOnClick}
                                 toggleLineVisibility={this.handleSwitchOnChange}
                                 syncChart={syncCharts}
                                 isVisible={isThroughputChartVisible}

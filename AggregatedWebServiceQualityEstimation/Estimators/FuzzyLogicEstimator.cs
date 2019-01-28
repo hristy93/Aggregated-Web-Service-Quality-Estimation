@@ -15,7 +15,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             ["ResponseTime"] = false,
             ["SuccessfulRequestsPerSecond"] = true,
             ["FailedRequestsPerSecond"] = false,
-            //["SentKilobytesPerSecond"] = true,
             ["ReceivedKilobytesPerSecond"] = true,
         };
 

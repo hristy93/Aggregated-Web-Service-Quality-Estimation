@@ -1,15 +1,8 @@
 ﻿import React, { Component } from 'react';
 import { FormGroup, ControlLabel, FormControl, Collapse } from 'react-bootstrap';
-import Select from '../common/Select/Select';
-import Textarea from '../common/Textarea/Textarea';
-import FileUpload from '../common/FileUpload/FileUpload';
 import LoadTestActions from '../../actions/LoadTestActions';
 import LoadTestStore from '../../stores/LoadTestStore';
-import { displayFailureMessage } from '../../utils/displayInformation';
 import connectToStores from 'alt-utils/lib/connectToStores';
-import isNil from 'lodash/isNil';
-
-const URLRegexExpression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
 
 class LoadTestForm extends Component {
     static getStores() {
