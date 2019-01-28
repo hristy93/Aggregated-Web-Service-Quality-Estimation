@@ -1,7 +1,5 @@
 ﻿import React, { Component } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import connectToStores from 'alt-utils/lib/connectToStores';
-import EstimationStore from '../../stores/EstimationStore';
 import EstimationActions from '../../actions/EstimationActions';
 import startCase from 'lodash/startCase';
 
@@ -82,7 +80,7 @@ class StatisticalEstimation extends Component {
                             }
                             </tr>
                         </thead>
-                        <tbody id={`table-body-statistical-estimation-${webServiceId}-web-service`}>>
+                        <tbody id={`table-body-statistical-estimation-${webServiceId}-web-service`}>
                         {
                                 statisticalData.map((item) => {
                                 return (

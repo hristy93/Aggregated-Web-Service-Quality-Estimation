@@ -20,6 +20,8 @@ class EstimationContainer extends Component {
         return ({
             firstWebServiceEstimationData: EstimationStore.getFirstWebServiceEstimationData(),
             secondWebServiceEstimationData: EstimationStore.getSecondWebServiceEstimationData(),
+            firstWebServiceChartsData: LoadTestChartsStore.getFirstWebServiceChartsData(),
+            secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
             firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
             secondServiceLoadTestData: LoadTestStore.getSecondServiceLoadTestData(),
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
@@ -39,6 +41,8 @@ class EstimationContainer extends Component {
         const {
             firstWebServiceEstimationData,
             secondWebServiceEstimationData,
+            firstWebServiceChartsData,
+            secondWebServiceChartsData,
             firstServiceLoadTestData,
             secondServiceLoadTestData,
             webServiceId,
