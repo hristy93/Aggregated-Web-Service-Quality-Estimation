@@ -166,7 +166,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     if (firstMetrics.Count() > 1 && _densestClusterCenter.Count() > 1)
                     {
                         firstVector = Vector<double>.Build.DenseOfEnumerable(firstMetrics.Skip(2)
-                            .Select(x => Double.Parse(x.Replace('.', ','))));
+                            .Select(x => Double.Parse(x, _cultureInfo)));
 
                         firstVector = firstVector.Normalize(2);
 

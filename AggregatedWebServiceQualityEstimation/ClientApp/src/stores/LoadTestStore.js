@@ -5,7 +5,7 @@ import EstimationStore from '../stores/EstimationStore';
 import immutable from 'alt-utils/lib/ImmutableUtil';
 import Immutable from 'immutable';
 import isNil from 'lodash/isNil';
-import { displayFailureMessage } from '../utils/displayInformation';
+import { displaySuccessMessage, displayFailureMessage } from '../utils/displayInformation';
 
 class LoadTestStore {
     constructor() {
@@ -13,10 +13,14 @@ class LoadTestStore {
 
         this.state = Immutable.Map({
             first: Immutable.Map({
-                loadTestData: []
+                loadTestData: [],
+                isFromFile: false,
+                loadTestDataSize: 0
             }),
             second: Immutable.Map({
-                loadTestData: []
+                loadTestData: [],
+                isFromFile: false,
+                loadTestDataSize: 0
             }),
             loadTestDuration: "00:00:30",
             url: "https://jsonplaceholder.typicode.com/todos/1",
@@ -65,8 +69,28 @@ class LoadTestStore {
         });
     }
 
-    uploadLoadTestData = ({ isFileUploaded, webServiceId }) => {
+    uploadLoadTestData = ({ isFileUploaded, fileContentLines, webServiceId }) => {
         if (isFileUploaded) {
+
+            this.setLoadTestDataSource({ isFromFile: true, webServiceId });
+            this.setLoadTestDataSize({ loadTestDataSize: fileContentLines, webServiceId });
+
+            const otherWebServiceLoadTestDataSize = webServiceId === "first" ?
+                this.state.getIn(["second", "loadTestDataSize"]) : this.state.getIn(["first", "loadTestDataSize"]);
+
+            if (otherWebServiceLoadTestDataSize !== 0 && otherWebServiceLoadTestDataSize !== fileContentLines) {
+                const alertMessage = "The the test data from the CSV file doesn't have the same number of lines as the previous one. " +
+                    "Please check your data and upload the file again!";
+                const logMessage = "The load test data lines from the CSV file are inconsistent with the previous one!";
+                displayFailureMessage(alertMessage, logMessage);
+
+                return;
+            } else {
+                const alertMessage = "The file is uploaded successfully!";
+                const logMessage = alertMessage;
+                displaySuccessMessage(alertMessage, logMessage);
+            }
+
             LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 
             // Get the statistics estimator's result and displaying it in a table
@@ -111,8 +135,12 @@ class LoadTestStore {
         this.setState(this.state.set("timeLeft", timeLeft));
     }
 
-    static getLoadTestData() {
-        return this.state.get("loadTestData");
+    setLoadTestDataSize = ({ loadTestDataSize, webServiceId }) => {
+        this.setState(this.state.setIn([webServiceId, "loadTestDataSize"], loadTestDataSize));
+    }
+
+    setLoadTestDataSource = ({ isFromFile, webServiceId }) => {
+        this.setState(this.state.setIn([webServiceId, "isFromFile"], isFromFile));
     }
 
     static getFirstServiceLoadTestData() {
@@ -133,6 +161,20 @@ class LoadTestStore {
 
     static getTimeLeft() {
         return this.state.get("timeLeft");
+    }
+
+    static getFirstServiceLoadTestDataInfo() {
+        return {
+            loadTestDataSize: this.state.getIn(["first", "loadTestDataSize"]),
+            loadTestDataSource: this.state.getIn(["first", "isFromFile"]) ? "file" : "tests"
+        };
+    }
+
+    static getSecondServiceLoadTestDataInfo() {
+        return {
+            loadTestDataSize: this.state.getIn(["second", "loadTestDataSize"]),
+            loadTestDataSource: this.state.getIn(["second", "isFromFile"]) ? "file" : "tests"
+        };
     }
 }
 

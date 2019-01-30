@@ -8,7 +8,7 @@ const tempDate = '1970/01/01 ';
 class LoadTestActions {
     constructor() {
         this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration",
-            "setTestState", "setTimeLeft", "clearLoadTestData");
+            "setTestState", "setTimeLeft", "clearLoadTestData", "setLoadTestDataSize", "setLoadTestDataSource");
     }
 
     runLoadTest = ({ data, duration }) => {
@@ -107,7 +107,7 @@ class LoadTestActions {
                     // handle error
                     const alertMessage = "There is a problem with the load test data!";
                     displayFailureMessage(alertMessage, error);
-                    dispatch({ isLoadTestDataWritten: true });
+                    dispatch({ isLoadTestDataWritten: true, webServiceId});
                 });
         };
     }
@@ -117,16 +117,21 @@ class LoadTestActions {
             LoadTestServices.uploadLoadTestData(files, webServiceId)
                 .then((response) => {
                     // handle success
-                    const alertMessage = response.data;
-                    const logMessage = response;
-                    displaySuccessMessage(alertMessage, logMessage);
-                    dispatch({ isFileUploaded: true, webServiceId});
+                    const fileContentLines = response.data;
+                    if (fileContentLines !== 0) {
+                        dispatch({ isFileUploaded: true, fileContentLines, webServiceId });
+                    } else {
+                        // handle error
+                        const alertMessage = "There CSV file is empty!";
+                        displayFailureMessage(alertMessage);
+                        dispatch({ isFileUploaded: false, webServiceId});
+                    }
                 })
                 .catch((error) => {
                     // handle error
                     const alertMessage = "There is a problem with the upload of the load test file!";
                     displayFailureMessage(alertMessage, error);
-                    dispatch({ isFileUploaded: false });
+                    dispatch({ isFileUploaded: false, webServiceId});
                 });
         };
     }

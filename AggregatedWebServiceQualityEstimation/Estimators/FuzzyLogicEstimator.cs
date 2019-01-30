@@ -5,6 +5,7 @@ using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
@@ -20,6 +21,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         public IList<double> AggregatedQualityMembershipFunction { get; set; }
 
+        private readonly CultureInfo _cultureInfo = new CultureInfo("en");
         private ITestDataManager _loadTestDataManager;
 
         public IList<string[]> MetricsData { get; set; }
@@ -50,8 +52,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 {
                     Vector<double> metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
                         .Skip(1)
-                        .Select(x => double.Parse(x.Replace('.', ',')))
-                        .Select(x => Math.Round(x, 3)));
+                        .Select(x => double.Parse(x, _cultureInfo)));
 
                     columnName = metrics[0];
                     if (isGreaterBetter[columnName])

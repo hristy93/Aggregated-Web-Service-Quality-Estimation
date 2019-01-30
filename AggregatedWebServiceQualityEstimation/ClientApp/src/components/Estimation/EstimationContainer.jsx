@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Panel, PanelGroup, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Panel, PanelGroup } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import StatisticalEstimation from './StatisticalEstimation';
 import ApdexScoreEstimation from './ApdexScoreEstimation';

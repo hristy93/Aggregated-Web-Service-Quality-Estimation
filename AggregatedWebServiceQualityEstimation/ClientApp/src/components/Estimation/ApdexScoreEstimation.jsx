@@ -1,11 +1,7 @@
 ﻿import React, { Component } from 'react';
-import connectToStores from 'alt-utils/lib/connectToStores';
 import { Button } from 'react-bootstrap';
 import LineChart from '../common/LineChart/LineChart';
 import EstimationActions from '../../actions/EstimationActions';
-import EstimationStore from '../../stores/EstimationStore';
-import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
-import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
 
 const decimalPlacePrecision = 2;
 

@@ -37,6 +37,8 @@ class LoadTest extends Component {
         return ({
             firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
             secondServiceLoadTestData: LoadTestStore.getSecondServiceLoadTestData(),
+            firstServiceLoadTestDataInfo: LoadTestStore.getFirstServiceLoadTestDataInfo(),
+            secondServiceLoadTestDataInfo: LoadTestStore.getSecondServiceLoadTestDataInfo(),
             firstWebServiceChartsData: LoadTestChartsStore.getFirstWebServiceChartsData(),
             secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
             loadTestDuration: LoadTestStore.getLoadTestDuration(),
@@ -225,6 +227,8 @@ class LoadTest extends Component {
         const isTestRunning = testState.started && !testState.finished;
         const areOperationsDenied = testState.writingTestData || isTestRunning;
         const isRunLoadTestButtonDisabled = !areUrlsValid || areOperationsDenied;
+        const isFirstWebServiceChartsPanelOpen = firstWebServiceChartsData.isPanelOpen;
+        const isSecondWebServiceChartsPanelOpen = secondWebServiceChartsData.isPanelOpen;
 
         return (
             <Grid fluid>
@@ -409,9 +413,9 @@ class LoadTest extends Component {
                             <Panel
                                 id="panel-first-web-service-charts"
                                 bsStyle="primary"
-                                expanded={firstWebServiceChartsData.isPanelOpen || firstServiceLoadTestData.length !== 0}
+                                expanded={isFirstWebServiceChartsPanelOpen || firstServiceLoadTestData.length !== 0}
                                 onToggle={() => LoadTestChartsActions.togglePanel({
-                                    isPanelOpen: !firstWebServiceChartsData.isPanelOpen,
+                                    isPanelOpen: !isFirstWebServiceChartsPanelOpen,
                                     webServiceId: "first"
                                 })}
                                 eventKey="1"
@@ -453,9 +457,9 @@ class LoadTest extends Component {
                             <Panel
                                 id="panel-second-web-service-charts"
                                 bsStyle="primary"
-                                expanded={secondWebServiceChartsData.isPanelOpen || secondServiceLoadTestData.length !== 0}
+                                expanded={isSecondWebServiceChartsPanelOpen || secondServiceLoadTestData.length !== 0}
                                 onToggle={() => LoadTestChartsActions.togglePanel({
-                                    isPanelOpen: !firstWebServiceChartsData.isPanelOpen,
+                                    isPanelOpen: !isSecondWebServiceChartsPanelOpen,
                                     webServiceId: "second"
                                 })}
                                 eventKey="1"

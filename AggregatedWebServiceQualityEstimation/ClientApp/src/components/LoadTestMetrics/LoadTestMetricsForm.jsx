@@ -27,7 +27,6 @@ class LoadTestMetricsForm extends Component {
 
     handleCheckBoxChange = (event) => {
         const metricName = event.target.name;
-        const isUsed = event.target.checked;
 
         LoadTestMetricsActions.setMetricsUsability(metricName);
     }

@@ -120,9 +120,21 @@ class LoadTestCharts extends Component {
             metricsInfo["FailedRequestsPerSecond"];
         const isThroughputChartVisible = metricsInfo["ReceivedKilobytesPerSecond"];
 
+        const chartsCommonProps = {
+            axisXKey: "IntervalStartTime",
+            //axisXLabel="Time Intervals"
+            data: chartsData,
+            brushOnChange: brushOnChange,
+            brushStartIndex: brushStartIndex,
+            brushEndIndex: brushEndIndex,
+            showReferenceLines: areReferenceLinesVisible,
+            referenceLinesData: referenceLinesData,
+            toggleLineVisibility: this.handleSwitchOnChange,
+            syncChart: syncCharts
+        };
+
         return (
             <div id={`${webServiceId}-web-service-charts`}>
-                <h4><b>Metrics Charts</b></h4>
                 {
                     chartsData.length > 0 ? (
                         <div id="charts-switches">
@@ -150,55 +162,28 @@ class LoadTestCharts extends Component {
                     <ListGroup>
                         <ListGroupItem>
                             <LineChart
-                                axisXKey="IntervalStartTime"
-                                //axisXLabel="Time Intervals"
-                                data={chartsData}
+                                {...chartsCommonProps }
                                 axisYUnit="s"
                                 //axisYLabel="Response Time"
                                 lines={chartsLinesData['responseTime']}
-                                brushOnChange={brushOnChange}
-                                brushStartIndex={brushStartIndex}
-                                brushEndIndex={brushEndIndex}
-                                showReferenceLines={areReferenceLinesVisible}
-                                referenceLinesData={referenceLinesData}
-                                toggleLineVisibility={this.handleSwitchOnChange}
-                                syncChart={syncCharts}
                                 isVisible={isResponseTimeChartVisible}
                             />
                         </ListGroupItem>
                         <ListGroupItem style={{ marginTop: '2rem' }}>
                             <LineChart
-                                axisXKey="IntervalStartTime"
-                                //axisXLabel="Time Intervals"
-                                data={chartsData}
+                                {...chartsCommonProps}
                                 axisYUnit="rps"
                                 //axisYLabel="Requests Per Second"
                                 lines={chartsLinesData['requests']}
-                                brushOnChange={brushOnChange}
-                                brushStartIndex={brushStartIndex}
-                                brushEndIndex={brushEndIndex}
-                                showReferenceLines={areReferenceLinesVisible}
-                                referenceLinesData={referenceLinesData}
-                                toggleLineVisibility={this.handleSwitchOnChange}
-                                syncChart={syncCharts}
                                 isVisible={isRequestsChartVisible}
                             />
                         </ListGroupItem>
                         <ListGroupItem style={{ marginTop: '2rem' }}>
                             <LineChart
-                                axisXKey="IntervalStartTime"
-                                //axisXLabel="Time Intervals"
-                                data={chartsData}
+                                {...chartsCommonProps}
                                 axisYUnit="KBps"
                                 //axisYLabel="Throughput"
                                 lines={chartsLinesData['throughput']}
-                                brushOnChange={brushOnChange}
-                                brushStartIndex={brushStartIndex}
-                                brushEndIndex={brushEndIndex}
-                                showReferenceLines={areReferenceLinesVisible}
-                                referenceLinesData={referenceLinesData}
-                                toggleLineVisibility={this.handleSwitchOnChange}
-                                syncChart={syncCharts}
                                 isVisible={isThroughputChartVisible}
                             />
                         </ListGroupItem>

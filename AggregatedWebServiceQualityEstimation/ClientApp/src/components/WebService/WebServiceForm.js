@@ -30,7 +30,8 @@ class WebServiceForm extends Component {
     }
 
     handleRequestTypeChange = (event) => {
-        const requestType = event.target.value;
+        const requestTypeInput = event.target.value;
+        const requestType = requestTypeInput.includes("GET") ? "GET" : "POST";
         const { webServiceId } = this.props;
 
         WebServicesActions.setRequestType({ requestType, webServiceId });
@@ -88,7 +89,7 @@ class WebServiceForm extends Component {
                     title="Request Type:"
                     items={["Receive data (GET)", "Send data (POST)"]}
                     disabled={areOperationsDenied}
-                    style={{ width: '25%'}}
+                    style={{ width: '30%'}}
                     onChange={this.handleRequestTypeChange}
                 />
                 {

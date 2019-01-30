@@ -1,11 +1,9 @@
 ﻿import React, { Component } from 'react';
-import connectToStores from 'alt-utils/lib/connectToStores';
 import { Button } from 'react-bootstrap';
 import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
 import startCase from 'lodash/startCase';
 import EstimationActions from '../../actions/EstimationActions';
-import EstimationStore from '../../stores/EstimationStore';
 import isNumber from 'lodash/isNumber';
 
 const decimalPlacePrecision = 2;

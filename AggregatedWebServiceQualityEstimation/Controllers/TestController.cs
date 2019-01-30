@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AggregatedWebServiceQualityEstimation.Controllers
 {
@@ -185,15 +186,17 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
 
             fileContent = _loadTestDataManager.UploadTestData(file);
-
+          
             if (fileContent == null)
             {
                 throw new InvalidOperationException("The file is not processed correctly!");
             }
 
+            var fileContentLines = Regex.Matches(fileContent, Environment.NewLine).Count - 1;
+
             _loadTestDataManager.WriteTestData(fileContent, webServiceId);
 
-            return Ok("The file is uploaded successfully!");
+            return Ok(fileContentLines);
         }
 
         [HttpPost("metrics")]

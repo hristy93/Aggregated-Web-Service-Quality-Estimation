@@ -87,12 +87,11 @@ class LoadTestChartsStore {
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
 
-    setChartsSync({ syncCharts, webServiceId }) {
+    setChartsSync = ({ syncCharts, webServiceId }) => {
         this.setState(this.state.setIn([webServiceId, "syncCharts"], syncCharts));
     }
 
-    togglePanel({ isPanelOpen, webServiceId }) {
-        const test = this.state.getIn([webServiceId, "isPanelOpen"]);
+    togglePanel = ({ isPanelOpen, webServiceId }) => {
         this.setState(this.state.setIn([webServiceId, "isPanelOpen"], isPanelOpen));
     }
 
@@ -120,7 +119,7 @@ class LoadTestChartsStore {
         return {
             syncCharts: this.state.getIn(["second", "syncCharts"]),
             areReferenceLinesVisible: this.state.getIn(["second", "areReferenceLinesVisible"]),
-            isPanelOpen: this.state.getIn(["first", "isPanelOpen"])
+            isPanelOpen: this.state.getIn(["second", "isPanelOpen"])
         };
     }
 }
