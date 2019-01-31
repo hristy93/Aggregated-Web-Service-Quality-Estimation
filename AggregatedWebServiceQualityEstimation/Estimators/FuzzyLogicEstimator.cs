@@ -22,19 +22,23 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         public IList<double> AggregatedQualityMembershipFunction { get; set; }
 
         private readonly CultureInfo _cultureInfo = new CultureInfo("en");
-        private ITestDataManager _loadTestDataManager;
+        private ITestDataIOManager _loadTestDataIOManager;
+        private ITestDataPrepocessor _loadTestDataPreprocessor;
 
         public IList<string[]> MetricsData { get; set; }
 
-        public FuzzyLogicEstimator(ITestDataManager loadTestDataManager)
+        public FuzzyLogicEstimator(ITestDataIOManager loadTestDataIOManager, ITestDataPrepocessor loadTestDataPreprocessor)
         {
             AggregatedQualityMembershipFunction = new List<double>();
-            _loadTestDataManager = loadTestDataManager;
+            _loadTestDataIOManager = loadTestDataIOManager;
+            _loadTestDataPreprocessor = loadTestDataPreprocessor;
         }
 
-        public void GetMetricsData(string webServiceId, bool fromFile = false, bool byRow = false)
+        public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
         {
-            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false)?.Skip(2).ToList();
+            var initialMetricsData = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile);
+            var preprocessedMetricsData = _loadTestDataPreprocessor.PreprocessMetricsData(initialMetricsData, webServiceId, byRow, fromFile);
+            MetricsData = preprocessedMetricsData?.Skip(2).ToList();
         }
 
         public void GetAggregatedQualityMembershipFunction()

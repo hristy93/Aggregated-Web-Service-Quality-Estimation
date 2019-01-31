@@ -34,7 +34,8 @@ namespace AggregatedWebServiceQualityEstimation
 
             // Add DI services
             services.AddTransient<ITestRunner, LoadTestRunner>();
-            services.AddSingleton<ITestDataManager, LoadTestDataManager>();
+            services.AddTransient<ITestDataIOManager, LoadTestDataIOManager>();
+            services.AddSingleton<ITestDataPrepocessor, LoadTestDataPrepocessor>();
             services.AddTransient<ITestModifier, LoadTestModifier>();
 
             services.AddTransient<IApdexScoreEstimator, ApdexScoreEstimator>();

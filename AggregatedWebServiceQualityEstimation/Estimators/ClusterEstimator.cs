@@ -29,16 +29,18 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         private double _densestClusterPotential;
         private int _metricsCount;
 
-        private readonly ITestDataManager _loadTestDataManager;
+        private ITestDataIOManager _loadTestDataIOManager;
+        private ITestDataPrepocessor _loadTestDataPreprocessor;
         private readonly CultureInfo _cultureInfo = new CultureInfo("en");
         private readonly double _epsilon = Math.Pow(10, -4);
         private readonly double _lowerEpsilon = 0.15;
         private readonly double _uppperEpsilon = 0.5;
         private readonly double _initialRadius = 0.5;
 
-        public ClusterEstimator(ITestDataManager loadTestDataManager)
+        public ClusterEstimator(ITestDataIOManager loadTestDataIOManager, ITestDataPrepocessor loadTestDataPreprocessor)
         {
-            _loadTestDataManager = loadTestDataManager;
+            _loadTestDataIOManager = loadTestDataIOManager;
+            _loadTestDataPreprocessor = loadTestDataPreprocessor;
             _clusterDensitiesCandidates = new Dictionary<IList<double>, double>();
             //_distances = new Dictionary<IList<double>, IList<double>>();
             _vectorsDistances = new Dictionary<(IList<double> firstVector, IList<double> secondVector), double>();
@@ -48,9 +50,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             ClustersSpreads = new List<double>();
         }
 
-        public void GetMetricsData(string webServiceId, bool fromFile = false, bool byRow = false)
+        public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
         {
-            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId);
+            var initialMetricsData = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile);
+            MetricsData = _loadTestDataPreprocessor.PreprocessMetricsData(initialMetricsData, webServiceId, byRow, fromFile);
             _metricsCount = MetricsData.Count;
         }
 

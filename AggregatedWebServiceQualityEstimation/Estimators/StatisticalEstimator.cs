@@ -15,20 +15,24 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     public class StatisticalEstimator : IStatisticalEstimator, IMetricsData
     {
         private readonly CultureInfo _cultureInfo = new CultureInfo("en");
-        private readonly ITestDataManager _loadTestDataManager;
+        private ITestDataIOManager _loadTestDataIOManager;
+        private ITestDataPrepocessor _loadTestDataPreprocessor;
 
         public IList<StatisticalEstimatorResult> StatisticalData { get; private set; }
         public IList<string[]> MetricsData { get; set; }
 
-        public StatisticalEstimator(ITestDataManager loadTestDataManager) 
+        public StatisticalEstimator(ITestDataIOManager loadTestDataIOManager, ITestDataPrepocessor loadTestDataPreprocessor) 
         {
             StatisticalData = new List<StatisticalEstimatorResult>();
-            _loadTestDataManager = loadTestDataManager;
+            _loadTestDataIOManager = loadTestDataIOManager;
+            _loadTestDataPreprocessor = loadTestDataPreprocessor;
         }
 
         public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
         {
-            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false)?.Skip(2).ToList();
+            var initialMetricsData = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile);
+            var preprocessedMetricsData = _loadTestDataPreprocessor.PreprocessMetricsData(initialMetricsData, webServiceId, byRow, fromFile);
+            MetricsData = preprocessedMetricsData?.Skip(2).ToList();
         }
 
         public void GetStatisticalData()

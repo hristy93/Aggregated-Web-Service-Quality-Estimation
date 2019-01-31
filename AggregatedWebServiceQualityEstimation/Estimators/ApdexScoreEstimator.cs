@@ -12,19 +12,21 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     public class ApdexScoreEstimator : IApdexScoreEstimator, IMetricsData
     {
         private readonly CultureInfo _cultureInfo = new CultureInfo("en");
-        private ApdexScoreEstimatorResult _apdexScoreEstimatorResult;
-        private ITestDataManager _loadTestDataManager;
+        private ITestDataIOManager _loadTestDataIOManager;
+        private ITestDataPrepocessor _loadTestDataPreprocessor;
 
         public IList<string[]> MetricsData { get; set; }
 
-        public ApdexScoreEstimator(ITestDataManager loadTestDataManager)
+        public ApdexScoreEstimator(ITestDataIOManager loadTestDataIOManager, ITestDataPrepocessor loadTestDataPreprocessor)
         {
-            _loadTestDataManager = loadTestDataManager;
+            _loadTestDataIOManager = loadTestDataIOManager;
+            _loadTestDataPreprocessor = loadTestDataPreprocessor;
         }
 
         public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
         {
-            MetricsData = _loadTestDataManager.GetMetricsData(webServiceId, byRow: false, fromFile: fromFile);
+            var initialMetricsData = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile);
+            MetricsData = _loadTestDataPreprocessor.PreprocessMetricsData(initialMetricsData, webServiceId, byRow, fromFile: fromFile);
         }
 
         public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile, string webServiceId)

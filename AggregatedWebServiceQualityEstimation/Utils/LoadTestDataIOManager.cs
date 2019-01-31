@@ -10,7 +10,7 @@ using System.Text;
 
 namespace AggregatedWebServiceQualityEstimation.Utils
 {
-    public class LoadTestDataManager : ITestDataManager
+    public class LoadTestDataIOManager : ITestDataIOManager
     {
         public readonly string loadTestFirstServiceFilePath = "loadTestResults-1.csv";
         public readonly string loadTestSecondServiceFilePath = "loadTestResults-2.csv";
@@ -52,7 +52,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             ["ReceivedKilobytesPerSecond"] = true,
         };
 
-        public LoadTestDataManager(IConfiguration configuration)
+        public LoadTestDataIOManager(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -111,60 +111,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             }
 
             return fileContent;
-        }
-
-
-        public void SaveUsedMetrics(Dictionary<string, bool> metricsInfo)
-        {
-            _metricsUsed = metricsInfo;
-        }
-
-        public IList<string[]> GetMetricsData(string webServiceId, bool byRow = true, bool fromFile = true, bool isFiltered = true)
-        {
-            var fileOutput = ReadTestData(webServiceId, fromFile);
-            var fileLines = fileOutput.Split(Environment.NewLine);
-            var fileLinesTransformed = fileLines.Select(x => x.Split(','));
-            IList<string[]> metricsData;
-
-            if (byRow)
-            {
-                if (isFiltered && _metricsUsed.Count != 0)
-                {
-                    var metricsNames = fileLinesTransformed.ToList()[0];
-                    var metricsIndexes = metricsNames
-                        .Where(item => item.StartsWith("Interval") ||
-                        (_metricsUsed.ContainsKey(item) && _metricsUsed[item]))
-                        .Select(item => metricsNames.ToList().IndexOf(item));
-                    var filteredMetricsData = fileLinesTransformed
-                        .Select(metricsInfo => metricsInfo
-                        .Where(item => metricsIndexes.Contains(metricsInfo.ToList().IndexOf(item))).ToArray())
-                        .ToList();
-                    metricsData = filteredMetricsData.Skip(1).ToList();
-                }
-                else
-                {
-                    metricsData = fileLinesTransformed.Skip(1).ToList();
-                }
-            }
-            else
-            {
-                metricsData = fileLinesTransformed
-                    .SelectMany(inner => inner.Select((item, index) => new { item, index }))
-                    .GroupBy(i => i.index, i => i.item)
-                    .Select(g => g.ToArray())
-                    .ToList();
-
-                if (isFiltered && _metricsUsed != null)
-                {
-                    var filteredMetricsData = metricsData
-                        .Where(metric => metric[0].StartsWith("Interval") || 
-                        (_metricsUsed.ContainsKey(metric[0]) && _metricsUsed[metric[0]]))
-                        .ToList();
-                    metricsData = filteredMetricsData;
-                }
-            }
-
-            return metricsData;
         }
 
         private string GetTestDataFromDatabase(string webServiceId)

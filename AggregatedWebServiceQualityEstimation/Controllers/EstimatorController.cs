@@ -22,9 +22,9 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
         private IClusterEstimator _clusterEstimator;
         private IFuzzyLogicEstimator _fuzzyLogicEstimator;
         private IStatisticalEstimator _statisticalEstimator;
-        private ITestDataManager _loadTestDataManager;
+        private ITestDataIOManager _loadTestDataManager;
 
-        public EstimatorController(ITestDataManager loadTestDataManager, IApdexScoreEstimator apdexScoreEstimator,
+        public EstimatorController(ITestDataIOManager loadTestDataManager, IApdexScoreEstimator apdexScoreEstimator,
             IClusterEstimator clusterEstimator, IFuzzyLogicEstimator fuzzyLogicEstimator, IStatisticalEstimator statisticalEstimator)
         {
             _loadTestDataManager = loadTestDataManager;
@@ -50,7 +50,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 }
 
                 var clusterEstimatorResult = new List<ClusterEstimatorResult>();
-                (_clusterEstimator as IMetricsData)?.GetMetricsData(webServiceId);
+                (_clusterEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile: true, byRow: true);
 
                 if ((_clusterEstimator as IMetricsData)?.MetricsData[0].Skip(2).Count() > 1)
                 {
@@ -94,7 +94,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                (_statisticalEstimator as IMetricsData)?.GetMetricsData(webServiceId);
+                (_statisticalEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile: true, byRow: false);
 
                 _statisticalEstimator.GetStatisticalData();
                 var fiveNumberSummaries = _statisticalEstimator.StatisticalData;
@@ -121,7 +121,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                (_fuzzyLogicEstimator as IMetricsData)?.GetMetricsData(webServiceId);
+                (_fuzzyLogicEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile: true, byRow: false);
 
                 _fuzzyLogicEstimator.GetAggregatedQualityMembershipFunction();
                 var aggregatedQualityMembershipFunction =
@@ -151,7 +151,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                (_apdexScoreEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile);
+                (_apdexScoreEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile, byRow: false);
 
                 var currentApdexScoreInfo = _apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile, webServiceId);
 

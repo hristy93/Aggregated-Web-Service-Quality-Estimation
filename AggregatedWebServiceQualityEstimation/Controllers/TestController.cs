@@ -19,16 +19,18 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
     public class TestController : ControllerBase
     {
         private ITestRunner _loadTestRunner;
-        private ITestDataManager _loadTestDataManager;
+        private ITestDataIOManager _loadTestDataIOManager;
+        private ITestDataPrepocessor _loadTestDataPreprocessor;
         private IConfiguration _configuration;
         private ITestModifier _loadTestModifier;
 
         public TestController(IConfiguration configuration, ITestRunner testRunner,
-            ITestDataManager testDataManager, ITestModifier testModifier)
+            ITestDataIOManager testDataIOManager, ITestDataPrepocessor loadTestDataPreprocessor, ITestModifier testModifier)
         {
             _configuration = configuration;
             _loadTestRunner = testRunner;
-            _loadTestDataManager = testDataManager;
+            _loadTestDataIOManager = testDataIOManager;
+            _loadTestDataPreprocessor = loadTestDataPreprocessor;
             _loadTestModifier = testModifier;
         }
 
@@ -131,7 +133,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                _loadTestDataManager.WriteTestData(webServiceId);
+                _loadTestDataIOManager.WriteTestData(webServiceId);
                 return Ok("The load test data was written successfully!");
             }
             catch (Exception ex)
@@ -155,7 +157,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The webServiceId is invalid or missing!");
                 }
 
-                var result = _loadTestDataManager.ReadTestData(webServiceId, fromFile);
+                var result = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -185,7 +187,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 return BadRequest("The file is invalid!");
             }
 
-            fileContent = _loadTestDataManager.UploadTestData(file);
+            fileContent = _loadTestDataIOManager.UploadTestData(file);
           
             if (fileContent == null)
             {
@@ -194,7 +196,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
             var fileContentLines = Regex.Matches(fileContent, Environment.NewLine).Count - 1;
 
-            _loadTestDataManager.WriteTestData(fileContent, webServiceId);
+            _loadTestDataIOManager.WriteTestData(fileContent, webServiceId);
 
             return Ok(fileContentLines);
         }
@@ -214,7 +216,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                     return BadRequest("The metricsUsabilityInfo is invalid or missing!");
                 }
 
-                _loadTestDataManager.SaveUsedMetrics(metricsUsabilityInfo);
+                _loadTestDataPreprocessor.SaveUsedMetrics(metricsUsabilityInfo);
 
                 return Ok("The used metrics are saved successfully!");
             }

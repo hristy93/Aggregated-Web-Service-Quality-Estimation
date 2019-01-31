@@ -12,7 +12,7 @@ namespace Backend.UnitTests.Controllers
 {
     public class EstimatorControllerTest
     {
-        private Mock<ITestDataManager> _loadTestDataManager;
+        private Mock<ITestDataIOManager> _loadTestDataManager;
         private Mock<IMetricsData> _metricsDataManager;
         private Mock<IApdexScoreEstimator> _apdexScoreEstimator;
         private Mock<IClusterEstimator> _clusterEstimator;
@@ -21,7 +21,7 @@ namespace Backend.UnitTests.Controllers
 
         public EstimatorControllerTest()
         {
-            _loadTestDataManager = new Mock<ITestDataManager>();
+            _loadTestDataManager = new Mock<ITestDataIOManager>();
             _metricsDataManager = new Mock<IMetricsData>();
             _apdexScoreEstimator = new Mock<IApdexScoreEstimator>();
             _clusterEstimator = new Mock<IClusterEstimator>();

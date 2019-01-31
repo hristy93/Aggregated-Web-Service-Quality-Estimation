@@ -17,20 +17,22 @@ using Xunit;
 
 namespace Backend.UnitTests.Controllers
 {
-    public class TestControllerTest
+    public class TestControllerTests
     {
         private IConfiguration _configuration;
         private Mock<ITestRunner> _loadTestRunner;
-        private Mock<ITestDataManager> _loadTestDataManager;
+        private Mock<ITestDataIOManager> _loadTestDataManager;
+        private Mock<ITestDataPrepocessor> _loadTestDataPreprocessor;
         private Mock<ITestModifier> _loadTestModifier;
 
-        public TestControllerTest()
+        public TestControllerTests()
         {
             IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             //configurationBuilder.AddJsonFile("AppSettings.json");
             _configuration = configurationBuilder.Build();
             _loadTestRunner = new Mock<ITestRunner>();
-            _loadTestDataManager = new Mock<ITestDataManager>();
+            _loadTestDataManager = new Mock<ITestDataIOManager>();
+            _loadTestDataPreprocessor = new Mock<ITestDataPrepocessor>();
             _loadTestModifier = new Mock<ITestModifier>();
         }
 
@@ -41,7 +43,8 @@ namespace Backend.UnitTests.Controllers
 
             _loadTestRunner.Setup(testRunner => testRunner.IsTestRunning()).Returns(true);
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var actualResult = testController.CheckTestStatus();
 
@@ -57,7 +60,8 @@ namespace Backend.UnitTests.Controllers
 
             _loadTestRunner.Setup(testRunner => testRunner.IsTestRunning()).Returns(false);
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var actualResult = testController.CheckTestStatus();
 
@@ -75,7 +79,8 @@ namespace Backend.UnitTests.Controllers
 
             _loadTestDataManager.Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile)).Returns(expectedValue);
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var actualResult = testController.ReadTestData(fromFile, webServiceId);
 
@@ -103,7 +108,8 @@ namespace Backend.UnitTests.Controllers
             const string webServiceId = null;
             const bool fromFile = true;
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.ReadTestData(fromFile, webServiceId);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -116,7 +122,8 @@ namespace Backend.UnitTests.Controllers
 
             _loadTestDataManager.Setup(testDataManager => testDataManager.WriteTestData(webServiceId));
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var actualResult = testController.WriteTestData(webServiceId);
 
@@ -131,7 +138,8 @@ namespace Backend.UnitTests.Controllers
 
             _loadTestDataManager.Setup(testDataManager => testDataManager.WriteTestData(webServiceId)).Throws(new Exception());
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             Assert.Throws<Exception>(() => testController.WriteTestData(webServiceId));
         }
@@ -141,7 +149,8 @@ namespace Backend.UnitTests.Controllers
         {
             _loadTestRunner.Setup(testRunner => testRunner.IsTestRunning()).Returns(false);
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var actualResult = testController.CancelTest();
 
@@ -154,7 +163,8 @@ namespace Backend.UnitTests.Controllers
         {
             _loadTestRunner.Setup(testRunner => testRunner.IsTestRunning()).Returns(true);
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                   _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             Assert.Throws<Exception>(() => testController.CancelTest());
         }
@@ -178,7 +188,8 @@ namespace Backend.UnitTests.Controllers
             _loadTestModifier.Setup(testModifier => testModifier.EditDuration(duration)).Returns(true);
             _loadTestRunner.Setup(testRunner => testRunner.InitiateTest());
 
-           var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.StartTest(duration, webServicesData);
             var resultValue = Assert.IsType<OkObjectResult>(result);
@@ -203,7 +214,8 @@ namespace Backend.UnitTests.Controllers
             _loadTestModifier.Setup(testModifier => testModifier.EditDuration(duration)).Returns(false);
             _loadTestRunner.Setup(testRunner => testRunner.InitiateTest());
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.StartTest(duration, webServicesData);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -222,7 +234,8 @@ namespace Backend.UnitTests.Controllers
                 }
             };
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.StartTest(duration, webServicesData);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -234,7 +247,8 @@ namespace Backend.UnitTests.Controllers
             string duration = "00:00:30";
             List<WebServiceData> webServicesData = null;
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.StartTest(duration, webServicesData);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -253,7 +267,8 @@ namespace Backend.UnitTests.Controllers
                 }
             };
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.StartTest(duration, webServicesData);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -273,7 +288,8 @@ namespace Backend.UnitTests.Controllers
         //    };
 
         //    _loadTestModifier.Setup(testModifier => testModifier.EditRequestBodyData(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>())).Throws(new Exception());
-        //    var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+        //    var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+        //       _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
         //    Assert.Throws<Exception>(() => testController.StartTest(duration, webServicesData));
         //}
@@ -285,7 +301,8 @@ namespace Backend.UnitTests.Controllers
             string webServiceId = "test";
 
             _loadTestDataManager.Setup(testDataManager => testDataManager.UploadTestData(It.IsAny<IFormFile>())).Returns(fileContent);
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object)
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object)
             {
                 ControllerContext = RequestWithFile()
             };
@@ -299,7 +316,8 @@ namespace Backend.UnitTests.Controllers
         {
             string webServiceId = null;
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.UploadTestData(webServiceId);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -310,7 +328,8 @@ namespace Backend.UnitTests.Controllers
         {
             string webServiceId = "first";
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.UploadTestData(webServiceId);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -323,7 +342,8 @@ namespace Backend.UnitTests.Controllers
             string webServiceId = "first";
 
             _loadTestDataManager.Setup(testDataManager => testDataManager.UploadTestData(It.IsAny<IFormFile>())).Returns(fileContent);
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object)
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object)
             {
                 ControllerContext = RequestWithFile()
             };
@@ -352,8 +372,9 @@ namespace Backend.UnitTests.Controllers
                 ["ResponseTime"] = true
             };
 
-            _loadTestDataManager.Setup(testDataManager => testDataManager.SaveUsedMetrics(metricsUsabilityInfo));
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            _loadTestDataPreprocessor.Setup(testDataPreprocessor => testDataPreprocessor.SaveUsedMetrics(metricsUsabilityInfo));
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.SaveUsedMetrics(metricsUsabilityInfo);
             Assert.IsType<OkObjectResult>(result);
@@ -364,7 +385,8 @@ namespace Backend.UnitTests.Controllers
         {
             Dictionary<string, bool> metricsUsabilityInfo = null;
 
-            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             var result = testController.SaveUsedMetrics(metricsUsabilityInfo);
             Assert.IsType<BadRequestObjectResult>(result);
