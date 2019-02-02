@@ -297,18 +297,31 @@ namespace Backend.UnitTests.Controllers
         [Fact]
         public void UploadTestData_Success()
         {
-            string fileContent = "fileContent";
+            string fileContent = "header" + Environment.NewLine  + "line1" + Environment.NewLine + "line2" + Environment.NewLine;
+            int actualResultValue = 2;
             string webServiceId = "test";
+            IList<string[]> cleanedUpMetricsData = new List<string[]>()
+            {
+                new string[1]
+                {
+                    fileContent
+                }
+            };
 
+            _loadTestDataPreprocessor.Setup(testDataPrepocessor => testDataPrepocessor.CleanUpMetricsData(fileContent)).Returns(cleanedUpMetricsData);
+            _loadTestDataPreprocessor.Setup(testDataPrepocessor => testDataPrepocessor.TransformMetricsData(cleanedUpMetricsData, webServiceId, true, true, true, true)).Returns(fileContent);
             _loadTestDataManager.Setup(testDataManager => testDataManager.UploadTestData(It.IsAny<IFormFile>())).Returns(fileContent);
+
             var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
                   _loadTestDataPreprocessor.Object, _loadTestModifier.Object)
             {
-                ControllerContext = RequestWithFile()
+                ControllerContext = RequestWithFile(fileContent)
             };
 
             var result = testController.UploadTestData(webServiceId);
+            var resultValue = result as OkObjectResult;
             Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(actualResultValue, resultValue.Value);
         }
 
         [Fact]
@@ -345,20 +358,19 @@ namespace Backend.UnitTests.Controllers
             var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
                   _loadTestDataPreprocessor.Object, _loadTestModifier.Object)
             {
-                ControllerContext = RequestWithFile()
+                ControllerContext = RequestWithFile("")
             };
 
             Assert.Throws<InvalidOperationException>(() => testController.UploadTestData(webServiceId));
             
         }
 
-        private ControllerContext RequestWithFile()
+        private ControllerContext RequestWithFile(string fileContent)
         {
-            string fileContent = "fileContent";
             string fileName = "data.csv";
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers.Add("Content-Type", "multipart/form-data");
-            var file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes(fileContent)), 0, 0, fileName, fileName);
+            var file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes(fileContent)), 0, fileContent.Length, fileName, fileName);
             httpContext.Request.Form = new FormCollection(new Dictionary<string, StringValues>(), new FormFileCollection { file });
             var actx = new ActionContext(httpContext, new RouteData(), new ControllerActionDescriptor());
             return new ControllerContext(actx);

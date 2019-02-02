@@ -180,14 +180,13 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
 
             IFormFile file = Request?.Form?.Files?.FirstOrDefault();
-            string fileContent = null;
 
             if (file == null)
             {
                 return BadRequest("The file is invalid!");
             }
 
-            fileContent = _loadTestDataIOManager.UploadTestData(file);
+            var fileContent = _loadTestDataIOManager.UploadTestData(file);
           
             if (fileContent == null)
             {
@@ -196,7 +195,10 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
             var fileContentLines = Regex.Matches(fileContent, Environment.NewLine).Count - 1;
 
-            _loadTestDataIOManager.WriteTestData(fileContent, webServiceId);
+            var cleanedUpMetricsData = _loadTestDataPreprocessor.CleanUpMetricsData(fileContent);
+            var transfromedFileContent = _loadTestDataPreprocessor.TransformMetricsData(cleanedUpMetricsData, webServiceId, toFileFormat: true);
+
+            _loadTestDataIOManager.WriteTestData(transfromedFileContent, webServiceId);
 
             return Ok(fileContentLines);
         }
