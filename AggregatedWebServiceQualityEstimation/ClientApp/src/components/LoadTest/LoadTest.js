@@ -378,7 +378,7 @@ class LoadTest extends Component {
                                             >
                                                 <Panel.Heading id="panel-heading-metrics-data-source">
                                                     <Panel.Title id="panel-title-metrics-data-source" toggle> 
-                                                        <b>Metrics From SCV File</b>
+                                                        <b>Metrics From CSV File</b>
                                                     </Panel.Title>
                                                 </Panel.Heading >
                                                 <Panel.Body id="panel-body-metrics-data-source" collapsible>
@@ -428,6 +428,7 @@ class LoadTest extends Component {
                                 <Panel.Body id="panel-body-first-web-service-charts" collapsible>
                                     <LoadTestCharts
                                         webServiceId="first"
+                                        areOperationsDenied={areOperationsDenied}
                                         chartsData={firstServiceLoadTestData}
                                         brushOnChange={this.handleBrushOnChange}
                                     />
@@ -472,6 +473,7 @@ class LoadTest extends Component {
                                 <Panel.Body collapsible>
                                     <LoadTestCharts
                                         webServiceId="second"
+                                        areOperationsDenied={areOperationsDenied}
                                         chartsData={secondServiceLoadTestData}
                                         brushOnChange={this.handleBrushOnChange}
                                     />

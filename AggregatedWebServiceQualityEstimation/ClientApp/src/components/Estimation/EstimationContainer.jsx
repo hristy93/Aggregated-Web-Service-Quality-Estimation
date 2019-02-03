@@ -24,6 +24,8 @@ class EstimationContainer extends Component {
             secondWebServiceChartsData: LoadTestChartsStore.getSecondWebServiceChartsData(),
             firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
             secondServiceLoadTestData: LoadTestStore.getSecondServiceLoadTestData(),
+            firstServiceLoadTestDataInfo: LoadTestStore.getFirstServiceLoadTestDataInfo(),
+            secondServiceLoadTestDataInfo: LoadTestStore.getSecondServiceLoadTestDataInfo(),
             chartsLinesData: LoadTestChartsStore.getChartsLinesData(),
             brushStartIndex: LoadTestChartsStore.getBrushStartIndex(),
             brushEndIndex: LoadTestChartsStore.getBrushEndIndex(),
@@ -45,6 +47,8 @@ class EstimationContainer extends Component {
             secondWebServiceChartsData,
             firstServiceLoadTestData,
             secondServiceLoadTestData,
+            firstServiceLoadTestDataInfo,
+            secondServiceLoadTestDataInfo,
             webServiceId,
             chartsLinesData,
             metricsInfo,
@@ -56,6 +60,9 @@ class EstimationContainer extends Component {
 
         const { syncCharts } = webServiceId === "first" ?
             firstWebServiceChartsData : secondWebServiceChartsData;
+
+        const { loadTestDataSize } = webServiceId === "first" ?
+            firstServiceLoadTestDataInfo : secondServiceLoadTestDataInfo;
 
         const {
             apdexScoreLimit,
@@ -87,6 +94,8 @@ class EstimationContainer extends Component {
         const clusterEstimatorProps = {
             webServiceId,
             clusterData,
+            metricsInfo,
+            loadTestDataSize,
             areOperationsDenied
         };
 
@@ -153,7 +162,7 @@ class EstimationContainer extends Component {
                             id={`panel-title-cluster-estimation-${webServiceId}-web-service`}
                             toggle
                         >
-                            <b>Cluster Estimation Data</b>
+                            <b>Metrics Consistency Estimation Data</b>
                         </Panel.Title>
                     </Panel.Heading>
                     <Panel.Body

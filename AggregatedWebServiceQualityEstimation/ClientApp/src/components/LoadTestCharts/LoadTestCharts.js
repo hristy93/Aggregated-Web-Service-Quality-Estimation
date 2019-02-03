@@ -70,6 +70,7 @@ class LoadTestCharts extends Component {
     render() {
         const {
             webServiceId,
+            areOperationsDenied,
             chartsData,
             chartsLinesData,
             firstWebServiceEstimationData,
@@ -148,6 +149,7 @@ class LoadTestCharts extends Component {
                                 id={`${webServiceId}-web-service-switch-show-reference-lines`}
                                 text="Show reference lines:"
                                 isChecked={areReferenceLinesVisible}
+                                disabled={areOperationsDenied}
                                 onChange={this.handleSwitchOnChange}
                             />
                         </div>

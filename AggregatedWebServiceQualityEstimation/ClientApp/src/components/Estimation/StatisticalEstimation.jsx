@@ -2,6 +2,7 @@
 import { Button, Table } from 'react-bootstrap';
 import EstimationActions from '../../actions/EstimationActions';
 import startCase from 'lodash/startCase';
+import { toPercentage } from '../../utils/displayData';
 
 const decimalPlacePrecision = 2;
 
@@ -43,14 +44,14 @@ class StatisticalEstimation extends Component {
                                     <h4> {startCase(statisticalItem.metricName)} </h4>
                                     {
                                         statisticalItem.metricName.toLocaleLowerCase().includes("success") &&
-                                        <p> Success Rate: {(successRate * 100).toFixed(decimalPlacePrecision)}% </p>
+                                        <p> Success Rate: {toPercentage(successRate, decimalPlacePrecision)} </p>
                                     }
                                     {
                                         statisticalItem.metricName.toLocaleLowerCase().includes("fail") &&
-                                        <p> Failure Rate: {((1 - successRate) * 100).toFixed(decimalPlacePrecision)}% </p>
+                                        <p> Failure Rate: {toPercentage((1 - successRate), decimalPlacePrecision)} </p>
                                     }
-                                    95% over {statisticalItem.percentile95.toFixed(decimalPlacePrecision)} ({(statisticalItem.percentageAbovePercentile95 * 100).toFixed(decimalPlacePrecision)}%) <br />
-                                    99% over {statisticalItem.percentile99.toFixed(decimalPlacePrecision)} ({(statisticalItem.percentageAbovePercentile99 * 100).toFixed(decimalPlacePrecision)}%) <br />
+                                    95% over {statisticalItem.percentile95.toFixed(decimalPlacePrecision)} ({toPercentage(statisticalItem.percentageAbovePercentile95, decimalPlacePrecision)}) <br />
+                                    99% over {statisticalItem.percentile99.toFixed(decimalPlacePrecision)} ({toPercentage(statisticalItem.percentageAbovePercentile99, decimalPlacePrecision)}) <br />
                                     <br />
                                 </div>
                             );
@@ -72,7 +73,7 @@ class StatisticalEstimation extends Component {
                                     if (!item.toLocaleLowerCase().includes("percentile")) {
                                         return (
                                             <th key={item}>
-                                                {startCase(item)}
+                                                {item.toLocaleLowerCase().includes('name') ? `${startCase(item)} / Statistic Measure` : startCase(item)}
                                             </th>
                                         );
                                     }

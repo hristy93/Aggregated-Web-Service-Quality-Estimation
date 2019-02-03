@@ -48,7 +48,7 @@ class LoadTestStore {
     }
 
     readLoadTestData = ({ loadTestData, webServiceId }) => {
-        console.log("loadTestData", webServiceId, loadTestData);
+        //console.log("loadTestData", webServiceId, loadTestData);
         if (!isNil(loadTestData)) {
             this.setState(this.state.setIn([webServiceId, "loadTestData"], loadTestData));
         } else {
