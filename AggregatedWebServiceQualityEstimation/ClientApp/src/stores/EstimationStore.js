@@ -11,13 +11,13 @@ class EstimationStore {
         this.state = Immutable.Map({
             first: Immutable.Map({
                 statisticalData: [],
-                apdexScoreData: [],
+                apdexScoreData: {},
                 apdexScoreLimit: 0.05,
                 clusterData: {}
             }),
             second: Immutable.Map({
                 statisticalData: [],
-                apdexScoreData: [],
+                apdexScoreData: {},
                 apdexScoreLimit: 0.05,
                 clusterData: {}
             })

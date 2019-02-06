@@ -12,8 +12,18 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
     public class ApdexScoreEstimator : IApdexScoreEstimator, IMetricsData
     {
         private readonly CultureInfo _cultureInfo = new CultureInfo("en");
+        private readonly Dictionary<double, string> _apdexScoreEstimationRatingMapping = new Dictionary<double, string>()
+        {
+            [94] = "Excellent",
+            [85] = "Good",
+            [70] = "Fair",
+            [50] = "Poor",
+            [0] = "Unacceptable"
+        };
+
         private ITestDataIOManager _loadTestDataIOManager;
         private ITestDataPrepocessor _loadTestDataPreprocessor;
+      
 
         public IList<string[]> MetricsData { get; set; }
 
@@ -29,9 +39,25 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             MetricsData = _loadTestDataPreprocessor.PreprocessMetricsData(initialMetricsData, webServiceId, byRow, fromFile: fromFile);
         }
 
-        public IEnumerable<ApdexScoreEstimatorResult> FindApdexScore(double apdexScoreLimit, bool fromFile, string webServiceId)
+        public ApdexScoreEstimatorResult FindApdexScoreEstimatorResult(double apdexScoreLimit, bool fromFile, string webServiceId)
         {
-            var result = new List<ApdexScoreEstimatorResult>();
+            var apdexScoreEstimations = FindApdexScoreEstimations(apdexScoreLimit, fromFile, webServiceId);
+            var averageApdexScore = FindAverageApdexScoreEstimation(apdexScoreEstimations);
+            var apdexScoreEstimationRating = FindApdexScoreEstimationRating(averageApdexScore);
+
+            var apdexScoreEstimatorResult = new ApdexScoreEstimatorResult()
+            {
+                ApdexScoreEstimations = apdexScoreEstimations,
+                AverageApdexScoreEstimation = averageApdexScore,
+                ApdexScoreEstimationRating = apdexScoreEstimationRating
+            };
+
+            return apdexScoreEstimatorResult;
+        }
+
+        private IEnumerable<ApdexScoreEstimation> FindApdexScoreEstimations(double apdexScoreLimit, bool fromFile, string webServiceId)
+        {
+            var result = new List<ApdexScoreEstimation>();
             var intervals = MetricsData.Take(2).ToList();
             var responseTimeData = MetricsData[2]?.Skip(1).ToList();
 
@@ -40,7 +66,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 var intervalStartTime = intervals?[0]?[1]?.Trim();
                 var intervalEndTime = intervals?[1]?[1]?.Trim();
 
-                var apdexScoreEstimatorResult = GetApdexScoreItem(responseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
+                var apdexScoreEstimatorResult = GetApdexScoreEstimation(responseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
 
                 result.Add(apdexScoreEstimatorResult);
             }
@@ -52,7 +78,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     var intervalEndTime = intervals?[1]?[i + 1]?.Trim();
                     var currentResponseTimeData = responseTimeData.Take(i + 1).ToList();
 
-                    var apdexScoreEstimatorResult = GetApdexScoreItem(currentResponseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
+                    var apdexScoreEstimatorResult = GetApdexScoreEstimation(currentResponseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
 
                     result.Add(apdexScoreEstimatorResult);
                 }
@@ -61,9 +87,32 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             return result;
         }
 
-        private ApdexScoreEstimatorResult GetApdexScoreItem(List<string> responseTimeData, double apdexScoreLimit, string intervalStartTime, string intervalEndTime)
+        private double FindAverageApdexScoreEstimation(IEnumerable<ApdexScoreEstimation> apdexScoreEstimations)
         {
-            ApdexScoreEstimatorResult apdexScoreEstimatorResult = null;
+            var averageApdexScoreEstimation = apdexScoreEstimations.Select(s => s.ApdexScore).Sum() / apdexScoreEstimations.Count();
+            return averageApdexScoreEstimation;
+        }
+
+        private string FindApdexScoreEstimationRating(double averageApdexScore)
+        {
+            string apdexScoreEstimationRating = _apdexScoreEstimationRatingMapping.Last().Value;
+
+            foreach (var keyValuePair in _apdexScoreEstimationRatingMapping)
+            {
+                if (averageApdexScore >= keyValuePair.Key)
+                {
+                    apdexScoreEstimationRating = keyValuePair.Value;
+                    break;
+                }
+            }
+            
+            return apdexScoreEstimationRating;
+        }
+
+        private ApdexScoreEstimation GetApdexScoreEstimation(List<string> responseTimeData, double apdexScoreLimit,
+            string intervalStartTime, string intervalEndTime)
+        {
+            ApdexScoreEstimation apdexScoreEstimation = null;
             int satisfiedResponseTimeValuesCount = 0;
             int toleratedResponseTimeValuesCount = 0;
 
@@ -86,7 +135,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
                 var apdexScore = (satisfiedResponseTimeValuesCount +
                   toleratedResponseTimeValuesCount / 2.0) / (responseTimeData.Count);
-                apdexScoreEstimatorResult = new ApdexScoreEstimatorResult()
+                apdexScoreEstimation = new ApdexScoreEstimation()
                 {
                     IntervalStartTime = intervalStartTime,
                     IntervalEndTime = intervalEndTime,
@@ -94,7 +143,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 };
             }
 
-            return apdexScoreEstimatorResult;
+            return apdexScoreEstimation;
         }
     }
 }

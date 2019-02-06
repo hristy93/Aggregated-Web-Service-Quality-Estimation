@@ -68,7 +68,7 @@ class EstimationActions {
                     // handle success
                     //console.log(response);
                     const apdexScoreData = response.data;
-                    apdexScoreData.sort(function (a, b) {
+                    apdexScoreData.apdexScoreEstimations.sort(function (a, b) {
                         return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);
                     });
                     dispatch({ apdexScoreData, webServiceId });
