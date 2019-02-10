@@ -36,7 +36,7 @@ class LoadTestForm extends Component {
                 <FormGroup
                     controlId="load-test-duration-input"                  
                 >
-                    <ControlLabel>Test Duration: </ControlLabel>
+                    <ControlLabel>Tests Duration (hh:mm:ss): </ControlLabel>
                     <FormControl
                         type="text"
                         value={loadTestDuration}

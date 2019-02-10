@@ -1,6 +1,8 @@
 ﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
 using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.Statistics;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -39,23 +41,43 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             MetricsData = _loadTestDataPreprocessor.PreprocessMetricsData(initialMetricsData, webServiceId, byRow, fromFile: fromFile);
         }
 
-        public ApdexScoreEstimatorResult FindApdexScoreEstimatorResult(double apdexScoreLimit, bool fromFile, string webServiceId)
+        public ApdexScoreEstimatorResult FindApdexScoreEstimatorResult(double? apdexScoreLimit, bool fromFile, string webServiceId)
         {
+            var initialApdexScoreLimit = FindInitialApdexScoreLimit();
+
+            if (!apdexScoreLimit.HasValue)
+            {
+                apdexScoreLimit = initialApdexScoreLimit;
+            }
+
             var apdexScoreEstimations = FindApdexScoreEstimations(apdexScoreLimit, fromFile, webServiceId);
             var averageApdexScore = FindAverageApdexScoreEstimation(apdexScoreEstimations);
             var apdexScoreEstimationRating = FindApdexScoreEstimationRating(averageApdexScore);
+           
 
             var apdexScoreEstimatorResult = new ApdexScoreEstimatorResult()
             {
                 ApdexScoreEstimations = apdexScoreEstimations,
                 AverageApdexScoreEstimation = averageApdexScore,
-                ApdexScoreEstimationRating = apdexScoreEstimationRating
+                ApdexScoreEstimationRating = apdexScoreEstimationRating,
+                InitialApdexScoreLimit = initialApdexScoreLimit
             };
 
             return apdexScoreEstimatorResult;
         }
 
-        private IEnumerable<ApdexScoreEstimation> FindApdexScoreEstimations(double apdexScoreLimit, bool fromFile, string webServiceId)
+        private double FindInitialApdexScoreLimit()
+        {
+            var responseTimeMetrics = MetricsData[2].Skip(1);
+            var metricsVector = Vector<double>.Build.DenseOfEnumerable(responseTimeMetrics
+                      .Skip(1)
+                      .Select(x => Double.Parse(x, _cultureInfo)));
+
+            var initialApdexScoreLimit = Statistics.Percentile(metricsVector, 90);
+            return initialApdexScoreLimit;
+        }
+
+        private IEnumerable<ApdexScoreEstimation> FindApdexScoreEstimations(double? apdexScoreLimit, bool fromFile, string webServiceId)
         {
             var result = new List<ApdexScoreEstimation>();
             var intervals = MetricsData.Take(2).ToList();
@@ -109,7 +131,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             return apdexScoreEstimationRating;
         }
 
-        private ApdexScoreEstimation GetApdexScoreEstimation(List<string> responseTimeData, double apdexScoreLimit,
+        private ApdexScoreEstimation GetApdexScoreEstimation(List<string> responseTimeData, double? apdexScoreLimit,
             string intervalStartTime, string intervalEndTime)
         {
             ApdexScoreEstimation apdexScoreEstimation = null;

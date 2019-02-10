@@ -6,7 +6,7 @@ const tempDate = '1970/01/01 ';
 
 class EstimationActions {
     constructor() {
-        this.generateActions("setApdexScoreLimit", "clearApdexScoreData");
+        this.generateActions("setApdexScoreLimit", "clearApdexScoreData", "setEstimationsPanelVisibility");
     }
 
     getClusterEstimatorResult = (webServiceId) => {
@@ -19,7 +19,7 @@ class EstimationActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the cluster estimator's result!";
+                    const alertMessage = `There is a problem with the cluster estimator's result of the ${webServiceId} web service!`;
                     displayFailureMessage(alertMessage, error);
                 });
         };
@@ -37,7 +37,7 @@ class EstimationActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the statistical estimator's result!";
+                    const alertMessage = `There is a problem with the statistical estimator's result of the ${webServiceId} web service!`;
                     displayFailureMessage(alertMessage, error);
                 });
         };
@@ -55,7 +55,7 @@ class EstimationActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the fuzzy logic estimator's result!";
+                    const alertMessage = `There is a problem with the fuzzy logic estimator's result of the ${webServiceId} web service!`;
                     displayFailureMessage(alertMessage, error);
                 });
         };
@@ -75,7 +75,7 @@ class EstimationActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the apdex score estimator's result!";
+                    const alertMessage = `There is a problem with the apdex score estimator's result of the ${webServiceId} web service!`;
                     displayFailureMessage(alertMessage, error);
                 });
         };

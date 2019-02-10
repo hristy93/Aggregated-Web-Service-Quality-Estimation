@@ -23,7 +23,7 @@ class LoadTestActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the load test!";
+                    const alertMessage = "There is a problem with running the performance and load tests!";
                     displayFailureMessage(alertMessage, error);
                     dispatch({ isTestSuccessful: false });
                 });
@@ -41,7 +41,7 @@ class LoadTestActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the canceling of the load test!";
+                    const alertMessage = "There is a problem with the canceling of the performance and load tests!";
                     displayFailureMessage(alertMessage, error);
                 });
         };
@@ -59,7 +59,7 @@ class LoadTestActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the load test!";
+                    const alertMessage = "There is a problem with checking the status of the performance and load tests!";
                     displayFailureMessage(alertMessage, error);
                     dispatch({ isTestCanceled: false });
                 });
@@ -87,7 +87,7 @@ class LoadTestActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the load test data!";
+                    const alertMessage = "There is a problem with reading the performance and load tests data!";
                     displayFailureMessage(alertMessage, error);
                 });
         };
@@ -105,7 +105,7 @@ class LoadTestActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the load test data!";
+                    const alertMessage = "There is a problem with writting the performance and load tests data!";
                     displayFailureMessage(alertMessage, error);
                     dispatch({ isLoadTestDataWritten: true, webServiceId});
                 });

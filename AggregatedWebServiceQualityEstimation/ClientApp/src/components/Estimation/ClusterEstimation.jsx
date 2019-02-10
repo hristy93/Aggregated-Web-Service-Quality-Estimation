@@ -111,20 +111,18 @@ class ClusterEstimation extends Component {
                 .reduce((sum, item) => sum += item, 0));
         }
 
-        console.log(outliersPercentage);
-
         return (
             <div
                 id={`cluster-estimation-${webServiceId}-web-service`}
                 style={{ marginTop: "2rem" }}
             >
-                <Button
+                {/*<Button
                     id={`button-get=cluster-estimation-${webServiceId}-web-service`}
                     disabled={areOperationsDenied}
                     onClick={() => EstimationActions.getClusterEstimatorResult(webServiceId)}
                 >
                     Get Metrics Consistency Data
-                </Button> 
+                </Button>*/} 
                 {
                     isClusterDataVisible && 
                     <div id="cluster-estimation-data" style={{ marginTop: "1rem" }}>

@@ -136,7 +136,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
 
         [HttpGet("apdex-score")]
-        public IActionResult GetApdexScoreResult([Required] double apdexScoreLimit, [Required] string webServiceId,
+        public IActionResult GetApdexScoreResult(double? apdexScoreLimit, [Required] string webServiceId,
             bool fromFile = true)
         {
             try

@@ -25,16 +25,13 @@ class StatisticalEstimation extends Component {
                 id={`statistical-estimation-${webServiceId}-web-service`}
                 style={{ marginTop: "2rem" }}
             >
-                <Button
+                {/*<Button
                     id={`button-get-statistical-estimation-data-${webServiceId}-web-service`}
                     disabled={areOperationsDenied}
                     onClick={() => EstimationActions.getStatisticalEstimatorResult(webServiceId)}
                 >
                     Get Statistical Data
-                 </Button>
-                <div id="statistical-header">
-                    <h4><b>Statistical Data</b></h4>
-                </div>
+                </Button>*/}
                 <div id="statistical-data" style={{ marginTop: "1rem" }}>
                     <div>
                     {
@@ -59,14 +56,14 @@ class StatisticalEstimation extends Component {
                     }
                     </div>
                     <Table
-                        id={`table-statistical-estimation-${webServiceId}-web-service`}
+                        id={`table-${webServiceId}-web-service-statistical-estimation`}
                         responsive
                         striped
                         bordered
                         condensed
                         hover
                     >
-                        <thead id={`table-head-statistical-estimation-${webServiceId}-web-service`}>
+                        <thead id={`table-header-${webServiceId}-web-service-statistical-estimation-`}>
                             <tr>
                             {
                                 Object.keys(statisticMetricNames).map((item) => {
@@ -81,7 +78,7 @@ class StatisticalEstimation extends Component {
                             }
                             </tr>
                         </thead>
-                        <tbody id={`table-body-statistical-estimation-${webServiceId}-web-service`}>
+                        <tbody id={`table-body-${webServiceId}-web-service-statistical-estimation`}>
                         {
                                 statisticalData.map((item) => {
                                 return (

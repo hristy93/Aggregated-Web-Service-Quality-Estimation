@@ -19,7 +19,7 @@ class LoadTestMetricsActions {
                 })
                 .catch((error) => {
                     // handle error
-                    const alertMessage = "There is a problem with the load test!";
+                    const alertMessage = "There is a problem with the setting the metrics that are used in the tests!";
                     displayFailureMessage(alertMessage, error);
                     dispatch({ isSaveSuccessful: false });
                 });

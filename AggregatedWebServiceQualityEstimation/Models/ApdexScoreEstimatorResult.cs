@@ -11,5 +11,6 @@ namespace AggregatedWebServiceQualityEstimation.Models
         public IEnumerable<ApdexScoreEstimation> ApdexScoreEstimations { get; set; }
         public double AverageApdexScoreEstimation { get; set; }
         public string ApdexScoreEstimationRating { get; set; }
+        public double InitialApdexScoreLimit { get; set; }
     }
 }

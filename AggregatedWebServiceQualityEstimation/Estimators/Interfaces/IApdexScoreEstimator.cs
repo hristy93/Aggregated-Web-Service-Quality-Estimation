@@ -5,6 +5,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators.Interfaces
 {
     public interface IApdexScoreEstimator
     {
-        ApdexScoreEstimatorResult FindApdexScoreEstimatorResult(double apdexScoreLimit, bool fromFile, string webServiceId);
+        ApdexScoreEstimatorResult FindApdexScoreEstimatorResult(double? apdexScoreLimit, bool fromFile, string webServiceId);
     }
 }
