@@ -49,18 +49,22 @@ namespace Backend.UnitTests.Controllers
             const double apdexScoreLimit = 0.05;
             const bool byRow = false;
             const bool fromFile = true;
-            List<ApdexScoreEstimatorResult> expectedResult = new List<ApdexScoreEstimatorResult>()
+            ApdexScoreEstimatorResult expectedResult = new ApdexScoreEstimatorResult()
             { 
-                new ApdexScoreEstimatorResult()
+                ApdexScoreEstimations = new List<ApdexScoreEstimation>()
                 {
-                    IntervalStartTime = "15:04:41",
-                    IntervalEndTime = "15:04:46",
-                    ApdexScore = 0.95
-                }
+                    new ApdexScoreEstimation() {
+                        IntervalStartTime = "15:04:41",
+                        IntervalEndTime = "15:04:46",
+                        ApdexScore = 0.95
+                    }
+                },
+                AverageApdexScoreEstimation = 0.95,
+                ApdexScoreEstimationRating = "Excellent"
             };
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
-            _apdexScoreEstimator.Setup(apdexScoreEstimator => apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile, webServiceId))
+            _apdexScoreEstimator.Setup(apdexScoreEstimator => apdexScoreEstimator.FindApdexScoreEstimatorResult(apdexScoreLimit, fromFile, webServiceId))
                 .Returns(expectedResult);
 
             var estimatorController = new EstimatorController(_loadTestDataManager.Object, _apdexScoreEstimator.Object,
@@ -68,7 +72,7 @@ namespace Backend.UnitTests.Controllers
 
             var actualResult = estimatorController.GetApdexScoreResult(apdexScoreLimit, webServiceId);
             var okResult = Assert.IsType<OkObjectResult>(actualResult);
-            var returnValue = Assert.IsType<List<ApdexScoreEstimatorResult>>(okResult.Value);
+            var returnValue = Assert.IsType<ApdexScoreEstimatorResult>(okResult.Value);
             Assert.Equal(expectedResult, returnValue);
         }
 

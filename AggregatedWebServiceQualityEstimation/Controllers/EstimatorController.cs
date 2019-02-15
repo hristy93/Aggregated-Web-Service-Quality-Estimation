@@ -136,7 +136,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
 
         [HttpGet("apdex-score")]
-        public IActionResult GetApdexScoreResult([Required] double apdexScoreLimit, [Required] string webServiceId,
+        public IActionResult GetApdexScoreResult(double? apdexScoreLimit, [Required] string webServiceId,
             bool fromFile = true)
         {
             try
@@ -153,9 +153,9 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
                 (_apdexScoreEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile, byRow: false);
 
-                var currentApdexScoreInfo = _apdexScoreEstimator.FindApdexScore(apdexScoreLimit, fromFile, webServiceId);
+                var apdexScoreEstimatorResult = _apdexScoreEstimator.FindApdexScoreEstimatorResult(apdexScoreLimit, fromFile, webServiceId);
 
-                return Ok(currentApdexScoreInfo);
+                return Ok(apdexScoreEstimatorResult);
             }
             catch (Exception ex)
             {

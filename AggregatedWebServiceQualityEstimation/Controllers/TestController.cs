@@ -47,7 +47,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
                 if (duration == null)
                 {
-                    return BadRequest("The duration of the test is invalid or missing!");
+                    return BadRequest("The duration of the tests is invalid or missing!");
                 }
 
                 if (data == null)
@@ -63,7 +63,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
                     if (url == null)
                     {
-                        return BadRequest("The url of the request is invalid!");
+                        return BadRequest($"The URL of the {webServiceId} web serviceurl is invalid!");
                     }
 
                     var requestPostData = webServiceItem.Body;
@@ -77,12 +77,12 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
                 if (!isDurationFormatValid)
                 {
-                    return BadRequest("The duration of the test is in invalid format!");
+                    return BadRequest("The duration of the tests is in invalid format!");
                 }
 
                 _loadTestRunner.InitiateTest();
 
-                return Ok("The load test finished successfully!");
+                return Ok("The performance and load tests finished successfully!");
             }
             catch (Exception ex)
             {
@@ -103,10 +103,10 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
             if (retries >= 5)
             {
-                throw new Exception("The load test was not cancelled after 5 retries!");
+                throw new Exception("The performance and load tests were not cancelled after 5 retries!");
             }
 
-            return Ok("The load test was canceled!");
+            return Ok("The performance and load tests were canceled!");
         }
 
 
@@ -134,7 +134,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
                 }
 
                 _loadTestDataIOManager.WriteTestData(webServiceId);
-                return Ok("The load test data was written successfully!");
+                return Ok($"The {webServiceId} web service's metrics data was written successfully!");
             }
             catch (Exception ex)
             {
@@ -183,14 +183,14 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
             if (file == null)
             {
-                return BadRequest("The file is invalid!");
+                return BadRequest($"The {webServiceId} web service's file is invalid!");
             }
 
             var fileContent = _loadTestDataIOManager.UploadTestData(file);
           
             if (fileContent == null)
             {
-                throw new InvalidOperationException("The file is not processed correctly!");
+                throw new InvalidOperationException($"The {webServiceId} web service's file was not processed correctly!");
             }
 
             var fileContentLines = Regex.Matches(fileContent, Environment.NewLine).Count - 1;

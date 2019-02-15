@@ -11,15 +11,17 @@ class EstimationStore {
         this.state = Immutable.Map({
             first: Immutable.Map({
                 statisticalData: [],
-                apdexScoreData: [],
-                apdexScoreLimit: 0.05,
-                clusterData: {}
+                apdexScoreData: {},
+                apdexScoreLimit: undefined,
+                clusterData: {},
+                isPanelVisible: false
             }),
             second: Immutable.Map({
                 statisticalData: [],
-                apdexScoreData: [],
-                apdexScoreLimit: 0.05,
-                clusterData: {}
+                apdexScoreData: {},
+                apdexScoreLimit: undefined,
+                clusterData: {},
+                isPanelVisible: false
             })
         });
     }
@@ -46,6 +48,11 @@ class EstimationStore {
         if (!isNil(clusterData)) {
             this.setState(this.state.setIn([webServiceId, "clusterData"], clusterData));
         }
+    }
+
+    setEstimationsPanelVisibility = ({ isPanelVisible, webServiceId }) => {
+        const test = this.state.getIn([webServiceId, "isPanelVisible"]);
+        this.setState(this.state.setIn([webServiceId, "isPanelVisible"], isPanelVisible));
     }
 
     static getFirstWebServiceEstimationData() {

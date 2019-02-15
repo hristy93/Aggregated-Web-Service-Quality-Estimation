@@ -2,6 +2,8 @@
 import { Button } from 'react-bootstrap';
 import LineChart from '../common/LineChart/LineChart';
 import EstimationActions from '../../actions/EstimationActions';
+import isNil from 'lodash/isNil';
+import isEmpty from 'lodash/isEmpty';
 
 const decimalPlacePrecision = 2;
 
@@ -26,25 +28,40 @@ class ApdexScoreEstimation extends Component {
             syncCharts
         } = this.props;
 
-        const averageApdexScore = (apdexScoreData.map((apdexScoreItem) => apdexScoreItem.ApdexScore)
-            .reduce((a, b) => a + b, 0) / apdexScoreData.length).toFixed(decimalPlacePrecision);
-        const isApdexScoreChartVisible = apdexScoreData.length !== 0 && metricsInfo["ResponseTime"];
+        const isApdexScoreChartVisible = !isEmpty(apdexScoreData) && metricsInfo["ResponseTime"];
         const isApdexScoreButtonDisabled = !apdexScoreLimit || !metricsInfo["ResponseTime"];
+        const isApdexScoreLimitSet = !isNil(apdexScoreLimit);
+
+        let newApdexScoreLimit;
+        if (!isApdexScoreLimitSet && !isEmpty(apdexScoreData)) {
+            newApdexScoreLimit = apdexScoreData.initialApdexScoreLimit.toFixed(decimalPlacePrecision);
+            EstimationActions.setApdexScoreLimit.defer({
+                apdexScoreLimit: newApdexScoreLimit,
+                webServiceId
+            });
+        }
 
         return (
             <div id="apdex-estimation" style={{ marginTop: "2rem" }}>
-                <Button
-                    id={`button-get-apdex-estimation-${webServiceId}-web-service`}
-                    disabled={isApdexScoreButtonDisabled}
-                    onClick={() => EstimationActions.getApdexScoreEstimatorResult({ apdexScoreLimit, webServiceId })}
-                >
-                    Get Apdex Score Data
-                </Button>
                 {
-                    isApdexScoreChartVisible &&
+                    !isEmpty(apdexScoreData) &&
+                    <Button
+                        id={`button-get-apdex-estimation-${webServiceId}-web-service`}
+                        disabled={isApdexScoreButtonDisabled}
+                        onClick={() => EstimationActions.getApdexScoreEstimatorResult({
+                            apdexScoreLimit: isApdexScoreLimitSet ? apdexScoreLimit : newApdexScoreLimit,
+                            webServiceId
+                        })}
+                    >
+                        Get Apdex Score Data
+                    </Button>
+                }
+                {
+                    isApdexScoreChartVisible && !isEmpty(apdexScoreData) &&
                     <div id={`apdex-estimation-summary-${webServiceId}-web-service`}>
                         <h4> Apdex Score Limit: {apdexScoreLimit} </h4>
-                        <h4> Average Apdex Score: {averageApdexScore}% </h4>
+                        <h4> Average Apdex Score: {apdexScoreData.averageApdexScoreEstimation.toFixed(decimalPlacePrecision)}% </h4>
+                        <h4> Apdex Score Rating: {apdexScoreData.apdexScoreEstimationRating} </h4>
                     </div>
                 }
                 <div id="apdex-estimation-data" style={{ marginTop: "1rem" }}>
@@ -52,7 +69,7 @@ class ApdexScoreEstimation extends Component {
                         id={`apdex-estimation-chart-${webServiceId}-web-service`}
                         axisXKey="IntervalStartTime"
                         //axisXLabel="Time Intervals"
-                        data={apdexScoreData}
+                        data={!isNil(apdexScoreData.apdexScoreEstimations) ? apdexScoreData.apdexScoreEstimations : []}
                         //axisYLabel="Apdex Score"
                         axisYUnit="%"
                         lines={chartsLinesData['apdexScore']}

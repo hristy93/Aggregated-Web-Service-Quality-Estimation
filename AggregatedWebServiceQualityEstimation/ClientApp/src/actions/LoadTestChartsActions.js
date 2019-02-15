@@ -3,7 +3,7 @@
 class LoadTestChartsActions {
     constructor() {
         this.generateActions("setBrushPosition", "setAllReferenceLinesVisibility", "setReferenceLinesVisibility",
-            "setChartsSync", "setLineVisibility", "togglePanel");
+            "setChartsSync", "setLineVisibility", "setChartsPanelVisibility");
     }
 }
 
