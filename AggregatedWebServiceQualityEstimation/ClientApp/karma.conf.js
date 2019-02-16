@@ -16,6 +16,7 @@ module.exports = function(config) {
 	plugins: [
 		'karma-mocha-reporter',
 		'karma-webpack',
+        'karma-coverage',
 		'karma-mocha',
 		'karma-chai',
 		'karma-sinon',
@@ -69,6 +70,12 @@ module.exports = function(config) {
         // return file.originalPath;
       // }
     // },
+    
+    // optionally, configure the reporter
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
+    },
 
 
 	// test results reporter to use

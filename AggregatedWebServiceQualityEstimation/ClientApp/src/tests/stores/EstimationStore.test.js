@@ -4,44 +4,131 @@ import { expect } from 'chai';
 import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
-import { mount } from 'enzyme';
+
 import alt from '../../alt';
 
 import EstimationStore from '../../stores/EstimationStore';
 import EstimationActions from '../../actions/EstimationActions';
-import { clusterEstimatorResult } from '../testData';
-
-let storeStub;
 
 describe('EstimationStore', () => {
-    //it.skip('getClusterEstimatorResult() properly get the cluster estimator results', () => {
-    //    //TODO: see the action with services picture
-    //    const action = EstimationActions.getClusterEstimatorResult
-    //    const data = {
-    //        clusterData: clusterEstimatorResult,
-    //        webServiceId: "first"
-    //    };
+    context('Get and set data for the first web service', () => {
+        it.skip('getStatisticalEstimatorResult() properly get the statistical estimator results for the first web service', () => {
+        });
 
-    //    alt.dispatcher.dispatch({action, data});
-    //    const returnedData = EstimationStore.getFirstWebServiceEstimationData();
-    //    console.log(returnedData);
-    //    const clusterData = returnedData.get('clusterData');
-    //    expect(clusterData).to.equal(data);
-    //});
+        it('clearApdexScoreData() properly clears the Apdex Score data for the first web service ', () => {
+            const action = EstimationActions.CLEAR_APDEX_SCORE_DATA;
+            const data = "first";
 
-    it('setApdexScoreLimit() properly sets the Apdes Score limit for the first web service', () => {
-        const action = EstimationActions.SET_APDEX_SCORE_LIMIT;
-        const data = {
-            apdexScoreLimit: 0.1,
-            webServiceId: "first"
-        };
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getFirstWebServiceEstimationData();
+            const { apdexScoreData } = returnedData;
+            expect(apdexScoreData).to.deep.equal({});
+        });
 
-        alt.dispatcher.dispatch({ action, data });
-        const returnedData = EstimationStore.getFirstWebServiceEstimationData();
-        console.log(returnedData);
-        const { apdexScoreLimit } = returnedData;
-        expect(apdexScoreLimit).to.equal(data.apdexScoreLimit);
+        it('setApdexScoreLimit() properly sets the Apdex Score limit for the first web service', () => {
+            const action = EstimationActions.SET_APDEX_SCORE_LIMIT;
+            const data = {
+                apdexScoreLimit: 0.1,
+                webServiceId: "first"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getFirstWebServiceEstimationData();
+            const { apdexScoreLimit } = returnedData;
+            expect(apdexScoreLimit).to.equal(data.apdexScoreLimit);
+        });
+
+        it.skip('getApdexScoreEstimatorResult() properly get the Apdex Score estimator results for the first web service', () => {
+        });
+
+        it.skip('getClusterEstimatorResult() properly get the cluster estimator results for the first web service', () => {
+        });
+
+        it('setEstimationsPanelVisibility() properly sets the estimations\' panel visiblity for the first web service', () => {
+            const action = EstimationActions.SET_ESTIMATIONS_PANEL_VISIBILITY;
+            const data = {
+                isPanelVisible: true,
+                webServiceId: "first"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getFirstWebServiceEstimationData();
+            const { isPanelVisible } = returnedData;
+            expect(isPanelVisible).to.equal(data.isPanelVisible);
+        });
+
+        it('setEstimationsPanelVisibility() properly sets the estimations\' panel visiblity for the first web service', () => {
+            const action = EstimationActions.SET_ESTIMATIONS_PANEL_VISIBILITY;
+            const data = {
+                isPanelVisible: true,
+                webServiceId: "first"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getFirstWebServiceEstimationData();
+            const { isPanelVisible } = returnedData;
+            expect(isPanelVisible).to.equal(data.isPanelVisible);
+        });
     });
 
+    context('Get and set data for the second web service', () => {
+        it.skip('getStatisticalEstimatorResult() properly get the statistical estimator results for the second web service', () => {
+        });
+
+        it('clearApdexScoreData() properly clears the Apdex Score data for the second web service ', () => {
+            const action = EstimationActions.CLEAR_APDEX_SCORE_DATA;
+            const data = "second";
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getSecondWebServiceEstimationData();
+            const { apdexScoreData } = returnedData;
+            expect(apdexScoreData).to.deep.equal({});
+        });
+
+        it('setApdexScoreLimit() properly sets the Apdex Score limit for the second web service', () => {
+            const action = EstimationActions.SET_APDEX_SCORE_LIMIT;
+            const data = {
+                apdexScoreLimit: 0.1,
+                webServiceId: "second"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getSecondWebServiceEstimationData();
+            const { apdexScoreLimit } = returnedData;
+            expect(apdexScoreLimit).to.equal(data.apdexScoreLimit);
+        });
+
+        it.skip('getApdexScoreEstimatorResult() properly get the Apdex Score estimator results for the second web service', () => {
+        });
+
+        it.skip('getClusterEstimatorResult() properly get the cluster estimator results for the second web service', () => {
+        });
+
+        it('setEstimationsPanelVisibility() properly sets the estimations\' panel visiblity for the second web service', () => {
+            const action = EstimationActions.SET_ESTIMATIONS_PANEL_VISIBILITY;
+            const data = {
+                isPanelVisible: true,
+                webServiceId: "second"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getSecondWebServiceEstimationData();
+            const { isPanelVisible } = returnedData;
+            expect(isPanelVisible).to.equal(data.isPanelVisible);
+        });
+
+        it('setEstimationsPanelVisibility() properly sets the estimations\' panel visiblity for the second web service', () => {
+            const action = EstimationActions.SET_ESTIMATIONS_PANEL_VISIBILITY;
+            const data = {
+                isPanelVisible: true,
+                webServiceId: "second"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = EstimationStore.getSecondWebServiceEstimationData();
+            const { isPanelVisible } = returnedData;
+            expect(isPanelVisible).to.equal(data.isPanelVisible);
+        });
+    });
 });
 

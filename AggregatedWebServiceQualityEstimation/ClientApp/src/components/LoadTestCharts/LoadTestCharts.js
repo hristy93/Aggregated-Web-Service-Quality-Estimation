@@ -197,3 +197,4 @@ class LoadTestCharts extends Component {
 }
 
 export default connectToStores(LoadTestCharts);
+export { LoadTestCharts };

@@ -200,3 +200,4 @@ class EstimationContainer extends Component {
 }
     
 export default connectToStores(EstimationContainer);
+export { EstimationContainer };

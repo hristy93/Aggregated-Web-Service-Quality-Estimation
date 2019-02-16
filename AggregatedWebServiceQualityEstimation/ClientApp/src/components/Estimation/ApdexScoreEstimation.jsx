@@ -8,13 +8,6 @@ import isEmpty from 'lodash/isEmpty';
 const decimalPlacePrecision = 2;
 
 class ApdexScoreEstimation extends Component {
-    handleApdexScoreLimitChange = (event) => {
-        const apdexScoreLimit = event.target.value;
-        const { webServiceId } = this.props;
-
-        EstimationActions.setApdexScoreLimit({ apdexScoreLimit, webServiceId});
-    }
-
     render() {
         const {
             webServiceId,
@@ -86,3 +79,4 @@ class ApdexScoreEstimation extends Component {
     }
     
 export default ApdexScoreEstimation;
+export { ApdexScoreEstimation };
