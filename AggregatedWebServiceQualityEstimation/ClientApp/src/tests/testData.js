@@ -84,6 +84,21 @@ const runTestsPostArgs = [
     }
 ];
 
+const webServicesData = {
+    first: {
+        url: "https://jsonplaceholder.typicode.com/todos/1",
+        isUrlValid: false,
+        requestType: "GET",
+        requestPostData: null
+    },
+    second: {
+        url: "https://jsonplaceholder.typicode.com/todos/2",
+        isUrlValid: false,
+        requestType: "GET",
+        requestPostData: null
+    }
+};
+
 const testsData = [
     {
         FailedRequestsPerSecond: "0",
@@ -161,6 +176,15 @@ const metricsInfo = {
     "ReceivedKilobytesPerSecond": true
 };
 
+const referenceLinesData = [{
+    metricName: "ResponseTime",
+    mean: 0.05,
+    lowerInnerFenceBound: 0.02,
+    upperInnerFenceBound: 0.08,
+    lowerOuterFenceBound: 0.01,
+    upperOuterFenceBound: 0.10,
+}];
+
 export {
     clusterEstimatorResult,
     statisticalEstimatorResult,
@@ -168,8 +192,10 @@ export {
     metricsUsabilityInfo,
     runTestsGetArgs,
     runTestsPostArgs,
+    webServicesData,
     testsData,
     chartsLinesData,
+    referenceLinesData,
     metricsInfo,
     getFakeUploadedFile
 };

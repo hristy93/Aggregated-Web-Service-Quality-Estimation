@@ -15,6 +15,7 @@ module.exports = function(config) {
 	// list of plugins
 	plugins: [
 		'karma-mocha-reporter',
+        'karma-coverage-istanbul-reporter',
 		'karma-webpack',
         'karma-coverage',
 		'karma-mocha',
@@ -76,13 +77,22 @@ module.exports = function(config) {
       type : 'html',
       dir : 'coverage/'
     },
+    
+    // any of these options are valid: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-api/lib/config.js#L33-L39
+    coverageIstanbulReporter: {
+      // reports can be any that are listed here: https://github.com/istanbuljs/istanbuljs/tree/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib
+      reports: ['html', 'lcovonly', 'text-summary'],
+ 
+      // Omit files with no statements, no functions and no branches from the report
+      skipFilesWithNoCoverage: true,
+    },
 
 
 	// test results reporter to use
 	// possible values: 'dots', 'progress'
 	// available reporters: https://npmjs.org/browse/keyword/karma-reporter
 	//reporters: ['progress', 'coverage'],
-	reporters: ['mocha'],
+	reporters: ['mocha', 'coverage-istanbul'],
 
 
 	// web server port

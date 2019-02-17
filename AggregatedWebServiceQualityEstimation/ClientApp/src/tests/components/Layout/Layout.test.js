@@ -14,12 +14,12 @@ let wrapper;
 describe.skip('<Layout />', () => {
     it('renders its children', () => {
         const text = "test";
-        const TestComponent = (props) => {
+        const TestComponent = ({text}) => {
             return <div id={text}> {text} </div>;
         };
         wrapper = mount(
             <Layout>
-                {TestComponent}
+                <TestComponent text={text} />>
             </Layout>
         );
         const wrappedTestComponent = wrapper.find(TestComponent);

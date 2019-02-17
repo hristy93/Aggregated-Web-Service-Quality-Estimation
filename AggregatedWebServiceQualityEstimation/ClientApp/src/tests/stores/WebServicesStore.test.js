@@ -145,7 +145,7 @@ describe('WebServicesStore', () => {
         });
     });
 
-    context.skip('Get and set data for both web services', () => {
+    context('Get and set data for both web services', () => {
         it('setUrlValidity() properly sets the validity of the URL for both web services to true and true', () => {
             const action = WebServicesActions.SET_URL_VALIDITY;
             const firstWebServiceData = {
@@ -153,14 +153,14 @@ describe('WebServicesStore', () => {
                 webServiceId: "first"
             };
 
-            alt.dispatcher.dispatch({ action, firstWebServiceData });
+            alt.dispatcher.dispatch({ action, data: firstWebServiceData });
 
             const secondWebServiceData = {
                 isUrlValid: true,
                 webServiceId: "second"
             };
 
-            alt.dispatcher.dispatch({ action, secondWebServiceData });
+            alt.dispatcher.dispatch({ action, data: secondWebServiceData });
 
             const bothWebServicesUrlsValidity = WebServicesStore.getUrlsValidity();
             expect(bothWebServicesUrlsValidity).to.equal(true);
@@ -173,14 +173,14 @@ describe('WebServicesStore', () => {
                 webServiceId: "first"
             };
 
-            alt.dispatcher.dispatch({ action, firstWebServiceData });
+            alt.dispatcher.dispatch({ action, data: firstWebServiceData });
 
             const secondWebServiceData = {
                 isUrlValid: false,
                 webServiceId: "second"
             }; 
 
-            alt.dispatcher.dispatch({ action, secondWebServiceData });
+            alt.dispatcher.dispatch({ action, data: secondWebServiceData });
 
             const bothWebServicesUrlsValidity = WebServicesStore.getUrlsValidity();
             expect(bothWebServicesUrlsValidity).to.equal(false);

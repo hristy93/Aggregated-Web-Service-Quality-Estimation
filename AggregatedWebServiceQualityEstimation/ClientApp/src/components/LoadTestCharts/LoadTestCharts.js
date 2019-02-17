@@ -164,6 +164,7 @@ class LoadTestCharts extends Component {
                     <ListGroup>
                         <ListGroupItem>
                             <LineChart
+                                id='responseTime'
                                 {...chartsCommonProps }
                                 axisYUnit="s"
                                 //axisYLabel="Response Time"
@@ -173,6 +174,7 @@ class LoadTestCharts extends Component {
                         </ListGroupItem>
                         <ListGroupItem style={{ marginTop: '2rem' }}>
                             <LineChart
+                                id='requests'
                                 {...chartsCommonProps}
                                 axisYUnit="rps"
                                 //axisYLabel="Requests Per Second"
@@ -182,6 +184,7 @@ class LoadTestCharts extends Component {
                         </ListGroupItem>
                         <ListGroupItem style={{ marginTop: '2rem' }}>
                             <LineChart
+                                id='throughput'
                                 {...chartsCommonProps}
                                 axisYUnit="KBps"
                                 //axisYLabel="Throughput"

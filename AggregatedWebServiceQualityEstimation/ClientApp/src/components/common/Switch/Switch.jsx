@@ -36,7 +36,12 @@ class Switch extends Component {
                     className="switch-label"
                     htmlFor={id}
                 >
-                    <span className="switch-label-text"> {text} </span>
+                    <span
+                        id={`switch-title-${id}`}
+                        className="switch-title"
+                    >
+                        {text}
+                    </span>
                     <ReactSwitch.default
                         onChange={onChange}
                         checked={isChecked}

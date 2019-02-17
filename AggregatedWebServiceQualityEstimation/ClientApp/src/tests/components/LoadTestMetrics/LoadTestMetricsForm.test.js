@@ -60,13 +60,18 @@ describe('<LoadTestMetricsForm />', () => {
         }
     });
 
-    it.skip('fires handleCheckBoxChange() when the checkboxes are clicked', () => {
-        const saveMetricsUsabilityInfoSpy = sinon.spy(LoadTestMetricsActions, 'saveMetricsUsabilityInfo');
+    it('fires handleCheckBoxChange() when the checkboxes are clicked', () => {
+        const setMetricsUsabilitySpy = sinon.spy(LoadTestMetricsActions, 'setMetricsUsability');
         const checkboxes = wrapper.find(Checkbox).at(1);
-        checkboxes.simulate('change');
+        const event = {
+            target: {
+                name: 'responseTime'
+            }
+        }
+        checkboxes.getElement().props.onChange(event);
 
-        expect(saveMetricsUsabilityInfoSpy.calledOnce).to.equal(true);
-        saveMetricsUsabilityInfoSpy.restore();
+        expect(setMetricsUsabilitySpy.calledOnce).to.equal(true);
+        setMetricsUsabilitySpy.restore();
     });
 });
 

@@ -7,6 +7,7 @@ configure({ adapter: new Adapter() });
 
 import { beforeEach, afterEach } from 'mocha';
 import alt from '../../alt';
+import Q from 'q';
 import LoadTestActions from '../../actions/LoadTestActions';
 
 let dispatcherSpy;
@@ -20,7 +21,7 @@ describe('LoadTestActions', () => {
         alt.dispatcher.dispatch.restore();
     });
 
-    it.skip('runLoadTest() successfully dispatches runLoadTest action', () => {
+    it('runLoadTest() successfully dispatches runLoadTest action', () => {
         const q = Q.defer();
         const actionStub = sinon
             .stub(LoadTestActions, 'runLoadTest')
@@ -53,9 +54,12 @@ describe('LoadTestActions', () => {
                     );
                 }
             })
-            .finally(actionStub.restore)
-            .finally(done);
-        q.resolve();
+            .finally(actionStub.restore);
+        q.resolve({
+            body: {
+                data: []
+            }
+        });
     });
 
     it.skip('cancelLoadTest() successfully dispatches cancelLoadTest action', () => {

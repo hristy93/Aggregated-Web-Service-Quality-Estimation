@@ -29,11 +29,12 @@ class Select extends Component {
 
         return (
             <FormGroup
-                controlId={`select-${id}`}
+                id={`input-group-select-${id}`}
                 style={style}
             >
                 <ControlLabel>{title}</ControlLabel>
                 <FormControl
+                    id={`input-select-${id}`}
                     componentClass="select"
                     placeholder={items[0]}
                     disabled={disabled}
@@ -41,7 +42,15 @@ class Select extends Component {
                 >
                     {
                         items.map((item) => {
-                            return <option value={item} key={item}>{item}</option>;
+                            return (
+                                <option
+                                    value={item}
+                                    key={item}
+                                    id={`select-option-${item}`}
+                                >
+                                    {item}
+                                </option>
+                            );
                         })
                     }
                 </FormControl>
