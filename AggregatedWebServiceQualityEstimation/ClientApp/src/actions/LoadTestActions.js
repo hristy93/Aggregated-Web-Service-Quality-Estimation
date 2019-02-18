@@ -49,7 +49,7 @@ class LoadTestActions {
 
     checkLoadTestStatus = () => {
         return (dispatch) => {
-            LoadTestServices.cancelLoadTest()
+            LoadTestServices.checkLoadTestStatus()
                 .then((response) => {
                     // handle success
                     const alertMessage = response.data;

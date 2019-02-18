@@ -7,7 +7,9 @@ configure({ adapter: new Adapter() });
 
 import { beforeEach, afterEach } from 'mocha';
 import alt from '../../alt';
+import Q from 'q';
 import LoadTestMetricsActions from '../../actions/LoadTestMetricsActions';
+import LoadTestMetricsServices from '../../services/LoadTestMetricsServices';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 
 let dispatcherSpy;
@@ -21,8 +23,68 @@ describe('LoadTestMetricsActions', () => {
         alt.dispatcher.dispatch.restore();
     });
 
-    it.skip('saveMetricsUsabilityInfo() successfully dispatches saveMetricsUsabilityInfo action', () => {
+    it('saveMetricsUsabilityInfo() successfully dispatches saveMetricsUsabilityInfo service', (done) => {
+        const q = Q.defer();
+        const serviceStub = sinon
+            .stub(LoadTestMetricsServices, 'saveMetricsUsabilityInfo')
+            .returns(q.promise);
+        const data = {
+            metricsInfo: {
+                "ResponseTime": true,
+                "SuccessfulRequestsPerSecond": true,
+                "FailedRequestsPerSecond": true,
+                "ReceivedKilobytesPerSecond": true
+            }
+        };
 
+        LoadTestMetricsActions.saveMetricsUsabilityInfo(data);
+
+        q.promise
+            .finally(() => {
+                const actionCall = dispatcherSpy.getCall(1);
+
+                if (spy.callCount !== 1) {
+                    done(
+                        new Error('LoadTestMetricsActions.saveMetricsUsabilityInfo() not called')
+                    );
+                }
+
+                if (
+                    !actionCall ||
+                    actionCall.args[0].action !== LoadTestActions.SAVE_METRICS_USABILITY_INFO
+                ) {
+                    done(
+                        new Error('LoadTestMetricsActions.saveMetricsUsabilityInfo() not dispatched')
+                    );
+                }
+            })
+            .finally(serviceStub.restore)
+            .finally(done);
+
+        q.resolve({
+            body: {
+                data: []
+            }
+        });
+    });
+
+    
+    it('saveMetricsUsabilityInfo() throws an error', () => {
+        const serviceStub = sinon
+            .stub(LoadTestMetricsServices, 'saveMetricsUsabilityInfo')
+            .returns(Q.reject(new Error('error')));
+        const data = {
+            metricsInfo: {
+                "ResponseTime": true,
+                "SuccessfulRequestsPerSecond": true,
+                "FailedRequestsPerSecond": true,
+                "ReceivedKilobytesPerSecond": true
+            }
+        };
+
+        LoadTestMetricsActions.saveMetricsUsabilityInfo(data);
+
+        serviceStub.restore();
     });
 
     it('setMetricsUsability() passes the right arguments', () => {

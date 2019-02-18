@@ -47,18 +47,18 @@ class LoadTestCharts extends Component {
 
                 LoadTestChartsActions.setAllReferenceLinesVisibility.defer({ areReferenceLinesVisible: isChecked, webServiceId });
                 break;
-            case "switch-line-visibility-SuccessfulRequestsPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("SuccessfulRequestsPerSecond");
-                break;
-            case "switch-line-visibility-FailedRequestsPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
-                break;
-            case "switch-line-visibility-ReceivedKilobytesPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
-                break;
+            // case "switch-line-visibility-SuccessfulRequestsPerSecond":
+            //     LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
+            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("SuccessfulRequestsPerSecond");
+            //     break;
+            // case "switch-line-visibility-FailedRequestsPerSecond":
+            //     LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
+            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
+            //     break;
+            // case "switch-line-visibility-ReceivedKilobytesPerSecond":
+            //     LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
+            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
+            //     break;
             default:
                 const alertMessage = "There is a problem with the switch!";
                 const errorMessage = `There is no switch with id = ${id}`;

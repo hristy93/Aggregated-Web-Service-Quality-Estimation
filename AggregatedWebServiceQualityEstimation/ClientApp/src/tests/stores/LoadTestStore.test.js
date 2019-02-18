@@ -6,9 +6,11 @@ import Adapter from 'enzyme-adapter-react-16';
 configure({ adapter: new Adapter() });
 
 import alt from '../../alt';
+import Q from 'q';
 
 import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestActions from '../../actions/LoadTestActions';
+import LoadTestServices from '../../services/LoadTestServices';
 
 describe('LoadTestStore', () => {
     context('Get and set data for the first web service', () => {
@@ -91,6 +93,57 @@ describe('LoadTestStore', () => {
 
 
     context('Get and set data for the tests', () => {
+        it.skip('runLoadTest() properly starts the tests', (done) => {
+            const q = Q.defer();
+            const serviceStub = sinon
+                .stub(LoadTestServices, 'runLoadTest')
+                .returns(q.promise);
+            const data = {
+                data: {
+                    url: 'www.test.com/api'
+                },
+                duration: '00:10:00'
+            };
+            const setTestStateSpy = sinon.spy(LoadTestActions.setTestState, 'defer');
+            // const writeLoadTestDataSpy = sinon.spy(LoadTestActions.writeLoadTestData, 'defer');
+    
+            LoadTestActions.runLoadTest(data);
+    
+            q.promise
+                .finally(() => {
+                    const actionCall = dispatcherSpy.getCall(1);
+    
+                    if (spy.callCount !== 1) {
+                        done(
+                            new Error('LoadTestActions.runLoadTest() not called')
+                        );
+                    }
+                    if (
+                        !actionCall ||
+                        actionCall.args[0].action !== LoadTestActions.RUN_LOAD_TEST
+                    ) {
+                        done(
+                            new Error('LoadTestActions.runLoadTest() not dispatched')
+                        );
+                    }
+                })
+                .finally(serviceStub.restore)
+                .finally(done);
+    
+            q.resolve({
+                body: {
+                    data: []
+                }
+            });
+
+        expect(setTestStateSpy.calledOnce).to.equal(true);
+        // expect(writeLoadTestDataSpy.calledTwice).to.equal(true);
+        
+        setTestStateSpy.restore();
+        // writeLoadTestDataSpy.restore();
+        // serviceStub.restore();
+        });
+
         it('setLoadTestDuration() properly the tests duration', () => {
             const action = LoadTestActions.SET_LOAD_TEST_DURATION;
             const data = "00:01:00";
