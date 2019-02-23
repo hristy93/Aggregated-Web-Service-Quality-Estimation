@@ -37,7 +37,7 @@ namespace Backend.UnitTests.Controllers
         }
 
         [Fact]
-        public void CheckTestStatus_ReturnsRunning()
+        public void CheckTestStatus_Success_ReturnsRunning()
         {
             const string expectedResult = "running";
 
@@ -54,7 +54,7 @@ namespace Backend.UnitTests.Controllers
         }
 
         [Fact]
-        public void CheckTestStatus_ReturnsStopped()
+        public void CheckTestStatus_Success_ReturnsStopped()
         {
             const string expectedResult = "stopped";
 
@@ -71,13 +71,14 @@ namespace Backend.UnitTests.Controllers
         }
 
         [Fact]
-        public void ReadTestData_ReturnLoadTestData()
+        public void ReadTestData_Success_ReturnLoadTestData()
         {
             const string expectedValue = "loadTestData";
             const string webServiceId = "first";
             const bool fromFile = true;
+            const string filePath = "";
 
-            _loadTestDataManager.Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile)).Returns(expectedValue);
+            _loadTestDataManager.Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile, filePath)).Returns(expectedValue);
 
             var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
                   _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
@@ -89,27 +90,58 @@ namespace Backend.UnitTests.Controllers
             Assert.Equal(expectedValue, returnValue);
         }
 
-        //[Fact(Skip = "Not needed")]
-        //public void ReadTestData_Failure_ThrowsException()
-        //{
-        //    const string webServiceId = "first";
-        //    const bool fromFile = true;
+        [Fact]
+        public void ReadTestData_Failure_ThrowsException()
+        {
+            const string webServiceId = "first";
+            const bool fromFile = true;
+            const string filePath = "";
 
-        //    _loadTestDataManager.Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile)).Throws(new Exception());
+            _loadTestDataManager.Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile, filePath)).Throws(new Exception());
 
-        //    var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object, _loadTestModifier.Object);
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+              _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
-        //    Assert.Throws<Exception>(() => testController.ReadTestData(fromFile, webServiceId));
-        //}
+            Assert.Throws<Exception>(() => testController.ReadTestData(fromFile, webServiceId));
+        }
 
         [Fact]
         public void ReadTestData_Failure_InvalidWebServiceId()
         {
             const string webServiceId = null;
             const bool fromFile = true;
+            const string filePath = "";
 
             var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
                   _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+
+            var result = testController.ReadTestData(fromFile, webServiceId);
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void ReadTestData_Failure_MissingWebServiceId()
+        {
+            const string webServiceId = null;
+            const bool fromFile = true;
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("webServiceId", "webServiceId is missing");
+
+            var result = testController.ReadTestData(fromFile, webServiceId);
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void ReadTestData_Failure_MissingFromFile()
+        {
+            const string webServiceId = null;
+            const bool fromFile = true;
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("fromFile", "fromFile is missing");
 
             var result = testController.ReadTestData(fromFile, webServiceId);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -142,6 +174,21 @@ namespace Backend.UnitTests.Controllers
                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
             Assert.Throws<Exception>(() => testController.WriteTestData(webServiceId));
+        }
+
+        [Fact]
+        public void WriteTestData_Failure_MissingWebServiceId()
+        {
+            const string webServiceId = "first";
+
+            _loadTestDataManager.Setup(testDataManager => testDataManager.WriteTestData(webServiceId)).Throws(new Exception());
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("webServiceId", "webServiceId is missing");
+
+            var result = testController.WriteTestData(webServiceId);
+            Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Fact]
@@ -242,6 +289,27 @@ namespace Backend.UnitTests.Controllers
         }
 
         [Fact]
+        public void StartTest_Failure_MissingDuration()
+        {
+            string duration = "00:00:30";
+            List<WebServiceData> webServicesData = new List<WebServiceData>()
+            {
+                new WebServiceData()
+                {
+                    WebServiceId = "first",
+                    Url = null
+                }
+            };
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("duration", "duration is missing");
+
+            var result = testController.StartTest(duration, webServicesData);
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
         public void StartTest_Failure_InvalidWebServicesData()
         {
             string duration = "00:00:30";
@@ -249,6 +317,20 @@ namespace Backend.UnitTests.Controllers
 
             var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
                  _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+
+            var result = testController.StartTest(duration, webServicesData);
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void StartTest_Failure_MissingWebServicesData()
+        {
+            string duration = "00:00:30";
+            List<WebServiceData> webServicesData = null;
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("data", "data is missing");
 
             var result = testController.StartTest(duration, webServicesData);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -274,25 +356,25 @@ namespace Backend.UnitTests.Controllers
             Assert.IsType<BadRequestObjectResult>(result);
         }
 
-        //[Fact(Skip = "Not needed")]
-        //public void StartTest_Failure_ThrowsException()
-        //{
-        //    string duration = "00:00:30";
-        //    List<WebServiceData> webServicesData = new List<WebServiceData>()
-        //    {
-        //        new WebServiceData()
-        //        {
-        //            WebServiceId = "first",
-        //            Url = null
-        //        }
-        //    };
+        [Fact]
+        public void StartTest_Failure_ThrowsException()
+        {
+            string duration = "00:00:30";
+            List<WebServiceData> webServicesData = new List<WebServiceData>()
+            {
+                new WebServiceData()
+                {
+                    WebServiceId = "first",
+                    Url = "https://jsonplaceholder.typicode.com/todos/1"
+                }
+            };
 
-        //    _loadTestModifier.Setup(testModifier => testModifier.EditRequestBodyData(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>())).Throws(new Exception());
-        //    var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
-        //       _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            _loadTestModifier.Setup(testModifier => testModifier.EditRequestBodyData(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>())).Throws(new Exception());
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+               _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
 
-        //    Assert.Throws<Exception>(() => testController.StartTest(duration, webServicesData));
-        //}
+            Assert.Throws<Exception>(() => testController.StartTest(duration, webServicesData));
+        }
 
         [Fact]
         public void UploadTestData_Success()
@@ -331,6 +413,19 @@ namespace Backend.UnitTests.Controllers
 
             var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
                 _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+
+            var result = testController.UploadTestData(webServiceId);
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void UploadTestData_Failure_MissingWebServiceId()
+        {
+            string webServiceId = null;
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("webServiceId", "webServiceId is missing");
 
             var result = testController.UploadTestData(webServiceId);
             Assert.IsType<BadRequestObjectResult>(result);
@@ -402,6 +497,31 @@ namespace Backend.UnitTests.Controllers
 
             var result = testController.SaveUsedMetrics(metricsUsabilityInfo);
             Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void SaveUsedMetrics_Failure_MissingMetricsUsabilityInfo()
+        {
+            Dictionary<string, bool> metricsUsabilityInfo = null;
+
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+            testController.ModelState.AddModelError("metricsUsabilityInfo", "missing metricsUsabilityInfo");
+
+            var result = testController.SaveUsedMetrics(metricsUsabilityInfo);
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void SaveUsedMetrics_Failure_Throws()
+        {
+            Dictionary<string, bool> metricsUsabilityInfo = new Dictionary<string, bool>();
+
+            _loadTestDataPreprocessor.Setup(testDataPreprocessor => testDataPreprocessor.SaveUsedMetrics(metricsUsabilityInfo)).Throws(new Exception());
+            var testController = new TestController(_configuration, _loadTestRunner.Object, _loadTestDataManager.Object,
+                _loadTestDataPreprocessor.Object, _loadTestModifier.Object);
+
+            Assert.Throws<Exception>(() => testController.SaveUsedMetrics(metricsUsabilityInfo));
         }
     }
 }

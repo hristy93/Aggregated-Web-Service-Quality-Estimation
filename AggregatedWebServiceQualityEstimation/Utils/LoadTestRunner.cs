@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AggregatedWebServiceQualityEstimation.Utils
 {
+    [ExcludeFromCodeCoverage]
     public class LoadTestRunner : ITestRunner
     {
         private const string CMD_PROCESS_NAME = "cmd.exe";
