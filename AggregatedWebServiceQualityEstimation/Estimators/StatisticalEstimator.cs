@@ -18,12 +18,12 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         private ITestDataIOManager _loadTestDataIOManager;
         private ITestDataPrepocessor _loadTestDataPreprocessor;
 
-        public IList<StatisticalEstimatorResult> StatisticalData { get; private set; }
+        public IList<StatisticalEstimation> StatisticalData { get; private set; }
         public IList<string[]> MetricsData { get; set; }
 
         public StatisticalEstimator(ITestDataIOManager loadTestDataIOManager, ITestDataPrepocessor loadTestDataPreprocessor) 
         {
-            StatisticalData = new List<StatisticalEstimatorResult>();
+            StatisticalData = new List<StatisticalEstimation>();
             _loadTestDataIOManager = loadTestDataIOManager;
             _loadTestDataPreprocessor = loadTestDataPreprocessor;
         }
@@ -35,7 +35,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             MetricsData = preprocessedMetricsData?.Skip(2).ToList();
         }
 
-        public void GetStatisticalData()
+        public IEnumerable<StatisticalEstimation> GetStatisticalData()
         {
             try
             {
@@ -43,7 +43,8 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 double[] fiveNumberSummary;
                 double mean;
                 double variance;
-                StatisticalEstimatorResult statisticalEstimatorResult;
+                StatisticalEstimation statisticalEstimation;
+                IList<StatisticalEstimation> statisticalEstimatorResult = new List<StatisticalEstimation>(); ;
                 foreach (var metrics in MetricsData)
                 {
                     metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
@@ -66,7 +67,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     var percentageAbovePercentile95 = (double) abovePercentile95Count / metricsVector.Count;
                     var percentageAbovePercentile99 = (double) abovePercentile99Count / metricsVector.Count;
 
-                    statisticalEstimatorResult = new StatisticalEstimatorResult()
+                    statisticalEstimation = new StatisticalEstimation()
                     {
                         MetricName = metrics.Take(1).ToList()[0],
                         Min = fiveNumberSummary[0],
@@ -82,8 +83,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                         PercentageAbovePercentile99 = percentageAbovePercentile99
                     };
 
-                    StatisticalData.Add(statisticalEstimatorResult);
+                    statisticalEstimatorResult.Add(statisticalEstimation);
                 }
+
+                return statisticalEstimatorResult;
             }
             catch (Exception ex)
             {

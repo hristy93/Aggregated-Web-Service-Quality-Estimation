@@ -3,7 +3,6 @@ using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Statistics;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -25,7 +24,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         private ITestDataIOManager _loadTestDataIOManager;
         private ITestDataPrepocessor _loadTestDataPreprocessor;
-      
+
 
         public IList<string[]> MetricsData { get; set; }
 
@@ -53,7 +52,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             var apdexScoreEstimations = FindApdexScoreEstimations(apdexScoreLimit, fromFile, webServiceId);
             var averageApdexScore = FindAverageApdexScoreEstimation(apdexScoreEstimations);
             var apdexScoreEstimationRating = FindApdexScoreEstimationRating(averageApdexScore);
-           
+
 
             var apdexScoreEstimatorResult = new ApdexScoreEstimatorResult()
             {
@@ -85,12 +84,15 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
             if (!fromFile)
             {
-                var intervalStartTime = intervals?[0]?[1]?.Trim();
-                var intervalEndTime = intervals?[1]?[1]?.Trim();
+                for (int i = 0; i < responseTimeData.Count; i++)
+                {
+                    var intervalStartTime = intervals?[0]?[i + 1]?.Trim();
+                    var intervalEndTime = intervals?[1]?[i + 1]?.Trim();
 
-                var apdexScoreEstimatorResult = GetApdexScoreEstimation(responseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
+                    var apdexScoreEstimation = GetApdexScoreEstimation(responseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
 
-                result.Add(apdexScoreEstimatorResult);
+                    result.Add(apdexScoreEstimation);
+                }
             }
             else
             {
@@ -100,9 +102,9 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     var intervalEndTime = intervals?[1]?[i + 1]?.Trim();
                     var currentResponseTimeData = responseTimeData.Take(i + 1).ToList();
 
-                    var apdexScoreEstimatorResult = GetApdexScoreEstimation(currentResponseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
+                    var apdexScoreEstimation = GetApdexScoreEstimation(currentResponseTimeData, apdexScoreLimit, intervalStartTime, intervalEndTime);
 
-                    result.Add(apdexScoreEstimatorResult);
+                    result.Add(apdexScoreEstimation);
                 }
             }
 
@@ -127,7 +129,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     break;
                 }
             }
-            
+
             return apdexScoreEstimationRating;
         }
 

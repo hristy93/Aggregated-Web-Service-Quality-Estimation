@@ -5,11 +5,13 @@ using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
+    [ExcludeFromCodeCoverage]
     public class FuzzyLogicEstimator : IFuzzyLogicEstimator, IMetricsData
     {
         private readonly IDictionary<string, bool> isGreaterBetter = new Dictionary<string, bool> {

@@ -60,7 +60,8 @@ namespace Backend.UnitTests.Controllers
                     }
                 },
                 AverageApdexScoreEstimation = 0.95,
-                ApdexScoreEstimationRating = "Excellent"
+                ApdexScoreEstimationRating = "Excellent",
+                InitialApdexScoreLimit = 0.545
             };
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
@@ -250,9 +251,9 @@ namespace Backend.UnitTests.Controllers
             const string webServiceId = "first";
             const bool byRow = false;
             const bool fromFile = false;
-            List<StatisticalEstimatorResult> expectedResult = new List<StatisticalEstimatorResult>()
+            List<StatisticalEstimation> expectedResult = new List<StatisticalEstimation>()
             {
-               new StatisticalEstimatorResult()
+               new StatisticalEstimation()
                {
                    MetricName = "test",
                    Min = 0,
@@ -270,15 +271,14 @@ namespace Backend.UnitTests.Controllers
             };
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
-            _statisticalEstimator.Setup(statisticalEstimator => statisticalEstimator.GetStatisticalData());
-            _statisticalEstimator.Setup(statisticalEstimator => statisticalEstimator.StatisticalData).Returns(expectedResult);
+            _statisticalEstimator.Setup(statisticalEstimator => statisticalEstimator.GetStatisticalData()).Returns(expectedResult);
 
             var estimatorController = new EstimatorController(_loadTestDataManager.Object, _apdexScoreEstimator.Object,
                 _clusterEstimator.Object, _fuzzyLogicEstimator.Object, _statisticalEstimator.Object);
 
             var actualResult = estimatorController.GetStatisticalEstimatorResult(webServiceId);
             var okResult = Assert.IsType<OkObjectResult>(actualResult);
-            var returnValue = Assert.IsType<List<StatisticalEstimatorResult>>(okResult.Value);
+            var returnValue = Assert.IsType<List<StatisticalEstimation>>(okResult.Value);
             Assert.Equal(expectedResult, returnValue);
         }
 
