@@ -40,12 +40,16 @@ class FileUpload extends Component {
         const spanClassName = !disabled ? "btn btn-default" : "btn btn-default disabled";
 
         return (
-            <FormGroup style={style}>
-                <ControlLabel>{title}</ControlLabel><br />
-                <ControlLabel htmlFor={`file-upload-${id}`} style={{ cursor: "pointer" }}>
+            <FormGroup id={`input-group-file-upload-${id}`} style={style}>
+                <ControlLabel id={`label-file-upload-title-${id}`}>{title}</ControlLabel><br />
+                <ControlLabel
+                    id={`input-label-file-upload-${id}`}
+                    htmlFor={`input-file-upload-${id}`}
+                    style={{ cursor: "pointer" }}
+                >
                     <span className={spanClassName}> {buttonText} </span>
                     <FormControl
-                        id={`file-upload-${id}`}
+                        id={`input-file-upload-${id}`}
                         type="file"
                         label={title}
                         style={{ display: "none" }}

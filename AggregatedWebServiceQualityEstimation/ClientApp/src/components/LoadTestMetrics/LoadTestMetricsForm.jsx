@@ -68,3 +68,4 @@ class LoadTestMetricsForm extends Component {
 }
 
 export default connectToStores(LoadTestMetricsForm);
+export { LoadTestMetricsForm };

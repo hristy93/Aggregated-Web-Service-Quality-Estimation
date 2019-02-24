@@ -26,9 +26,12 @@ class Textarea extends Component {
         } = this.props;
 
         return (
-            <FormGroup controlId={`textarea-${id}`}>
-                <ControlLabel>{title}</ControlLabel>
+            <FormGroup id={`input-group-textarea-${id}`}>
+                <ControlLabel id={`input-label-textarea-${id}`}>
+                    {title}
+                </ControlLabel>
                 <FormControl
+                    id={`input-textarea-${id}`}
                     componentClass="textarea"
                     placeholder={title}
                     style={style}

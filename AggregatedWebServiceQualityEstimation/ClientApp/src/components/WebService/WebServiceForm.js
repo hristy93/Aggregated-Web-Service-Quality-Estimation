@@ -44,19 +44,6 @@ class WebServiceForm extends Component {
         WebServicesActions.setRequestPostData({ requestPostData, webServiceId });
     }
 
-    handleFileUploadChange = (event, webServiceId) => {
-        event.preventDefault();
-        const { files } = event.target;
-
-        if (isNil(files)) {
-            displayFailureMessage("No files selected!");
-        } else if (files.length > 1) {
-            displayFailureMessage("More than 1 file selected!");
-        } else {
-            LoadTestActions.uploadLoadTestData({ files, webServiceId });
-        }
-    }
-
     render() {
         const {
             webServiceId,
@@ -69,13 +56,14 @@ class WebServiceForm extends Component {
         return (
             <form>
                 <FormGroup
-                    controlId={`input-request-url-${webServiceId}-web-service`}
+                    id={`input-group-request-url-${webServiceId}-web-service`}
                     validationState={isUrlValid ? "success" : "error"}
                 >
                     <ControlLabel id={`label-request-url-${webServiceId}-web-service`}>
                         Web Service URL
                     </ControlLabel>
                     <FormControl
+                        id={`input-request-url-${webServiceId}-web-service`}
                         type="url"
                         value={url}
                         placeholder={url !== "" ? "" : "Enter web service endpoint"}
@@ -111,3 +99,4 @@ class WebServiceForm extends Component {
 }
 
 export default WebServiceForm;
+export { WebServiceForm };

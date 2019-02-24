@@ -47,18 +47,18 @@ class LoadTestCharts extends Component {
 
                 LoadTestChartsActions.setAllReferenceLinesVisibility.defer({ areReferenceLinesVisible: isChecked, webServiceId });
                 break;
-            case "switch-line-visibility-SuccessfulRequestsPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("SuccessfulRequestsPerSecond");
-                break;
-            case "switch-line-visibility-FailedRequestsPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
-                break;
-            case "switch-line-visibility-ReceivedKilobytesPerSecond":
-                LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
-                LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
-                break;
+            // case "switch-line-visibility-SuccessfulRequestsPerSecond":
+            //     LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
+            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("SuccessfulRequestsPerSecond");
+            //     break;
+            // case "switch-line-visibility-FailedRequestsPerSecond":
+            //     LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
+            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
+            //     break;
+            // case "switch-line-visibility-ReceivedKilobytesPerSecond":
+            //     LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
+            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
+            //     break;
             default:
                 const alertMessage = "There is a problem with the switch!";
                 const errorMessage = `There is no switch with id = ${id}`;
@@ -164,6 +164,7 @@ class LoadTestCharts extends Component {
                     <ListGroup>
                         <ListGroupItem>
                             <LineChart
+                                id='responseTime'
                                 {...chartsCommonProps }
                                 axisYUnit="s"
                                 //axisYLabel="Response Time"
@@ -173,6 +174,7 @@ class LoadTestCharts extends Component {
                         </ListGroupItem>
                         <ListGroupItem style={{ marginTop: '2rem' }}>
                             <LineChart
+                                id='requests'
                                 {...chartsCommonProps}
                                 axisYUnit="rps"
                                 //axisYLabel="Requests Per Second"
@@ -182,6 +184,7 @@ class LoadTestCharts extends Component {
                         </ListGroupItem>
                         <ListGroupItem style={{ marginTop: '2rem' }}>
                             <LineChart
+                                id='throughput'
                                 {...chartsCommonProps}
                                 axisYUnit="KBps"
                                 //axisYLabel="Throughput"
@@ -197,3 +200,4 @@ class LoadTestCharts extends Component {
 }
 
 export default connectToStores(LoadTestCharts);
+export { LoadTestCharts };

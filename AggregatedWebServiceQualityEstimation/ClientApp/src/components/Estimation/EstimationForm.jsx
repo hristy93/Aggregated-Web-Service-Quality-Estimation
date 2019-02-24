@@ -37,3 +37,4 @@ class EstimationForm extends Component {
 }
 
 export default EstimationForm;
+export { EstimationForm };

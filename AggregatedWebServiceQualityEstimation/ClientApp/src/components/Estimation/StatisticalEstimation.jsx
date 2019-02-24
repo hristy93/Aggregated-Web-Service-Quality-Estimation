@@ -40,7 +40,10 @@ class StatisticalEstimation extends Component {
                     {/*
                         statisticalData.map((statisticalItem) => {
                             return (
-                                <div key={`${statisticalItem.metricName}-percentile-data`}>
+                                <div
+                                    key={`${statisticalItem.metricName}-percentile-data-${webServiceId}-web-service`}
+                                    id={`${statisticalItem.metricName}-percentile-data-${webServiceId}-web-service`}
+                                >
                                     <h4> {startCase(statisticalItem.metricName)} </h4>
                                     {
                                         statisticalItem.metricName.toLocaleLowerCase().includes("success") &&
@@ -145,3 +148,4 @@ class StatisticalEstimation extends Component {
 }
 
 export default StatisticalEstimation;
+export { StatisticalEstimation };

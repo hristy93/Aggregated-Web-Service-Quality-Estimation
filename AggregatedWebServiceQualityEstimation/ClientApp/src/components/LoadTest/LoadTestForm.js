@@ -28,7 +28,7 @@ class LoadTestForm extends Component {
             testState
         } = this.props;
 
-        const isTestRunning = testState.started && !testState.finished;
+        const isTestRunning = testState.isStarted && !testState.isFinished;
         const areOperationsDenied = testState.writingTestData || isTestRunning;
 
         return (
@@ -53,3 +53,4 @@ class LoadTestForm extends Component {
 }
 
 export default connectToStores(LoadTestForm);
+export { LoadTestForm };

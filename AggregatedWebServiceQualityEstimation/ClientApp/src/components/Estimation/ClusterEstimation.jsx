@@ -47,6 +47,7 @@ class ClusterEstimation extends Component {
                             <h4
                                 key={`cluster-${index}-info-${key}`}
                                 id={`${webServiceId}-web-service-cluster-${index}-info-${key}`}
+                                className={`${webServiceId}-web-service-cluster-info`}
                             >
                             {`${clusterEstimatorResultMetricsMapping[key]}: ${formattedValue}`}
                             </h4>
@@ -57,6 +58,7 @@ class ClusterEstimation extends Component {
                             <h4
                                 key={`${key}-${index}`}
                                 id={`${webServiceId}-web-service-cluster-${index}-info-${key}`}
+                                className={`${webServiceId}-web-service-cluster-info`}
                             >
                                 {clusterEstimatorResultMetricsMapping[key]} Coordinates:
                             </h4>
@@ -82,6 +84,7 @@ class ClusterEstimation extends Component {
                 <ListGroupItem
                     key={`cluster-${index}-data`}
                     id={`${webServiceId}-web-service-cluster-${index}-data`}
+                    className={`${webServiceId}-web-service-cluster-data`}
                     style={{ marginBottom: '2rem' }}
                 >
                     <h4><b> Metrics Grouping {index + 1} </b></h4>
@@ -125,7 +128,7 @@ class ClusterEstimation extends Component {
                 </Button>*/} 
                 {
                     isClusterDataVisible && 
-                    <div id="cluster-estimation-data" style={{ marginTop: "1rem" }}>
+                    <div id={`cluster-estimation-data-${webServiceId}-web-service`} style={{ marginTop: "1rem" }}>
                         <ListGroup>
                             {this.clusterEstimatonRenderer(clusterData, metricsInfo, loadTestDataSize, webServiceId)}
                         
@@ -147,3 +150,4 @@ class ClusterEstimation extends Component {
     }
     
 export default ClusterEstimation;
+export { ClusterEstimation };
