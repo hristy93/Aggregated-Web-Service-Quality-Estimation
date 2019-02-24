@@ -103,7 +103,8 @@ class EstimationContainer extends Component {
             webServiceId,
             statisticalData,
             areOperationsDenied,
-            loadTestData
+            loadTestData,
+            metricsInfo
         };
 
         return (

@@ -100,7 +100,7 @@ class LoadTestStore {
 
                 return;
             } else {
-                const alertMessage = "The file is uploaded successfully!";
+                const alertMessage = `The CSV file for the ${webServiceId} web service is uploaded successfully!`;
                 const logMessage = alertMessage;
                 displaySuccessMessage(alertMessage, logMessage);
             }

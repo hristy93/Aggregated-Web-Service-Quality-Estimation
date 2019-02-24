@@ -362,7 +362,7 @@ class LoadTest extends Component {
                                                                 onClick={this.handleRunLoadTestButtonClick}
                                                                 disabled={isRunLoadTestButtonDisabled}
                                                             >
-                                                                Run Load Test
+                                                                Run Tests
                                                             </Button>
                                                             {/*</OverlayTrigger>*/}
                                                             <Button
@@ -370,7 +370,7 @@ class LoadTest extends Component {
                                                                 onClick={this.handleCancelLoadTestButtonClick}
                                                                 disabled={!isTestRunning}
                                                             >
-                                                                Cancel Test
+                                                                Cancel Tests
                                                             </Button>
                                                             <Button
                                                                 id="write-load-test-data-button"
