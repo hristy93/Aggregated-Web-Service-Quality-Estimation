@@ -18,7 +18,7 @@ const props = {
     testState: {
         isStarted: false,
         isFinished: false,
-        writingTestData: false
+        isWritingTestData: false
     }
 };
 
@@ -55,7 +55,7 @@ describe('<LoadTestForm />', () => {
             testState: {
                 isStarted: true,
                 isFinished: false,
-                writingTestData: false 
+                isWritingTestData: false 
             }
         });
         const formControl = wrapper.find(FormControl).getElement();
@@ -68,7 +68,7 @@ describe('<LoadTestForm />', () => {
             testState: {
                 isStarted: false,
                 isFinished: false,
-                writingTestData: true
+                isWritingTestData: true
             }
         });
         const formControl = wrapper.find(FormControl).getElement();

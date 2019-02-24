@@ -51,7 +51,7 @@ const props = {
     testState: {
         isStarted: false,
         isFinished: false,
-        writingTestData: false
+        isWritingTestData: false
     },
     timeLeft: '',
     first: webServicesData['first'],
@@ -457,7 +457,7 @@ describe('<LoadTest />', () => {
                 testState: {
                     isStarted: true,
                     isFinished: false,
-                    writingTestData: false
+                    isWritingTestData: false
                 },
             });
 
@@ -471,7 +471,7 @@ describe('<LoadTest />', () => {
                 testState: {
                     isStarted: false,
                     isFinished: false,
-                    writingTestData: true
+                    isWritingTestData: true
                 },
             });
 
@@ -490,7 +490,7 @@ describe('<LoadTest />', () => {
                 testState: {
                     isStarted: true,
                     isFinished: false,
-                    writingTestData: false
+                    isWritingTestData: false
                 },
             });
 

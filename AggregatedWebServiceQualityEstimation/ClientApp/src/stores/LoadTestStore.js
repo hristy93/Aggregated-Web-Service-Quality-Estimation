@@ -30,7 +30,7 @@ class LoadTestStore {
             testState: {
                 isStarted: false,
                 isFinished: false,
-                writingTestData: false
+                isWritingTestData: false
             },
             requestPostData: null,
             timeLeft: null
@@ -39,9 +39,9 @@ class LoadTestStore {
 
     runLoadTest = (testResult) => {
         LoadTestActions.setTestState.defer({
-            started: false,
-            finished: true,
-            writingTestData: true
+            isStarted: false,
+            isFinished: true,
+            isWritingTestData: true
         });
 
         LoadTestActions.writeLoadTestData.defer("first");
@@ -55,14 +55,17 @@ class LoadTestStore {
 
             const loadTestDataLength = loadTestData.length;
 
+            // Set charts' panel visibility to true
+            LoadTestChartsActions.setChartsPanelVisibility.defer({
+                isPanelVisible: true,
+                webServiceId
+            });
+
+            // Set the size of the test data
             this.setLoadTestDataSize({
                 loadTestDataSize: loadTestDataLength,
                 webServiceId
             });
-
-            //if (loadTestDataLength !== 0) {
-            //    LoadTestChartsActions.setChartsPanelVisibility.defer({ isPanelVisible: true, webServiceId });
-            //}
         } else {
             const alertMessage = "There is a problem with the load test data!";
             const logMessage = "The load test data is invalid!";
@@ -79,7 +82,7 @@ class LoadTestStore {
         }
 
         LoadTestActions.setTestState.defer({
-            writingTestData: false
+            isWritingTestData: false
         });
     }
 
@@ -120,13 +123,19 @@ class LoadTestStore {
         this.waitFor(EstimationStore);
         let apdexScoreLimit = EstimationStore.getState().getIn([webServiceId, "apdexScoreLimit"]);
         apdexScoreLimit = !isNil(apdexScoreLimit) ? apdexScoreLimit : "";
-        EstimationActions.getApdexScoreEstimatorResult.defer({ apdexScoreLimit, webServiceId });
+        EstimationActions.getApdexScoreEstimatorResult.defer({
+            apdexScoreLimit,
+            webServiceId
+        });
 
         // Get cluster estimator's result and display it in the panel
         EstimationActions.getClusterEstimatorResult.defer(webServiceId);
 
         // Set estimations' panel visibility to true
-        EstimationActions.setEstimationsPanelVisibility.defer({ isPanelVisible: true, webServiceId });
+        EstimationActions.setEstimationsPanelVisibility.defer({
+            isPanelVisible: true,
+            webServiceId
+        });
     }
 
     setLoadTestDuration = (loadTestDuration) => {
@@ -136,14 +145,14 @@ class LoadTestStore {
     setTestState = (newTestState) => {
         if (!isNil(newTestState)) {
             const localTestState = this.state.get("testState");
-            if (!isNil(newTestState.started)) {
-                localTestState["started"] = newTestState.started;
+            if (!isNil(newTestState.isStarted)) {
+                localTestState["isStarted"] = newTestState.isStarted;
             }
-            if (!isNil(newTestState.finished)) {
-                localTestState["finished"] = newTestState.finished;
+            if (!isNil(newTestState.isFinished)) {
+                localTestState["isFinished"] = newTestState.isFinished;
             }
-            if (!isNil(newTestState.writingTestData)) {
-                localTestState["writingTestData"] = newTestState.writingTestData;
+            if (!isNil(newTestState.isWritingTestData)) {
+                localTestState["isWritingTestData"] = newTestState.isWritingTestData;
             }
 
             this.setState(this.state.set("testState", localTestState));

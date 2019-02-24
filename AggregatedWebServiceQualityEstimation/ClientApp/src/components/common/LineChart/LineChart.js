@@ -1,7 +1,6 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isNil from 'lodash/isNil';
-import LineChartOptions from './LineChartOptions';
 import {
     LineChart as LineChartRecharts,
     CartesianGrid,

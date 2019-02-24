@@ -76,7 +76,7 @@ class EstimationContainer extends Component {
         const estimationFormProps = {
             webServiceId,
             apdexScoreLimit,
-            areOperationsDenied
+            areOperationsDenied: areOperationsDenied || !metricsInfo["ResponseTime"]
         };
 
         const apdexScoreEstimatorProps = {

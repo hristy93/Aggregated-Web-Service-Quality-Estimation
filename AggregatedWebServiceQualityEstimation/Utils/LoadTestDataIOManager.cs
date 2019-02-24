@@ -17,33 +17,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 
         private readonly string _combinedQuery = @"select ResponseTime, SuccessfulRequestsPerSecond, FailedRequestsPerSecond, ReceivedKilobytesPerSecond, 
             IntervalStartTime, IntervalEndTime from LoadTestDataForAllChartsDualServices";
-
-        private readonly string _responceTimeQuery = "select distinct ComputedValue as ResponceTime, IntervalStartTime, IntervalEndTime "
-            + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
-            + "and CategoryName = 'LoadTest:Request' "
-            + "and CounterName = 'Avg. Response Time' "
-            + "and IntervalStartTime <> IntervalEndTime";
-
-        private readonly string _successfulRequestsPerSecondQuery = "select distinct ComputedValue as SuccessfulRequestsPerSecond, IntervalStartTime, IntervalEndTime "
-            + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
-            + "and CategoryName = 'LoadTest:Request' "
-            + "and CounterName = 'Passed Requests/Sec' "
-            + "and IntervalStartTime <> IntervalEndTime";
-
-        private readonly string _sentBytesPerSecondQuery = "select distinct ComputedValue AS SentBytesPerSecond, IntervalStartTime, IntervalEndTime "
-            + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
-            + "and CategoryName = 'Network Interface' "
-            + "and CounterName = 'Bytes Sent/sec' "
-            + "and ComputedValue<> 0";
-
-        private readonly string _receivedBytesPerSecondQuery = "select distinct ComputedValue AS ReceivedBytesPerSecond, IntervalStartTime, IntervalEndTime "
-            + "from LoadTestComputedCounterSample where LoadTestRunId = (select max(LoadTestRunId) from LoadTestComputedCounterSample) "
-            + "and CategoryName = 'Network Interface' "
-            + "and CounterName = 'Bytes Received/sec' "
-            + "and ComputedValue<> 0";
-
         private IConfiguration _configuration;
-
         private static Dictionary<string, bool> _metricsUsed = new Dictionary<string, bool>()
         {
             ["ResponseTime"] = true,

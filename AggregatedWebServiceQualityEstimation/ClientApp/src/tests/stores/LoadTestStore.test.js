@@ -159,7 +159,7 @@ describe('LoadTestStore', () => {
             const data = {
                 isStarted: false,
                 isFinished: false,
-                writingTestData: false
+                isWritingTestData: false
             };
 
             alt.dispatcher.dispatch({ action, data });
@@ -173,7 +173,7 @@ describe('LoadTestStore', () => {
             const data = {
                 isStarted: false,
                 isFinished: false,
-                writingTestData: false
+                isWritingTestData: false
             };
 
             alt.dispatcher.dispatch({ action, data });

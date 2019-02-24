@@ -389,7 +389,7 @@ describe('LoadTestActions', () => {
         const data = {
             isStarted: false,
             isFinished: false,
-            writingTestData: false
+            isWritingTestData: false
         };
 
         const action = LoadTestActions.SET_TEST_STATE;

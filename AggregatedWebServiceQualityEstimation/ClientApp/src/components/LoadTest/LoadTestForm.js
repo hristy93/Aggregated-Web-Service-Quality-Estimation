@@ -29,7 +29,7 @@ class LoadTestForm extends Component {
         } = this.props;
 
         const isTestRunning = testState.isStarted && !testState.isFinished;
-        const areOperationsDenied = testState.writingTestData || isTestRunning;
+        const areOperationsDenied = testState.isWritingTestData || isTestRunning;
 
         return (
             <form>

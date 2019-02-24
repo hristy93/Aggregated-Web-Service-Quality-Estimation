@@ -15,7 +15,7 @@ import {
     clusterEstimatorResult,
     apdexScoreEstimatorResult,
     statisticalEstimatorResult,
-} from '../testData'
+} from '../testData';
 
 let dispatcherSpy;
 
@@ -25,7 +25,7 @@ describe('EstimationActions', () => {
     });
 
     afterEach(() => {
-        alt.dispatcher.dispatch.reset();
+        alt.dispatcher.dispatch.restore();
     });
 
     it('getClusterEstimatorResult() successfully dispatches getClusterEstimatorResult action', (done) => {
@@ -57,7 +57,7 @@ describe('EstimationActions', () => {
                     );
                 }
             })
-            .finally(serviceStub.reset)
+            .finally(serviceStub.restore)
             .finally(done);
 
         q.resolve({
@@ -77,7 +77,7 @@ describe('EstimationActions', () => {
 
         EstimationActions.getClusterEstimatorResult(data);
 
-        serviceStub.reset();
+        serviceStub.restore();
     });
 
     it('getStatisticalEstimatorResult() successfully dispatches getStatisticalEstimatorResult action', (done) => {
@@ -109,7 +109,7 @@ describe('EstimationActions', () => {
                     );
                 }
             })
-            .finally(serviceStub.reset)
+            .finally(serviceStub.restore)
             .finally(done);
 
         q.resolve({
@@ -129,7 +129,7 @@ describe('EstimationActions', () => {
 
         EstimationActions.getStatisticalEstimatorResult(data);
 
-        serviceStub.reset();
+        serviceStub.restore();
     });
 
     it('getFuzzyLogicEstimatorResult() successfully dispatches getFuzzyLogicEstimatorResult action', (done) => {
@@ -161,7 +161,7 @@ describe('EstimationActions', () => {
                     );
                 }
             })
-            .finally(serviceStub.reset)
+            .finally(serviceStub.restore)
             .finally(done);
 
         q.resolve({
@@ -181,7 +181,7 @@ describe('EstimationActions', () => {
 
         EstimationActions.getFuzzyLogicEstimatorResult(data);
 
-        serviceStub.reset();
+        serviceStub.restore();
     });
 
     it('getApdexScoreEstimatorResult() successfully dispatches getApdexScoreEstimatorResult action', (done) => {
@@ -213,7 +213,7 @@ describe('EstimationActions', () => {
                     );
                 }
             })
-            .finally(serviceStub.reset)
+            .finally(serviceStub.restore)
             .finally(done);
 
         q.resolve({
@@ -233,7 +233,7 @@ describe('EstimationActions', () => {
 
         EstimationActions.getApdexScoreEstimatorResult(data);
 
-        serviceStub.reset();
+        serviceStub.restore();
     });
 
     it('setApdexScoreLimit() passes the right arguments', () => {

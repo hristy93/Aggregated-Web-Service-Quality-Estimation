@@ -90,7 +90,7 @@ class StatisticalEstimation extends Component {
                             condensed
                             hover
                         >
-                            <thead id={`table-header-${webServiceId}-web-service-statistical-estimation-`}>
+                            <thead id={`table-header-${webServiceId}-web-service-statistical-estimation`}>
                                 <tr>
                                 {
                                     Object.keys(statisticMetricNames).map((item) => {

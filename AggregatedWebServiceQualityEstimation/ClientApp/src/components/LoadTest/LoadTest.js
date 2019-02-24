@@ -26,6 +26,7 @@ import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import WebServicesStore from '../../stores/WebServicesStore';
 import FileUpload from '../common/FileUpload/FileUpload';
 import isNil from 'lodash/isNil';
+import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { displayFailureMessage } from '../../utils/displayInformation';
 
@@ -33,7 +34,7 @@ let testTimer;
 
 class LoadTest extends Component {
     static getStores() {
-        return [LoadTestStore, WebServicesStore];
+        return [LoadTestStore, WebServicesStore, EstimationStore, LoadTestChartsStore];
     }
 
     // TODO: check if the props argument in getPropsFromStores works
@@ -203,7 +204,7 @@ class LoadTest extends Component {
         if (!isNil(testState)) {
             if (testState.isStarted && !testState.isFinished) {
                 return "Running...";
-            } else if (testState.writingTestData) {
+            } else if (testState.isWritingTestData) {
                 return "Writing test data ...";
             } else {
                 return "Not running";
@@ -221,15 +222,15 @@ class LoadTest extends Component {
             </Tooltip>
         );
 
-    handleEstimationsPanelVisibility = (webServiceId, isPanelVisible) => {
+    handleEstimationsPanelVisibility = (isPanelVisible, webServiceId) => {
         EstimationActions.setEstimationsPanelVisibility({
             isPanelVisible,
             webServiceId
         });
     }
 
-    handleChartsPanelVisibility = (webServiceId, isPanelVisible) => {
-        EstimationActions.setEstimationsPanelVisibility({
+    handleChartsPanelVisibility = (isPanelVisible, webServiceId) => {
+        LoadTestChartsActions.setChartsPanelVisibility({
             isPanelVisible,
             webServiceId
         });
@@ -255,16 +256,24 @@ class LoadTest extends Component {
             testState,
             timeLeft,
             first,
-            second
+            second,
         } = this.props;
 
         const isTestRunning = testState.isStarted && !testState.isFinished;
-        const areOperationsDenied = testState.writingTestData || isTestRunning;
+        const areOperationsDenied = testState.isWritingTestData || isTestRunning;
         const isRunLoadTestButtonDisabled = !areUrlsValid || areOperationsDenied;
-        const isFirstWebServiceChartsPanelOpen = firstWebServiceChartsData.isPanelVisible || firstServiceLoadTestData.length !== 0;
-        const isSecondWebServiceChartsPanelOpen = secondWebServiceChartsData.isPanelVisible || secondServiceLoadTestData.length !== 0;
-        const isFirstWebServiceEstimationsPanelOpen = firstWebServiceEstimationData.isPanelVisible;
-        const isSecondWebServiceEstimationsPanelOpen = secondWebServiceEstimationData.isPanelVisible;
+
+        const isFirstWebServiceChartsPanelOpen = firstWebServiceChartsData.isPanelVisible && firstServiceLoadTestData.length !== 0;
+        const isSecondWebServiceChartsPanelOpen = secondWebServiceChartsData.isPanelVisible && secondServiceLoadTestData.length !== 0;
+
+        const isFirstWebServiceEstimationsAvailable = !isEmpty(firstWebServiceEstimationData.apdexScoreData) ||
+            !isEmpty(firstWebServiceEstimationData.clusterData) || !isEmpty(firstWebServiceEstimationData.statisticalData);
+        const isSecondWebServiceEstimationsAvailable = !isEmpty(secondWebServiceEstimationData.apdexScoreData) ||
+            !isEmpty(secondWebServiceEstimationData.clusterData) || !isEmpty(secondWebServiceEstimationData.statisticalData);
+
+
+        const isFirstWebServiceEstimationsPanelOpen = firstWebServiceEstimationData.isPanelVisible && isFirstWebServiceEstimationsAvailable;
+        const isSecondWebServiceEstimationsPanelOpen = secondWebServiceEstimationData.isPanelVisible && isSecondWebServiceEstimationsAvailable;
 
         this.setCursorState(areOperationsDenied);
 
@@ -468,10 +477,10 @@ class LoadTest extends Component {
                                 id="panel-first-web-service-charts"
                                 bsStyle="primary"
                                 expanded={isFirstWebServiceChartsPanelOpen}
-                                onToggle={() => this.handleChartsPanelVisibility({
-                                    isPanelVisible: !isFirstWebServiceChartsPanelOpen,
-                                    webServiceId: "first"
-                                })}
+                                onToggle={() => this.handleChartsPanelVisibility(
+                                    !isFirstWebServiceChartsPanelOpen,
+                                    "first"
+                                )}
                                 eventKey="1"
                             >
                                 <Panel.Heading id="panel-heading-first-web-service-charts">
@@ -493,10 +502,10 @@ class LoadTest extends Component {
                                 id="panel-first-web-service-estimations"
                                 bsStyle="primary"
                                 expanded={isFirstWebServiceEstimationsPanelOpen}
-                                onToggle={() => this.handleEstimationsPanelVisibility({
-                                    isPanelVisible: !isFirstWebServiceEstimationsPanelOpen,
-                                    webServiceId: "first"
-                                })}
+                                onToggle={() => this.handleEstimationsPanelVisibility(
+                                    !isFirstWebServiceEstimationsPanelOpen,
+                                    "first"
+                                )}
                                 eventKey="2"
                             >
                                 <Panel.Heading id="panel-heading-first-web-service-estimations">
@@ -521,10 +530,10 @@ class LoadTest extends Component {
                                 id="panel-second-web-service-charts"
                                 bsStyle="primary"
                                 expanded={isSecondWebServiceChartsPanelOpen}
-                                onToggle={() => this.handleChartsPanelVisibility({
-                                        isPanelVisible: !isSecondWebServiceChartsPanelOpen,
-                                        webServiceId: "second"
-                                })}
+                                onToggle={() => this.handleChartsPanelVisibility(
+                                    !isSecondWebServiceChartsPanelOpen,
+                                    "second"
+                                )}
                                 eventKey="1"
                             >
                                 <Panel.Heading id="panel-heading-second-web-service-charts">
@@ -546,10 +555,10 @@ class LoadTest extends Component {
                                 id="panel-second-web-service-estimations"
                                 bsStyle="primary"
                                 expanded={isSecondWebServiceEstimationsPanelOpen}
-                                onToggle={() => this.handleEstimationsPanelVisibility({
-                                    isPanelVisible: !isSecondWebServiceEstimationsPanelOpen,
-                                    webServiceId: "second"
-                                })}
+                                onToggle={() => this.handleEstimationsPanelVisibility(
+                                    !isSecondWebServiceEstimationsPanelOpen,
+                                    "second"
+                                )}
                                 eventKey="2"
                             >
                                 <Panel.Heading id="panel-heading-second-web-service-estimattions">
