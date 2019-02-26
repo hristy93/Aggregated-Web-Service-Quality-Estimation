@@ -44,13 +44,13 @@ class ClusterEstimation extends Component {
                     }
 
                     return (
-                            <h4
-                                key={`cluster-${index}-info-${key}`}
-                                id={`${webServiceId}-web-service-cluster-${index}-info-${key}`}
-                                className={`${webServiceId}-web-service-cluster-info`}
-                            >
-                            {`${clusterEstimatorResultMetricsMapping[key]}: ${formattedValue}`}
-                            </h4>
+                        <h4
+                            key={`cluster-${index}-info-${key}`}
+                            id={`${webServiceId}-web-service-cluster-${index}-info-${key}`}
+                            className={`${webServiceId}-web-service-cluster-info`}
+                        >
+                        {`${clusterEstimatorResultMetricsMapping[key]}: ${formattedValue}`}
+                        </h4>
                     );
                 } else {
                     return (

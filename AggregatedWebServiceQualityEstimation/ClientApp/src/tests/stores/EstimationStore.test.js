@@ -129,6 +129,25 @@ describe('EstimationStore', () => {
             const { isPanelVisible } = returnedData;
             expect(isPanelVisible).to.equal(data.isPanelVisible);
         });
+
+        it('getAllEstimatorsResults() properly gets all estimatiors\' results', () => {
+            const getApdexScoreEstimatorResultSpy = sinon.spy(EstimationActions.getApdexScoreEstimatorResult, 'defer');
+            const getClusterEstimatorResultSpy = sinon.spy(EstimationActions.getClusterEstimatorResult, 'defer');
+            const getStatisticalEstimatorResultSpy = sinon.spy(EstimationActions.getStatisticalEstimatorResult, 'defer');
+
+            const action = EstimationActions.GET_ALL_ESTIMATORS_RESULTS;
+            const data = "second";
+
+            alt.dispatcher.dispatch({ action, data });
+
+            expect(getApdexScoreEstimatorResultSpy.calledOnce).to.equal(true);
+            expect(getClusterEstimatorResultSpy.calledOnce).to.equal(true);
+            expect(getStatisticalEstimatorResultSpy.calledOnce).to.equal(true);
+
+            getApdexScoreEstimatorResultSpy.restore();
+            getClusterEstimatorResultSpy.restore();
+            getStatisticalEstimatorResultSpy.restore();
+        });
     });
 });
 

@@ -6,7 +6,8 @@ const tempDate = '1970/01/01 ';
 
 class EstimationActions {
     constructor() {
-        this.generateActions("setApdexScoreLimit", "clearApdexScoreData", "setEstimationsPanelVisibility");
+        this.generateActions("setApdexScoreLimit", "clearApdexScoreData", "setEstimationsPanelVisibility",
+        "getAllEstimatorsResults");
     }
 
     getClusterEstimatorResult = (webServiceId) => {

@@ -78,7 +78,7 @@ class LoadTestStore {
             LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 
             // if you want to generate the estimators result after displaying the metrics data
-            this.getEstimatorsData(webServiceId);
+            EstimationActions.getAllEstimatorsResults.defer(webServiceId);
         }
 
         LoadTestActions.setTestState.defer({
@@ -111,31 +111,8 @@ class LoadTestStore {
             LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 
             // if you want to generate the estimators result after displaying the metrics data
-            this.getEstimatorsData(webServiceId);
+            EstimationActions.getAllEstimatorsResults.defer(webServiceId);
         }
-    }
-
-    getEstimatorsData = (webServiceId) => {
-        // Get the statistics estimator's result and displaying it in a table
-        EstimationActions.getStatisticalEstimatorResult.defer(webServiceId);
-
-        // Get the apdex estimator's result and displaying it in a chart
-        this.waitFor(EstimationStore);
-        let apdexScoreLimit = EstimationStore.getState().getIn([webServiceId, "apdexScoreLimit"]);
-        apdexScoreLimit = !isNil(apdexScoreLimit) ? apdexScoreLimit : "";
-        EstimationActions.getApdexScoreEstimatorResult.defer({
-            apdexScoreLimit,
-            webServiceId
-        });
-
-        // Get cluster estimator's result and display it in the panel
-        EstimationActions.getClusterEstimatorResult.defer(webServiceId);
-
-        // Set estimations' panel visibility to true
-        EstimationActions.setEstimationsPanelVisibility.defer({
-            isPanelVisible: true,
-            webServiceId
-        });
     }
 
     setLoadTestDuration = (loadTestDuration) => {

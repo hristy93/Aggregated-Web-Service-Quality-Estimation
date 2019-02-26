@@ -266,14 +266,14 @@ class LoadTest extends Component {
         const isFirstWebServiceChartsPanelOpen = firstWebServiceChartsData.isPanelVisible && firstServiceLoadTestData.length !== 0;
         const isSecondWebServiceChartsPanelOpen = secondWebServiceChartsData.isPanelVisible && secondServiceLoadTestData.length !== 0;
 
-        const isFirstWebServiceEstimationsAvailable = !isEmpty(firstWebServiceEstimationData.apdexScoreData) ||
+        const areFirstWebServiceEstimationsAvailable = !isEmpty(firstWebServiceEstimationData.apdexScoreData) ||
             !isEmpty(firstWebServiceEstimationData.clusterData) || !isEmpty(firstWebServiceEstimationData.statisticalData);
-        const isSecondWebServiceEstimationsAvailable = !isEmpty(secondWebServiceEstimationData.apdexScoreData) ||
+        const areSecondWebServiceEstimationsAvailable = !isEmpty(secondWebServiceEstimationData.apdexScoreData) ||
             !isEmpty(secondWebServiceEstimationData.clusterData) || !isEmpty(secondWebServiceEstimationData.statisticalData);
 
 
-        const isFirstWebServiceEstimationsPanelOpen = firstWebServiceEstimationData.isPanelVisible && isFirstWebServiceEstimationsAvailable;
-        const isSecondWebServiceEstimationsPanelOpen = secondWebServiceEstimationData.isPanelVisible && isSecondWebServiceEstimationsAvailable;
+        const isFirstWebServiceEstimationsPanelOpen = firstWebServiceEstimationData.isPanelVisible && areFirstWebServiceEstimationsAvailable;
+        const isSecondWebServiceEstimationsPanelOpen = secondWebServiceEstimationData.isPanelVisible && areSecondWebServiceEstimationsAvailable;
 
         this.setCursorState(areOperationsDenied);
 

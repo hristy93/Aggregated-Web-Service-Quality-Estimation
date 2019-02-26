@@ -277,5 +277,17 @@ describe('EstimationActions', () => {
         expect(firstArg.action).to.equal(action);
         expect(firstArg.data).to.deep.equal(data);
     });
+
+    it('getAllEstimatorsResults() passes the right arguments', () => {
+        const data = "first"
+        const action = EstimationActions.GET_ALL_ESTIMATORS_RESULTS;
+
+        EstimationActions.getAllEstimatorsResults(data);
+
+        var dispatcherArgs = dispatcherSpy.args[0];
+        var firstArg = dispatcherArgs[0];
+        expect(firstArg.action).to.equal(action);
+        expect(firstArg.data).to.deep.equal(data);
+    });
 });
 
