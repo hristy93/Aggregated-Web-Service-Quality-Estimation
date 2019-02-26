@@ -117,7 +117,6 @@ namespace Backend.UnitTests.Controllers
             const bool byRow = false;
             const bool fromFile = true;
             const double densestClusterDensity = 0.03;
-            //const double densestClusterEstimation = 0.90;
             const double densestClusterCenterPotential = 0.90;
             const double densestClusterSpread = 0.95;
 
@@ -141,23 +140,10 @@ namespace Backend.UnitTests.Controllers
                     Density =  densestClusterDensity,
                     Center = densestClusterCenter,
                     Spread = densestClusterSpread
-                //DensestClusterEstimation = new List<double>() { densestClusterEstimation }
                 }
             };
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.FindDensestCluster());
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.FindClustersDensities());
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersDensities)
-            //    .Returns(new List<double>() { expectedResult[0].Density });
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersCentersPotentials)
-            //   .Returns(new List<double>() { expectedResult[0].Potential });
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.DensestClusterEstimation)
-            //    .Returns(densestClusterEstimation);
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersCenters)
-            //    .Returns(new List<IList<double>>() { expectedResult[0].Center });
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersSpreads)
-            //   .Returns(new List<double>() { expectedResult[0].Spread });
             _clusterEstimator.Setup(clusterEstimator => clusterEstimator.FindClusterEstimatorResult()).Returns(expectedResult);
             _clusterEstimator.As<IMetricsData>().Setup(metricsData => metricsData.MetricsData).Returns(metrics);
 
@@ -177,7 +163,6 @@ namespace Backend.UnitTests.Controllers
             const bool byRow = false;
             const bool fromFile = true;
             const double densestClusterDensity = 0.03;
-            //const double densestClusterEstimation = 0.90;
             const double densestClusterCenterPotential = 0.90;
             const double densestClusterSpread = 0.95;
 
@@ -201,23 +186,10 @@ namespace Backend.UnitTests.Controllers
                     Density = densestClusterDensity,
                     Center = densestClusterCenter,
                     Spread = densestClusterSpread
-                    //DensestClusterEstimation = new List<double>() { densestClusterEstimation }
                 }
             };
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.FindDensestCluster());
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.FindClustersDensities());
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersDensities)
-            //    .Returns(new List<double>() { inputData[0].Density });
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersCentersPotentials)
-            //   .Returns(new List<double>() { inputData[0].Potential });
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.DensestClusterEstimation)
-            //    .Returns(densestClusterEstimation);
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersCenters)
-            //    .Returns(new List<IList<double>>() { inputData[0].Center });
-            //_clusterEstimator.Setup(clusterEstimator => clusterEstimator.ClustersSpreads)
-            //   .Returns(new List<double>() { inputData[0].Spread });
             _clusterEstimator.As<IMetricsData>().Setup(metricsData => metricsData.MetricsData).Returns(metrics);
 
             var estimatorController = new EstimatorController(_loadTestDataManager.Object, _apdexScoreEstimator.Object,

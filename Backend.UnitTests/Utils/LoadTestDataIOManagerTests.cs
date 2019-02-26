@@ -34,22 +34,5 @@ namespace Backend.UnitTests.Utils
             var actualResult = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile, _filePath);
             Assert.Equal(_metricsDataInFileFromat, actualResult);
         }
-
-        [Fact(Skip = "Not mocked method from the same class")]
-        public void ReadTestData_NotFromFile_Success()
-        {
-            const string webServiceId = "first";
-            const bool fromFile = false;
-
-            var mockedLoadTestDataIOManager = new Mock<ITestDataIOManager>();
-            mockedLoadTestDataIOManager
-                .Setup(loadTestDataIOManager => loadTestDataIOManager.GetTestDataFromDatabase(webServiceId))
-                .Returns(_metricsDataInFileFromat);
-                
-            var _loadTestDataIOManager = new LoadTestDataIOManager(_configuration);
-
-            var actualResult = _loadTestDataIOManager.ReadTestData(webServiceId, fromFile, _filePath);
-            Assert.Equal(_metricsDataInFileFromat, actualResult);
-        }
     }
 }

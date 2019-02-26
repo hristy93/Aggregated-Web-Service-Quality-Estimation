@@ -28,7 +28,6 @@ namespace Backend.UnitTests.Controllers
         public TestControllerTests()
         {
             IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            //configurationBuilder.AddJsonFile("AppSettings.json");
             _configuration = configurationBuilder.Build();
             _loadTestRunner = new Mock<ITestRunner>();
             _loadTestDataManager = new Mock<ITestDataIOManager>();

@@ -120,7 +120,6 @@ namespace Backend.UnitTests.Estimators
             var clusterEstimator = new ClusterEstimator(_loadTestDataManager.Object, _loadTestDataPreprocessor.Object);
             clusterEstimator.GetMetricsData(webServiceId, fromFile, byRow);
 
-            //TODO: check the deocumentations when changes to the methods are made
             var result = clusterEstimator.FindClusterEstimatorResult();
 
             Assert.IsType<List<ClusterEstimation>>(result);
@@ -169,29 +168,10 @@ namespace Backend.UnitTests.Estimators
             var clusterEstimator = new ClusterEstimator(_loadTestDataManager.Object, _loadTestDataPreprocessor.Object);
             clusterEstimator.GetMetricsData(webServiceId, fromFile, byRow);
 
-            //TODO: check the deocumentations when changes to the methods are made
             var result = clusterEstimator.FindClusterEstimatorResult();
 
             Assert.IsType<List<ClusterEstimation>>(result);
             Assert.Equal(expectedResult, result);
         }
-
-        //[Fact]
-        //public void GetStatisticalData_Faulure_ThrowsException()
-        //{
-        //    const string webServiceId = "first";
-        //    const bool byRow = true;
-        //    const bool fromFile = true;
-
-        //    _loadTestDataManager
-        //       .Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile))
-        //       .Returns(_metricsData.ToString());
-        //    _loadTestDataPreprocessor
-        //        .Setup(loadTestDataPreprocessor => loadTestDataPreprocessor.PreprocessMetricsData(_metricsData.ToString(), webServiceId, byRow, fromFile, true))
-        //        .Throws(new Exception());
-
-        //    var clusterEstimator = new ClusterEstimator(_loadTestDataManager.Object, _loadTestDataPreprocessor.Object);
-        //    Assert.Throws<Exception>(() => clusterEstimator.GetMetricsData(webServiceId, fromFile, byRow));
-        //}
     }
 }

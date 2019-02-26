@@ -245,7 +245,7 @@ namespace Backend.UnitTests.Estimators
             Assert.Equal<ApdexScoreEstimatorResult>(expectedResult, result);
         }
 
-        [Fact(Skip = "Needs investimation on the logic for fromFile check")]
+        [Fact]
         public void FindApdexScoreEstimatorResult_NotFromFileAndWithoutPredefinedLimit_Success()
         {
             const string webServiceId = "first";
@@ -261,25 +261,25 @@ namespace Backend.UnitTests.Estimators
                     {
                         IntervalStartTime = "15:55:38",
                         IntervalEndTime = "15:55:43",
-                        ApdexScore = 50
+                        ApdexScore = 90
                     },
                     new ApdexScoreEstimation()
                     {
                         IntervalStartTime = "15:55:43",
                         IntervalEndTime = "15:55:48",
-                        ApdexScore = 75
+                        ApdexScore = 90
                     },
                     new ApdexScoreEstimation()
                     {
                         IntervalStartTime = "15:55:48",
                         IntervalEndTime = "15:55:53",
-                        ApdexScore = 83.333333333333343
+                        ApdexScore = 90
                     },
                     new ApdexScoreEstimation()
                     {
                         IntervalStartTime = "15:55:53",
                         IntervalEndTime = "15:55:58",
-                        ApdexScore = 87.5
+                        ApdexScore = 90
                     },
                     new ApdexScoreEstimation()
                     {
@@ -288,8 +288,8 @@ namespace Backend.UnitTests.Estimators
                         ApdexScore = 90
                     }
                 },
-                AverageApdexScoreEstimation = 77.166666666666671,
-                ApdexScoreEstimationRating = "Fair",
+                AverageApdexScoreEstimation = 90,
+                ApdexScoreEstimationRating = "Good",
                 InitialApdexScoreLimit = 0.7731667
             };
 
@@ -307,24 +307,5 @@ namespace Backend.UnitTests.Estimators
             Assert.IsType<ApdexScoreEstimatorResult>(result);
             Assert.Equal<ApdexScoreEstimatorResult>(expectedResult, result);
         }
-
-        //[Fact(Skip = "Unknown failure")]
-        //public void FindApdexScoreEstimatorResult_Failure_ThrowsException()
-        //{
-        //    const string webServiceId = "first";
-        //    const bool byRow = false;
-        //    const bool fromFile = true;
-        //    const double apdexScoreLimit = 0.05;
-
-        //    _loadTestDataManager
-        //       .Setup(testDataManager => testDataManager.ReadTestData(webServiceId, fromFile))
-        //       .Returns(_metricsData.ToString());
-        //    _loadTestDataPreprocessor
-        //        .Setup(loadTestDataPreprocessor => loadTestDataPreprocessor.PreprocessMetricsData(_metricsData.ToString(), webServiceId, byRow, fromFile, true))
-        //        .Throws(new Exception());
-
-        //    var apdexScoreEstimator = new ApdexScoreEstimator(_loadTestDataManager.Object, _loadTestDataPreprocessor.Object);
-        //    Assert.Throws<Exception>(() => apdexScoreEstimator.FindApdexScoreEstimatorResult(apdexScoreLimit, fromFile, webServiceId));
-        //}
     }
 }
