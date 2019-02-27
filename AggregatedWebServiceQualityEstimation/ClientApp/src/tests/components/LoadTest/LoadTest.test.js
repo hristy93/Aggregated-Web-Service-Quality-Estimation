@@ -90,12 +90,12 @@ describe('<LoadTest />', () => {
         });
 
         it('fires handleFileUploadChange() when a file with metrics for the first web service is uploaded', () => {
-            const changeSpy = sinon.spy(LoadTestActions, 'uploadLoadTestData');
+            const changeSpy = sinon.spy(LoadTestActions.uploadLoadTestData, 'defer');
             const secondWebServiceFileUpload = wrapper.find('#csv-metrics-file-first-web-service').at(0);
             const event = {
                 preventDefault: noop,
                 target: {
-                    files: getFakeUploadedFile(10)
+                    files: [getFakeUploadedFile(10)]
                 }
             };
             secondWebServiceFileUpload.getElement().props.onChange(event, 'first');
@@ -207,12 +207,12 @@ describe('<LoadTest />', () => {
         });
 
         it('fires handleFileUploadChange() when a file with metrics for the second web service is uploaded', () => {
-            const changeSpy = sinon.spy(LoadTestActions, 'uploadLoadTestData');
+            const changeSpy = sinon.spy(LoadTestActions.uploadLoadTestData, 'defer');
             const secondWebServiceFileUpload = wrapper.find('#csv-metrics-file-second-web-service').at(0);
             const event = {
                 preventDefault: noop,
                 target: {
-                    files: getFakeUploadedFile(10)
+                    files: [getFakeUploadedFile(10)]
                 }
             };
             secondWebServiceFileUpload.getElement().props.onChange(event, 'second');

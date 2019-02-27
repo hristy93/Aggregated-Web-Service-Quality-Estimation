@@ -76,6 +76,20 @@ describe('WebServicesStore', () => {
             const { requestPostData } = returnedData;
             expect(requestPostData).to.equal(data.requestPostData);
         });
+
+
+        it('setFileName() properly sets the name of the uploaded CSV file for the first web service', () => {
+            const action = WebServicesActions.SET_FILE_NAME;
+            const data = {
+                fileName: "test",
+                webServiceId: "first"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = WebServicesStore.getFirstWebServiceData();
+            const { fileName } = returnedData;
+            expect(fileName).to.equal(data.fileName);
+        });
     });
 
     context('Get and set data for the second web service', () => {
@@ -142,6 +156,19 @@ describe('WebServicesStore', () => {
             const returnedData = WebServicesStore.getSecondWebServiceData();
             const { requestPostData } = returnedData;
             expect(requestPostData).to.equal(data.requestPostData);
+        });
+
+        it('setFileName() properly sets the name of the uploaded CSV file for the second web service', () => {
+            const action = WebServicesActions.SET_FILE_NAME;
+            const data = {
+                fileName: "test",
+                webServiceId: "second"
+            };
+
+            alt.dispatcher.dispatch({ action, data });
+            const returnedData = WebServicesStore.getSecondWebServiceData();
+            const { fileName } = returnedData;
+            expect(fileName).to.equal(data.fileName);
         });
     });
 

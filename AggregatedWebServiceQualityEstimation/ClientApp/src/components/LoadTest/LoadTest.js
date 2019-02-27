@@ -24,6 +24,7 @@ import LoadTestActions from '../../actions/LoadTestActions';
 import EstimationActions from '../../actions/EstimationActions';
 import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import WebServicesStore from '../../stores/WebServicesStore';
+import WebServicesActions from '../../actions/WebServicesActions';
 import FileUpload from '../common/FileUpload/FileUpload';
 import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
@@ -196,14 +197,20 @@ class LoadTest extends Component {
         } else if (files.length > 1) {
             displayFailureMessage("More than 1 file selected!");
         } else {
-            LoadTestActions.uploadLoadTestData({ files, webServiceId });
+            LoadTestActions.uploadLoadTestData.defer({ files, webServiceId });
+
+            const fileName = files[0].name;
+            WebServicesActions.setFileName.defer({
+                fileName,
+                webServiceId
+            });
         }
     }
 
     getLoadTestStateMessage = (testState) => {
         if (!isNil(testState)) {
             if (testState.isStarted && !testState.isFinished) {
-                return "Running...";
+                return "Running ...";
             } else if (testState.isWritingTestData) {
                 return "Writing test data ...";
             } else {
@@ -360,12 +367,12 @@ class LoadTest extends Component {
                                                     <ListGroupItem>
                                                         <LoadTestForm id='load-test-form' />
                                                         <ButtonToolbar id='button-toolbar-tests-controls'>
+                                                            <h5><b> Tests Controls: </b></h5>
                                                             {/*<OverlayTrigger
                                                                 trigger={'hover'}
                                                                 placement="bottom"
                                                                 overlay={this.renderValidateInputsTooltip}
                                                             >*/}
-                                                            <h5><b> Tests Controls: </b></h5>
                                                             <Button
                                                                 id="button-run-load-test"
                                                                 onClick={this.handleRunLoadTestButtonClick}
@@ -448,6 +455,7 @@ class LoadTest extends Component {
                                                         fileType=".csv"
                                                         disabled={areOperationsDenied}
                                                         onChange={(event) => this.handleFileUploadChange(event, "first")}
+                                                        helpText={first.fileName}
                                                     />
                                                     <FileUpload
                                                         id={'csv-metrics-file-second-web-service'}
@@ -455,6 +463,7 @@ class LoadTest extends Component {
                                                         buttonText="Add file"
                                                         fileType=".csv"
                                                         disabled={areOperationsDenied}
+                                                        helpText={second.fileName}
                                                         onChange={(event) => this.handleFileUploadChange(event, "second")}
                                                     />
                                                 </Panel.Body>

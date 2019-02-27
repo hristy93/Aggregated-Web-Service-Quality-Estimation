@@ -57,7 +57,7 @@ class FileUpload extends Component {
                         accept={fileType}
                     />
                 </ControlLabel>
-                {helpText && <HelpBlock>{helpText}</HelpBlock>}
+                {helpText && <HelpBlock>File name: {helpText}</HelpBlock>}
             </FormGroup>
         );
     }

@@ -95,5 +95,20 @@ describe('WebServicesActions', () => {
         expect(firstArg.action).to.equal(action);
         expect(firstArg.data).to.deep.equal(data);
     });
+
+    it('setFileName() passes the right arguments', () => {
+        const data = {
+            fileName: "test",
+            webServiceId: "first"
+        };
+        const action = WebServicesActions.SET_FILE_NAME;
+
+        WebServicesActions.setFileName(data);
+
+        var dispatcherArgs = dispatcherSpy.args[0];
+        var firstArg = dispatcherArgs[0];
+        expect(firstArg.action).to.equal(action);
+        expect(firstArg.data).to.deep.equal(data);
+    });
 });
 

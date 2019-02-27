@@ -1,6 +1,7 @@
 ﻿import alt from '../alt';
 import LoadTestActions from '../actions/LoadTestActions';
 import EstimationActions from '../actions/EstimationActions';
+import WebServicesActions from '../actions/WebServicesActions';
 import LoadTestChartsActions from '../actions/LoadTestChartsActions';
 import EstimationStore from '../stores/EstimationStore';
 import immutable from 'alt-utils/lib/ImmutableUtil';
@@ -46,6 +47,24 @@ class LoadTestStore {
 
         LoadTestActions.writeLoadTestData.defer("first");
         LoadTestActions.writeLoadTestData.defer("second");
+
+        WebServicesActions.setFileName.defer({
+            fileName: '',
+            webServiceId: "first"
+        });
+        WebServicesActions.setFileName.defer({
+            fileName: '',
+            webServiceId: "second"
+        });
+
+        this.setLoadTestDataSource({
+            isFromFile: false,
+            webServiceId: "first"
+        });
+        this.setLoadTestDataSource({
+            isFromFile: false,
+            webServiceId: "second"
+        });
     }
 
     readLoadTestData = ({ loadTestData, webServiceId }) => {
@@ -92,10 +111,14 @@ class LoadTestStore {
             this.setLoadTestDataSource({ isFromFile: true, webServiceId });
             this.setLoadTestDataSize({ loadTestDataSize: fileContentLines, webServiceId });
 
+            const isOtherWebServiceLoadTestDataFromFile = webServiceId === "first" ?
+                this.state.getIn(["second", "isFromFile"]) : this.state.getIn(["first", "isFromFile"]);
+
             const otherWebServiceLoadTestDataSize = webServiceId === "first" ?
                 this.state.getIn(["second", "loadTestDataSize"]) : this.state.getIn(["first", "loadTestDataSize"]);
 
-            if (otherWebServiceLoadTestDataSize !== 0 && otherWebServiceLoadTestDataSize !== fileContentLines) {
+            if (otherWebServiceLoadTestDataSize !== 0 && isOtherWebServiceLoadTestDataFromFile &&
+                otherWebServiceLoadTestDataSize !== fileContentLines) {
                 const alertMessage = "The the test data from the CSV file doesn't have the same number of lines as the previous one. " +
                     "Please check your data and upload the file again!";
                 const logMessage = "The load test data lines from the CSV file are inconsistent with the previous one!";
