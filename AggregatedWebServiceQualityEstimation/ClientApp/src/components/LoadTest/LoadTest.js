@@ -9,7 +9,6 @@ import {
     Panel,
     PanelGroup,
     ListGroupItem,
-    Tooltip
 } from 'react-bootstrap';
 import LoadTestMetricsForm from './../LoadTestMetrics/LoadTestMetricsForm';
 import LoadTestForm from './LoadTestForm';
@@ -26,6 +25,7 @@ import LoadTestChartsActions from '../../actions/LoadTestChartsActions';
 import WebServicesStore from '../../stores/WebServicesStore';
 import WebServicesActions from '../../actions/WebServicesActions';
 import FileUpload from '../common/FileUpload/FileUpload';
+import Tooltip from '../common/Tooltip/Tooltip';
 import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
@@ -283,8 +283,8 @@ class LoadTest extends Component {
         const isSecondWebServiceEstimationsPanelOpen = secondWebServiceEstimationData.isPanelVisible && areSecondWebServiceEstimationsAvailable;
 
         this.setCursorState(areOperationsDenied);
-
-        return (
+        
+                          return (
             <Grid fluid>
                 <Row className="show-grid">
                     <Col md={6}>
@@ -368,26 +368,34 @@ class LoadTest extends Component {
                                                         <LoadTestForm id='load-test-form' />
                                                         <ButtonToolbar id='button-toolbar-tests-controls'>
                                                             <h5><b> Tests Controls: </b></h5>
-                                                            {/*<OverlayTrigger
-                                                                trigger={'hover'}
-                                                                placement="bottom"
-                                                                overlay={this.renderValidateInputsTooltip}
-                                                            >*/}
-                                                            <Button
-                                                                id="button-run-load-test"
-                                                                onClick={this.handleRunLoadTestButtonClick}
+                                                            <Tooltip
+                                                                id="tooltip-button-run-load-test"
+                                                                title="Please enter valid URLs"
                                                                 disabled={isRunLoadTestButtonDisabled}
                                                             >
-                                                                Run Tests
-                                                            </Button>
-                                                            {/*</OverlayTrigger>*/}
-                                                            <Button
-                                                                id="button-cancel-load-test"
-                                                                onClick={this.handleCancelLoadTestButtonClick}
-                                                                disabled={!isTestRunning}
-                                                            >
-                                                                Cancel Tests
-                                                            </Button>
+                                                                <Button
+                                                                    id="button-run-load-test"
+                                                                    onClick={this.handleRunLoadTestButtonClick}
+                                                                    disabled={isRunLoadTestButtonDisabled}
+                                                                    style={isRunLoadTestButtonDisabled ? { pointerEvents: 'none' } : {}}
+                                                                >
+                                                                    Run Tests
+                                                                </Button>
+                                                             </Tooltip>
+                                                             <Tooltip 
+                                                                 id="tooltip-button-cancel-load-test"
+                                                                 title="The tests are not runnning"
+                                                                 disabled={!isTestRunning}
+                                                             >
+                                                                 <Button
+                                                                     id="button-cancel-load-test"
+                                                                     onClick={this.handleCancelLoadTestButtonClick}
+                                                                     disabled={!isTestRunning}
+                                                                     style={!isTestRunning ? { pointerEvents: 'none' } : {}}
+                                                                 >
+                                                                     Cancel Tests
+                                                                 </Button>
+                                                             </Tooltip>
                                                             <Button
                                                                 id="button-write-load-test-data"
                                                                 onClick={() => this.handleWriteLoadTestDataClick("first")}
