@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { FormGroup, ControlLabel, FormControl, Collapse } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import LoadTestActions from '../../actions/LoadTestActions';
 import LoadTestStore from '../../stores/LoadTestStore';
 import connectToStores from 'alt-utils/lib/connectToStores';

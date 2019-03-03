@@ -3,7 +3,6 @@ import LoadTestActions from '../actions/LoadTestActions';
 import EstimationActions from '../actions/EstimationActions';
 import WebServicesActions from '../actions/WebServicesActions';
 import LoadTestChartsActions from '../actions/LoadTestChartsActions';
-import EstimationStore from '../stores/EstimationStore';
 import immutable from 'alt-utils/lib/ImmutableUtil';
 import Immutable from 'immutable';
 import isNil from 'lodash/isNil';
@@ -38,33 +37,41 @@ class LoadTestStore {
         });
     }
 
-    runLoadTest = (testResult) => {
-        LoadTestActions.setTestState.defer({
-            isStarted: false,
-            isFinished: true,
-            isWritingTestData: true
-        });
+    runLoadTest = ({ isTestSuccessful }) => {
+        if (isTestSuccessful) {
+            LoadTestActions.setTestState.defer({
+                isStarted: false,
+                isFinished: true,
+                isWritingTestData: true
+            });
 
-        LoadTestActions.writeLoadTestData.defer("first");
-        LoadTestActions.writeLoadTestData.defer("second");
+            LoadTestActions.writeLoadTestData.defer("first");
+            LoadTestActions.writeLoadTestData.defer("second");
 
-        WebServicesActions.setFileName.defer({
-            fileName: '',
-            webServiceId: "first"
-        });
-        WebServicesActions.setFileName.defer({
-            fileName: '',
-            webServiceId: "second"
-        });
+            WebServicesActions.setFileName.defer({
+                fileName: '',
+                webServiceId: "first"
+            });
+            WebServicesActions.setFileName.defer({
+                fileName: '',
+                webServiceId: "second"
+            });
 
-        this.setLoadTestDataSource({
-            isFromFile: false,
-            webServiceId: "first"
-        });
-        this.setLoadTestDataSource({
-            isFromFile: false,
-            webServiceId: "second"
-        });
+            this.setLoadTestDataSource({
+                isFromFile: false,
+                webServiceId: "first"
+            });
+            this.setLoadTestDataSource({
+                isFromFile: false,
+                webServiceId: "second"
+            });
+        } else {
+            LoadTestActions.setTestState.defer({
+                isStarted: false,
+                isFinished: false,
+                isWritingTestData: false
+            });
+        }
     }
 
     readLoadTestData = ({ loadTestData, webServiceId }) => {
@@ -123,13 +130,12 @@ class LoadTestStore {
                     "Please check your data and upload the file again!";
                 const logMessage = "The load test data lines from the CSV file are inconsistent with the previous one!";
                 displayFailureMessage(alertMessage, logMessage);
-
                 return;
-            } else {
-                const alertMessage = `The CSV file for the ${webServiceId} web service is uploaded successfully!`;
-                const logMessage = alertMessage;
-                displaySuccessMessage(alertMessage, logMessage);
-            }
+            } 
+
+            const alertMessage = `The CSV file for the ${webServiceId} web service is uploaded successfully!`;
+            const logMessage = alertMessage;
+            displaySuccessMessage(alertMessage, logMessage);
 
             LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 

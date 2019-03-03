@@ -1,13 +1,8 @@
 ﻿import React, { Component } from 'react';
-import {
-    Button,
-    ListGroup,
-    ListGroupItem
-} from 'react-bootstrap';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
 import startCase from 'lodash/startCase';
-import EstimationActions from '../../actions/EstimationActions';
 import isNumber from 'lodash/isNumber';
 import { toPercentage } from '../../utils/displayData';
 
@@ -103,7 +98,6 @@ class ClusterEstimation extends Component {
             clusterData,
             metricsInfo,
             loadTestDataSize,
-            areOperationsDenied
        } = this.props;
 
         let outliersPercentage;
@@ -119,13 +113,6 @@ class ClusterEstimation extends Component {
                 id={`cluster-estimation-${webServiceId}-web-service`}
                 style={{ marginTop: "2rem" }}
             >
-                {/*<Button
-                    id={`button-get=cluster-estimation-${webServiceId}-web-service`}
-                    disabled={areOperationsDenied}
-                    onClick={() => EstimationActions.getClusterEstimatorResult(webServiceId)}
-                >
-                    Get Metrics Consistency Data
-                </Button>*/} 
                 {
                     isClusterDataVisible && 
                     <div id={`cluster-estimation-data-${webServiceId}-web-service`} style={{ marginTop: "1rem" }}>

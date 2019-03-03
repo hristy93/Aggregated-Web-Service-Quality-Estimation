@@ -21,11 +21,9 @@ class Tooltip extends Component {
             disabled,
             children
         } = this.props;
-
-        //const style = !isDisabled ? { display: 'inline-block' } : { display: 'inline-block', cursor: 'not-allowed' };
         const style = { display: 'inline-block', cursor: 'not-allowed' };
         const tooltip = <ReactTooltip id={id}>{title}</ReactTooltip>;
-        console.log('disabled', disabled);
+
         return (
             disabled ? (
                 <OverlayTrigger rootClose placement="top" overlay={tooltip}>

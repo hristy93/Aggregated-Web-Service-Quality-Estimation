@@ -95,14 +95,12 @@ class EstimationContainer extends Component {
             webServiceId,
             clusterData,
             metricsInfo,
-            loadTestDataSize,
-            areOperationsDenied
+            loadTestDataSize
         };
 
         const statisticsEstimatorProps = {
             webServiceId,
             statisticalData,
-            areOperationsDenied,
             loadTestData,
             metricsInfo
         };

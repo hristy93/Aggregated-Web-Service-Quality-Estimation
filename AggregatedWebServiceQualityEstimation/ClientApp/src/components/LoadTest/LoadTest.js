@@ -219,16 +219,6 @@ class LoadTest extends Component {
         }
     }
 
-    renderValidateInputsTooltip = (
-            <Tooltip
-                id="tooltip-run-load-test"
-                placement="top"
-                className="in"
-            >
-                <strong>Enter or check the web service URLs!</strong>
-            </Tooltip>
-        );
-
     handleEstimationsPanelVisibility = (isPanelVisible, webServiceId) => {
         EstimationActions.setEstimationsPanelVisibility({
             isPanelVisible,
@@ -278,13 +268,12 @@ class LoadTest extends Component {
         const areSecondWebServiceEstimationsAvailable = !isEmpty(secondWebServiceEstimationData.apdexScoreData) ||
             !isEmpty(secondWebServiceEstimationData.clusterData) || !isEmpty(secondWebServiceEstimationData.statisticalData);
 
-
         const isFirstWebServiceEstimationsPanelOpen = firstWebServiceEstimationData.isPanelVisible && areFirstWebServiceEstimationsAvailable;
         const isSecondWebServiceEstimationsPanelOpen = secondWebServiceEstimationData.isPanelVisible && areSecondWebServiceEstimationsAvailable;
 
         this.setCursorState(areOperationsDenied);
         
-                          return (
+        return (
             <Grid fluid>
                 <Row className="show-grid">
                     <Col md={6}>

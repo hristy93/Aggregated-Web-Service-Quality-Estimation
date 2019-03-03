@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Table } from 'react-bootstrap';
-import EstimationActions from '../../actions/EstimationActions';
+import { Table } from 'react-bootstrap';
 import startCase from 'lodash/startCase';
 import { toPercentage } from '../../utils/displayData';
 
@@ -12,7 +11,6 @@ class StatisticalEstimation extends Component {
         const {
             webServiceId,
             statisticalData,
-            areOperationsDenied,
             loadTestData,
             metricsInfo
         } = this.props;
@@ -26,40 +24,10 @@ class StatisticalEstimation extends Component {
                 id={`statistical-estimation-${webServiceId}-web-service`}
                 style={{ marginTop: "2rem" }}
             >
-                {/*<Button
-                    id={`button-get-statistical-estimation-data-${webServiceId}-web-service`}
-                    disabled={areOperationsDenied}
-                    onClick={() => EstimationActions.getStatisticalEstimatorResult(webServiceId)}
-                >
-                    Get Statistical Data
-                </Button>*/}
                 <div
                     id={`statistical-data-${webServiceId}-web-service`}
                     style={{ marginTop: "1rem" }}
                 >
-                    {/*
-                        statisticalData.map((statisticalItem) => {
-                            return (
-                                <div
-                                    key={`${statisticalItem.metricName}-percentile-data-${webServiceId}-web-service`}
-                                    id={`${statisticalItem.metricName}-percentile-data-${webServiceId}-web-service`}
-                                >
-                                    <h4> {startCase(statisticalItem.metricName)} </h4>
-                                    {
-                                        statisticalItem.metricName.toLocaleLowerCase().includes("success") &&
-                                        <p> Success Rate: {toPercentage(successRate, decimalPlacePrecision)} </p>
-                                    }
-                                    {
-                                        statisticalItem.metricName.toLocaleLowerCase().includes("fail") &&
-                                        <p> Failure Rate: {toPercentage((1 - successRate), decimalPlacePrecision)} </p>
-                                    }
-                                    95% over {statisticalItem.percentile95.toFixed(decimalPlacePrecision)} ({toPercentage(statisticalItem.percentageAbovePercentile95, decimalPlacePrecision)}) <br />
-                                    99% over {statisticalItem.percentile99.toFixed(decimalPlacePrecision)} ({toPercentage(statisticalItem.percentageAbovePercentile99, decimalPlacePrecision)}) <br />
-                                    <br />
-                                </div>
-                            );
-                        })
-                    */}
                     {   
                         (metricsInfo['SuccessfulRequestsPerSecond'] || metricsInfo['FailedRequestsPerSecond']) &&
                         <div
