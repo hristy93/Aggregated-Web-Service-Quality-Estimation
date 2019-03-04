@@ -8,6 +8,7 @@ import { mount } from 'enzyme';
 import { beforeEach, afterEach } from 'mocha';
 import noop from 'lodash/noop';
 
+import { Glyphicon } from 'react-bootstrap';
 import { ApdexScoreEstimation } from '../../../components/Estimation/ApdexScoreEstimation';
 import EstimationActions from '../../../actions/EstimationActions';
 
@@ -57,6 +58,11 @@ describe('<ApdexScoreEstimation />', () => {
         
         expect(lineChart).to.have.lengthOf(1);
         expect(apdexScoreChart).to.have.lengthOf(1);
+    });
+
+    it('renders Glyphicon for the Apdex Score info', () => {
+        const glyphiconApdexScoreInfo = wrapper.find(Glyphicon);
+        expect(glyphiconApdexScoreInfo).to.have.lengthOf(1);
     });
 
     it('does not render anything when the Apdex Score data is not present', () => {

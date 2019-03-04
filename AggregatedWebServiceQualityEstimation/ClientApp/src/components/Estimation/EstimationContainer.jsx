@@ -10,6 +10,7 @@ import EstimationStore from '../../stores/EstimationStore';
 import LoadTestChartsStore from '../../stores/LoadTestChartsStore';
 import LoadTestStore from '../../stores/LoadTestStore';
 import LoadTestMetricsStore from '../../stores/LoadTestMetricsStore';
+import Popover from '../../components/common/Popover/Popover';
 
 class EstimationContainer extends Component {
     static getStores() {
@@ -37,6 +38,25 @@ class EstimationContainer extends Component {
         const inputValue = event.target.value;
 
         EstimationActions.setApdexScoreLimit(inputValue);
+    }
+
+    renderApdexScoreInfo = (webServiceId) => {
+        const title = "Apdex Score Information";
+        const description = (
+            <h5> 
+                Apdex Score is a numerical measure of user satisfaction with the performance (response time) of a
+                web application. Its values are between 0 and 1 (0 = the user is not satisfied,
+                1 = the user is satisfied)
+            </h5>
+        );
+        return (
+            <Popover 
+                id={`apdex-score-info-${webServiceId}-web-service`}
+                title={title}
+                position="right"
+                description={description}
+            />
+        );
     }
 
     render() {
@@ -140,6 +160,8 @@ class EstimationContainer extends Component {
                             toggle
                         >
                             <b>Apdex Score Estimation Data</b>
+                            {'   '}
+                            {this.renderApdexScoreInfo(webServiceId)}
                         </Panel.Title>
                     </Panel.Heading>
                     <Panel.Body

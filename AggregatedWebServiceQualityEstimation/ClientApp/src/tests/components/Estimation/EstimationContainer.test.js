@@ -8,6 +8,7 @@ import { mount } from 'enzyme';
 import { beforeEach, afterEach } from 'mocha';
 import noop from 'lodash/noop';
 
+import { Glyphicon } from 'react-bootstrap';
 import { EstimationContainer } from '../../../components/Estimation/EstimationContainer';
 
 import {
@@ -118,6 +119,11 @@ describe('<EstimationContainer />', () => {
 
         const statisticalEstimationPanelBody = wrapper.find(`#panel-body-statistical-estimation-${props.webServiceId}-web-service`).at(0);
         expect(statisticalEstimationPanelBody).to.have.lengthOf(1);
+    });
+
+    it('renders Glyphicon for the Apdex Score info', () => {
+        const glyphiconApdexScoreInfo = wrapper.find(Glyphicon);
+        expect(glyphiconApdexScoreInfo).to.have.lengthOf(1);
     });
 });
 
