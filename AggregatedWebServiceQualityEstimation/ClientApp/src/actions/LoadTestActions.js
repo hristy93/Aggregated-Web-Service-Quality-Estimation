@@ -82,7 +82,6 @@ class LoadTestActions {
                         return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);
                     });
                     parsedResultData = parsedResultData.filter(item => item.IntervalStartTime !== "");
-                    //console.log("parsedResultData", webServiceId, parsedResultData);
                     dispatch({ loadTestData: parsedResultData, webServiceId });
                 })
                 .catch((error) => {

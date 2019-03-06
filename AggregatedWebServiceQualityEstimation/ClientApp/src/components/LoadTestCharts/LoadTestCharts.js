@@ -37,28 +37,12 @@ class LoadTestCharts extends Component {
                 LoadTestChartsActions.setChartsSync({ syncCharts: isChecked, webServiceId: webServiceId });
                 break;
             case `${webServiceId}-web-service-switch-show-reference-lines`:
-                // need to check if the data is the same 
-                //if (this.props.statisticalData.length === 0) {
-                //    EstimationActions.getStatisticalEstimatorResult();
-                //}
                 if (isChecked) {
                     EstimationActions.getStatisticalEstimatorResult(webServiceId);
                 }
 
                 LoadTestChartsActions.setAllReferenceLinesVisibility.defer({ areReferenceLinesVisible: isChecked, webServiceId });
                 break;
-            // case "switch-line-visibility-SuccessfulRequestsPerSecond":
-            //     LoadTestChartsActions.setLineVisibility.defer("SuccessfulRequestsPerSecond");
-            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("SuccessfulRequestsPerSecond");
-            //     break;
-            // case "switch-line-visibility-FailedRequestsPerSecond":
-            //     LoadTestChartsActions.setLineVisibility.defer("FailedRequestsPerSecond");
-            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("FailedRequestsPerSecond");
-            //     break;
-            // case "switch-line-visibility-ReceivedKilobytesPerSecond":
-            //     LoadTestChartsActions.setLineVisibility.defer("ReceivedKilobytesPerSecond");
-            //     LoadTestChartsActions.setReferenceLinesVisibility.defer("ReceivedKilobytesPerSecond");
-            //     break;
             default:
                 const alertMessage = "There is a problem with the switch!";
                 const errorMessage = `There is no switch with id = ${id}`;
@@ -98,20 +82,11 @@ class LoadTestCharts extends Component {
 
                 return {
                     metricName: item.metricName,
-
-                    // Use mean and stdev
-                    mean: item.mean,
-                    lowerInnerFenceBound: item.mean - standardDeviation,
-                    upperInnerFenceBound: item.mean + standardDeviation,
-                    lowerOuterFenceBound: item.mean - standardDeviation * 2,
-                    upperOuterFenceBound: item.mean + standardDeviation * 2,
-
-                    // Use median and IQR
-                    //median: item.median,
-                    //lowerInnerFenceBound: item.lowerQuartile - innerQuartileDistance * 1.5,
-                    //upperInnerFenceBound: item.upperQuartile + innerQuartileDistance * 1.5,
-                    //lowerOuterFenceBound: item.lowerQuartile - innerQuartileDistance * 3,
-                    //upperOuterFenceBound: item.upperQuartile + innerQuartileDistance * 3
+                    median: item.median,
+                    lowerInnerFenceBound: item.lowerQuartile - innerQuartileDistance * 1.5,
+                    upperInnerFenceBound: item.upperQuartile + innerQuartileDistance * 1.5,
+                    lowerOuterFenceBound: item.lowerQuartile - innerQuartileDistance * 3,
+                    upperOuterFenceBound: item.upperQuartile + innerQuartileDistance * 3
                 };
             });
         }
@@ -123,7 +98,6 @@ class LoadTestCharts extends Component {
 
         const chartsCommonProps = {
             axisXKey: "IntervalStartTime",
-            //axisXLabel="Time Intervals"
             data: chartsData,
             brushOnChange: brushOnChange,
             brushStartIndex: brushStartIndex,
@@ -167,7 +141,6 @@ class LoadTestCharts extends Component {
                                 id='responseTime'
                                 {...chartsCommonProps }
                                 axisYUnit="s"
-                                //axisYLabel="Response Time"
                                 lines={chartsLinesData['responseTime']}
                                 isVisible={isResponseTimeChartVisible}
                             />
@@ -177,7 +150,6 @@ class LoadTestCharts extends Component {
                                 id='requests'
                                 {...chartsCommonProps}
                                 axisYUnit="rps"
-                                //axisYLabel="Requests Per Second"
                                 lines={chartsLinesData['requests']}
                                 isVisible={isRequestsChartVisible}
                             />
@@ -187,7 +159,6 @@ class LoadTestCharts extends Component {
                                 id='throughput'
                                 {...chartsCommonProps}
                                 axisYUnit="KBps"
-                                //axisYLabel="Throughput"
                                 lines={chartsLinesData['throughput']}
                                 isVisible={isThroughputChartVisible}
                             />

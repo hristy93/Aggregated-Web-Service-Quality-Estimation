@@ -11,14 +11,14 @@ class WebServicesStore {
 
         this.state = Immutable.Map({
             first: Immutable.Map({
-                url: "https://jsonplaceholder.typicode.com/todos/1",
+                url: "",
                 isUrlValid: false,
                 requestType: "GET",
                 requestPostData: null,
                 fileName: ''
             }),
             second: Immutable.Map({
-                url: "https://jsonplaceholder.typicode.com/todos/2",
+                url: "",
                 isUrlValid: false,
                 requestType: "GET",
                 requestPostData: null,

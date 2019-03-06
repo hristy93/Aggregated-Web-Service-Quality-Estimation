@@ -14,8 +14,6 @@ let wrapper;
 
 describe('<App />', () => {
     it('renders Layout', () => {
-        //const div = document.createElement('div');
-        //ReactDOM.render(<App />, div);
         wrapper = mount(<App />);
         expect(wrapper.find(Layout)).to.have.lengthOf(1);
     });

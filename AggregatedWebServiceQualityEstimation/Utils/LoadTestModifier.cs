@@ -43,8 +43,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             XmlNode requestNode = webServiceId == "first" ?
                 document.LastChild.FirstChild.FirstChild :
                 document.LastChild.FirstChild.ChildNodes[1];
-            //document.LastChild.FirstChild :
-            //document.LastChild.LastChild;
 
             if (isPostRequest)
             {

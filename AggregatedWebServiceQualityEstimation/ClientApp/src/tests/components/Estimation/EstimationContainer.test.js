@@ -121,9 +121,9 @@ describe('<EstimationContainer />', () => {
         expect(statisticalEstimationPanelBody).to.have.lengthOf(1);
     });
 
-    it('renders Glyphicon for the Apdex Score info', () => {
+    it('renders two Glyphicons for the Apdex Score info', () => {
         const glyphiconApdexScoreInfo = wrapper.find(Glyphicon);
-        expect(glyphiconApdexScoreInfo).to.have.lengthOf(1);
+        expect(glyphiconApdexScoreInfo).to.have.lengthOf(2);
     });
 });
 

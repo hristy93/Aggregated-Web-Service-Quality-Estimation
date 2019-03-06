@@ -105,7 +105,6 @@ describe('LoadTestStore', () => {
                 duration: '00:10:00'
             };
             const setTestStateSpy = sinon.spy(LoadTestActions.setTestState, 'defer');
-            // const writeLoadTestDataSpy = sinon.spy(LoadTestActions.writeLoadTestData, 'defer');
     
             LoadTestActions.runLoadTest(data);
     
@@ -136,12 +135,8 @@ describe('LoadTestStore', () => {
                 }
             });
 
-        expect(setTestStateSpy.calledOnce).to.equal(true);
-        // expect(writeLoadTestDataSpy.calledTwice).to.equal(true);
-        
-        setTestStateSpy.restore();
-        // writeLoadTestDataSpy.restore();
-        // serviceStub.restore();
+            expect(setTestStateSpy.calledOnce).to.equal(true);
+            setTestStateSpy.restore();
         });
 
         it('setLoadTestDuration() properly the tests duration', () => {

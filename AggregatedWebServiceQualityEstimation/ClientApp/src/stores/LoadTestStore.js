@@ -24,7 +24,6 @@ class LoadTestStore {
                 loadTestDataSize: 0
             }),
             loadTestDuration: "00:00:30",
-            url: "https://jsonplaceholder.typicode.com/todos/1",
             isUrlValid: false,
             requestType: "GET",
             testState: {
@@ -75,7 +74,6 @@ class LoadTestStore {
     }
 
     readLoadTestData = ({ loadTestData, webServiceId }) => {
-        //console.log("loadTestData", webServiceId, loadTestData);
         if (!isNil(loadTestData)) {
             this.setState(this.state.setIn([webServiceId, "loadTestData"], loadTestData));
 
@@ -103,7 +101,6 @@ class LoadTestStore {
         if (isLoadTestDataWritten) {
             LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 
-            // if you want to generate the estimators result after displaying the metrics data
             EstimationActions.getAllEstimatorsResults.defer(webServiceId);
         }
 
@@ -139,7 +136,6 @@ class LoadTestStore {
 
             LoadTestActions.readLoadTestData.defer({ fromFile: true, webServiceId });
 
-            // if you want to generate the estimators result after displaying the metrics data
             EstimationActions.getAllEstimatorsResults.defer(webServiceId);
         }
     }

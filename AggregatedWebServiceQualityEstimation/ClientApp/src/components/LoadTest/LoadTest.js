@@ -38,7 +38,6 @@ class LoadTest extends Component {
         return [LoadTestStore, WebServicesStore, EstimationStore, LoadTestChartsStore];
     }
 
-    // TODO: check if the props argument in getPropsFromStores works
     static getPropsFromStores() {
         const newProps = {
             firstServiceLoadTestData: LoadTestStore.getFirstServiceLoadTestData(),
@@ -87,10 +86,6 @@ class LoadTest extends Component {
         data.push(firstWebServiceRequestData);
         data.push(secondWebServiceRequestData);
 
-        //if (!isNil(loadTestDuration)) {
-        //    data["duration"] = loadTestDuration;
-        //}
-
         if (!isNil(data)) {
             LoadTestActions.clearLoadTestData();
             LoadTestActions.runLoadTest.defer({ data, duration: loadTestDuration });
@@ -99,8 +94,6 @@ class LoadTest extends Component {
                 isStarted: true,
                 isFinished: false
             });
-
-            //EstimationActions.clearApdexScoreData.defer();
 
             this.setTestTimer(loadTestDuration);
         } else {
@@ -153,19 +146,9 @@ class LoadTest extends Component {
             LoadTestActions.setTimeLeft(diffTime);
 
             if (diff % 3 === 0) {
-                // Load the test data periodically while the test is running
-                //new Promise((resolve) => {
-                //    resolve(LoadTestActions.readLoadTestData.defer(false, "first"));
-                //});
-                //promise.then(() => EstimationActions.getApdexScoreEstimatorResult.defer(apdexScoreLimit));
-
                 LoadTestActions.readLoadTestData.defer({ fromFile: false, webServiceId: "first" });
             }
             if (diff % 5 === 0) {
-                //new Promise((resolve) => {
-                //    resolve(LoadTestActions.readLoadTestData.defer(false, "second"));
-                //});
-
                 LoadTestActions.readLoadTestData.defer({ fromFile: false, webServiceId: "second" });
             }
 

@@ -513,14 +513,5 @@ describe('<LoadTest />', () => {
             expect(metricsDataSourceFileBody).to.have.lengthOf(1);
         });
     });
-
-    //it('fires handleLoadTestDurationChange() when the duration is changed', () => {
-    //    const changeSpy = sinon.spy(LoadTestActions, 'setLoadTestDuration');
-    //    const formControl = wrapper.find(FormControl);
-    //    formControl.simulate('change');
-
-    //    expect(changeSpy.calledOnce).to.equal(true);
-    //    changeSpy.restore();
-    //});
 });
 

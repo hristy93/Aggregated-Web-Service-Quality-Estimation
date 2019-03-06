@@ -3,12 +3,10 @@ using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Statistics;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AggregatedWebServiceQualityEstimation.Estimators
 {
@@ -44,12 +42,12 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 double mean;
                 double variance;
                 StatisticalEstimatorResult statisticalEstimatorResult;
+
                 foreach (var metrics in MetricsData)
                 {
                     metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
                         .Skip(1)
                         .Select(x => Double.Parse(x, _cultureInfo)));
-                        //.Select(x => Math.Round(x, 3)));
 
                     fiveNumberSummary = Statistics.FiveNumberSummary(metricsVector.ToArray());
                     mean = Statistics.Mean(metricsVector);
@@ -87,7 +85,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
     }
