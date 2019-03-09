@@ -54,7 +54,8 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             bool fromFile = true, bool isFiltered = true)
         {
             var fileLines = metricsData.Split(Environment.NewLine);
-            var transformedFileLines = fileLines.Select(x => x.Split(','));
+            var filteredFileLines = fileLines.Where(s => !String.IsNullOrWhiteSpace(s));
+            var transformedFileLines = filteredFileLines.Select(x => x.Split(','));
             var trasformedMetricsData = HandleMetricsDataTransformation(transformedFileLines, webServiceId, byRow, fromFile,
                 isFiltered);
 
@@ -268,6 +269,11 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             if (isFiltered && _metricsUsed.Count != 0)
             {
                 var metricsNames = transformedFileLines.ToList()[0];
+                //if (metricsNames != _metricsUsed.Keys.ToArray())
+                //{
+                //    throw new ArgumentException("The inputed metrics data is in invalid format for transformation by rows!");
+                //}
+
                 var metricsIndeces = metricsNames
                     .Where(item => item == INTERVAL_START_TIME || item == INTERVAL_END_TIME ||
                     (_metricsUsed.ContainsKey(item) && _metricsUsed[item]))

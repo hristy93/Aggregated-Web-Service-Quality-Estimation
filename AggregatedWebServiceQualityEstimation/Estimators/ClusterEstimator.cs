@@ -1,4 +1,5 @@
 ﻿using AggregatedWebServiceQualityEstimation.Estimators.Interfaces;
+using AggregatedWebServiceQualityEstimation.Models;
 using AggregatedWebServiceQualityEstimation.Utils.Interfaces;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
@@ -11,10 +12,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 {
     public class ClusterEstimator : IClusterEstimator, IMetricsData
     {
-        public IList<double> ClustersCentersPotentials { get; private set; }
-        public IList<IList<double>> ClustersCenters { get; private set; }
-        public IList<double> ClustersDensities { get; private set; }
-        public IList<double> ClustersSpreads { get; private set; }
+        private IList<double> _clustersCentersPotentials;
+        private IList<IList<double>> _clustersCenters;
+        private IList<double> _clustersDensities;
+        private IList<double> _clustersSpreads;
 
         public IList<string[]> MetricsData { get; set; }
 
@@ -40,10 +41,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             _loadTestDataPreprocessor = loadTestDataPreprocessor;
             _clusterDensitiesCandidates = new Dictionary<IList<double>, double>();
             _vectorsDistances = new Dictionary<(IList<double> firstVector, IList<double> secondVector), double>();
-            ClustersCentersPotentials = new List<double>();
-            ClustersDensities = new List<double>();
-            ClustersCenters = new List<IList<double>>();
-            ClustersSpreads = new List<double>();
+            _clustersCentersPotentials = new List<double>();
+            _clustersDensities = new List<double>();
+            _clustersCenters = new List<IList<double>>();
+            _clustersSpreads = new List<double>();
         }
 
         public void GetMetricsData(string webServiceId, bool fromFile, bool byRow)
@@ -53,7 +54,29 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             _metricsCount = MetricsData.Count;
         }
 
-        public void FindDensestClusterCenter()
+        public IList<ClusterEstimation> FindClusterEstimatorResult()
+        {
+            FindDensestCluster();
+            FindClustersDensities();
+            var clusterEstimatorResult = new List<ClusterEstimation>();
+
+            for (int i = 0; i < _clustersCenters.Count; i++)
+            {
+                var clusterEstimation = new ClusterEstimation()
+                {
+                    Center = _clustersCenters[i],
+                    Potential = _clustersCentersPotentials[i],
+                    Density = _clustersDensities[i],
+                    Spread = _clustersSpreads[i]
+                };
+
+                clusterEstimatorResult.Add(clusterEstimation);
+            }
+
+            return clusterEstimatorResult;
+        }
+
+        private void FindDensestCluster()
         {
             try
             {
@@ -106,12 +129,12 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 }
 
                 _densestClusterPotential = _potentials.Max();
-                ClustersCentersPotentials.Add(_densestClusterPotential);
+                _clustersCentersPotentials.Add(_densestClusterPotential);
 
                 maxPotentialIndex = _potentials.IndexOf(_densestClusterPotential);
                 _densestClusterCenter = Vector<double>.Build.DenseOfEnumerable(MetricsData[maxPotentialIndex].Skip(2)
                     .Select(x => Double.Parse(x, _cultureInfo)));
-                ClustersCenters.Add(_densestClusterCenter);
+                _clustersCenters.Add(_densestClusterCenter);
 
                 var pointsInCluster = _vectorsDistances
                     .Where(s => Object.Equals(s.Key.firstVector, _densestClusterCenter) && s.Value.CompareTo(_radius, _epsilon) < 0)
@@ -119,9 +142,9 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 var numberOfPointInCluseter = pointsInCluster.Count();
 
                 numberOfPointInCluseter++;
-                ClustersSpreads.Add((double) numberOfPointInCluseter / _metricsCount);                
+                _clustersSpreads.Add((double) numberOfPointInCluseter / _metricsCount);                
 
-                FindOtherClusterCenters();
+                FindOtherClusters();
             }
             catch (Exception ex)
             {
@@ -129,7 +152,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             }
         }
 
-        public void FindOtherClusterCenters()
+        private void FindOtherClusters()
         {
             try
             {
@@ -174,14 +197,14 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             }
         }
 
-        public void FindClustersDensities()
+        private void FindClustersDensities()
         {
             try
             {
-                foreach (var clusterCenter in ClustersCenters)
+                foreach (var clusterCenter in _clustersCenters)
                 {
                     var clusterDensisty = _clusterDensitiesCandidates[clusterCenter];
-                    ClustersDensities.Add(clusterDensisty);
+                    _clustersDensities.Add(clusterDensisty);
                 }
             }
             catch (Exception ex)
@@ -203,7 +226,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 _potentials = newPotentials;
 
                 //Find other clusters
-                FindOtherClusterCenters();
+                FindOtherClusters();
             }
             else if (newDensestClusterCenterPotential.CompareTo((_densestClusterPotential * _lowerEpsilon), _epsilon) < 0)
             {
@@ -211,7 +234,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             }
             else
             {
-                var distanceToClosestCluster = ClustersCenters
+                var distanceToClosestCluster = _clustersCenters
                     .Select(c => Distance.Euclidean(Vector<double>.Build.DenseOfEnumerable(c), newClusterCenter))
                     .Min();
                 if ((distanceToClosestCluster / _initialRadius)
@@ -221,7 +244,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     _potentials = newPotentials;
 
                     //Find other clusters
-                    FindOtherClusterCenters();
+                    FindOtherClusters();
                 }
                 else
                 {
@@ -236,8 +259,8 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
         private void AddOtherClustersData(IList<double> newPotentials, double newDensestClusterCenterPotential,
             Vector<double> newClusterCenter)
         {
-            ClustersCenters.Add(newClusterCenter);
-            ClustersCentersPotentials.Add(newDensestClusterCenterPotential);
+            _clustersCenters.Add(newClusterCenter);
+            _clustersCentersPotentials.Add(newDensestClusterCenterPotential);
             _densestClusterCenter = newClusterCenter;
 
             var numberOfPointsInCluster = _vectorsDistances
@@ -246,7 +269,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
             // Add the cluster center
             numberOfPointsInCluster++;
-            ClustersSpreads.Add((double)numberOfPointsInCluster / _metricsCount);
+            _clustersSpreads.Add((double)numberOfPointsInCluster / _metricsCount);
         }
     }
 }

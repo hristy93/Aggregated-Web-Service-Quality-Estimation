@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             File.WriteAllText(loadTestFilePath, testData);
         }
 
-        public string ReadTestData(string webServiceId, bool fromFile = true)
+        public string ReadTestData(string webServiceId, bool fromFile = true, string filepath = "")
         {
             string result = "";
 
@@ -51,7 +52,16 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             {
                 if (fromFile)
                 {
-                    var loadTestFilePath = webServiceId == "first" ? loadTestFirstServiceFilePath : loadTestSecondServiceFilePath;
+                    string loadTestFilePath;
+                    if (!String.IsNullOrEmpty(filepath))
+                    {
+                        loadTestFilePath = filepath;
+                    }
+                    else
+                    {
+                        loadTestFilePath = webServiceId == "first" ? loadTestFirstServiceFilePath : loadTestSecondServiceFilePath;
+                    }
+                   
                     using (StreamReader myFile = new StreamReader(loadTestFilePath))
                     {
                         result = myFile.ReadToEnd();
@@ -87,7 +97,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
             return fileContent;
         }
 
-        private string GetTestDataFromDatabase(string webServiceId)
+        public string GetTestDataFromDatabase(string webServiceId)
         {
             StringBuilder testDataBuilder = new StringBuilder();
             string connectionString = _configuration.GetValue<string>("ConnectionString");

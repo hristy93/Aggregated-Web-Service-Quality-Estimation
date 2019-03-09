@@ -86,7 +86,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -138,7 +138,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -162,7 +162,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -224,7 +224,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
     }
