@@ -7,7 +7,10 @@ const displayFailureMessage = (alertMessage, error = null) => {
         if (!isNil(error.response)) {
             if (!isNil(error.request)) {
                 console.log(`Error with status ${error.response.status} with message '${error.message}'` +
-                    ` and data: \n ${ error.response.data }`);
+                    ` and data: \n ${error.response.data}`);
+                if (!error.response.data.includes('html')) {
+                    alertMessage += ' ' + error.response.data;
+                }
             } else {
                 console.log(`Error with status ${error.response.status} and data:\n ${error.response.data}`);
             }

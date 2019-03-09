@@ -19,7 +19,7 @@ class EstimationForm extends Component {
         return (
             <div id={`estimations-options-${webServiceId}-web-service`}>
                  <FormGroup>
-                     <ControlLabel>Response Time Limit (in seconds): </ControlLabel>
+                     <ControlLabel>Apdex Score Limit (in seconds): </ControlLabel>
                      <FormControl
                          id={`input-apdex-score-estimation-limit-${webServiceId}-web-service`}
                          type="text"
@@ -37,3 +37,4 @@ class EstimationForm extends Component {
 }
 
 export default EstimationForm;
+export { EstimationForm };

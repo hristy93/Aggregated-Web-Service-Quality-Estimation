@@ -6,7 +6,8 @@ const tempDate = '1970/01/01 ';
 
 class EstimationActions {
     constructor() {
-        this.generateActions("setApdexScoreLimit", "clearApdexScoreData", "setEstimationsPanelVisibility");
+        this.generateActions("setApdexScoreLimit", "clearApdexScoreData", "setEstimationsPanelVisibility",
+        "getAllEstimatorsResults");
     }
 
     getClusterEstimatorResult = (webServiceId) => {
@@ -30,7 +31,6 @@ class EstimationActions {
             EstimationServices.getStatisticalEstimatorResult(webServiceId)
                 .then((response) => {
                     // handle success
-                    //console.log(response);
                     const statisticalData = response.data;
 
                     dispatch({ statisticalData, webServiceId });
@@ -48,7 +48,6 @@ class EstimationActions {
             EstimationServices.getFuzzyLogicEstimatorResult(webServiceId)
                 .then((response) => {
                     // handle success
-                    //console.log(response);
                     const fuzzyLogicData = response.data;
 
                     dispatch({ fuzzyLogicData, webServiceId });
@@ -66,7 +65,6 @@ class EstimationActions {
             EstimationServices.getApdexScoreEstimatorResult(apdexScoreLimit, webServiceId)
                 .then((response) => {
                     // handle success
-                    //console.log(response);
                     const apdexScoreData = response.data;
                     apdexScoreData.apdexScoreEstimations.sort(function (a, b) {
                         return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);

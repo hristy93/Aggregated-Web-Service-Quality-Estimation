@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { FormGroup, ControlLabel, FormControl, Collapse } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import LoadTestActions from '../../actions/LoadTestActions';
 import LoadTestStore from '../../stores/LoadTestStore';
 import connectToStores from 'alt-utils/lib/connectToStores';
@@ -28,8 +28,8 @@ class LoadTestForm extends Component {
             testState
         } = this.props;
 
-        const isTestRunning = testState.started && !testState.finished;
-        const areOperationsDenied = testState.writingTestData || isTestRunning;
+        const isTestRunning = testState.isStarted && !testState.isFinished;
+        const areOperationsDenied = testState.isWritingTestData || isTestRunning;
 
         return (
             <form>
@@ -53,3 +53,4 @@ class LoadTestForm extends Component {
 }
 
 export default connectToStores(LoadTestForm);
+export { LoadTestForm };

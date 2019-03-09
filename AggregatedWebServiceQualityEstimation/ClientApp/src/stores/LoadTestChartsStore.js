@@ -72,7 +72,6 @@ class LoadTestChartsStore {
         const chartsLinesDataItem = Object.keys(chartsLinesData)
             .map(key => chartsLinesData[key].find(lines => lines.axisYKey === `${lineName}`))
             .filter(item => !isNil(item))[0];
-        //const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
         chartsLinesDataItem['isLineVisible'] = !chartsLinesDataItem['isLineVisible'];
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }
@@ -82,7 +81,6 @@ class LoadTestChartsStore {
         const chartsLinesDataItem = Object.keys(chartsLinesData)
             .map(key => chartsLinesData[key].find(lines => lines.axisYKey === `${lineName}`))
             .filter(item => !isNil(item))[0];
-        //const chartsLinesDataItem = chartsLinesData[`${chartName}`].find(lines => lines.axisYKey === `${lineName}`);
         chartsLinesDataItem['areReferenceLinesVisible'] = !chartsLinesDataItem['areReferenceLinesVisible'];
         this.setState(this.state.set("chartsLinesData", chartsLinesData));
     }

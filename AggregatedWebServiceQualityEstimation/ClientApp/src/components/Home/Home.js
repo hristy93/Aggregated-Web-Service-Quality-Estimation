@@ -8,7 +8,9 @@ export class Home extends Component {
             <div style={{ margin: '0 2rem' }}>
                 <Row className="show-grid">
                     <Col sm={12} style={{ textAlign: "center" }}>
-                        <h1>Aggregated Web Service Quality Estimation</h1>
+                        <div id="header">
+                            <h1 id="header-title">Aggregated Web Service Quality Estimation</h1>
+                        </div>
                     </Col>
                 </Row>
                 <Row className="show-grid" style={{ marginTop: "2rem" }}>

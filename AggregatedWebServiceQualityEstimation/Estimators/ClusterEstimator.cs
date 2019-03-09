@@ -21,9 +21,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
         private Vector<double> _densestClusterCenter;
         private IList<double> _potentials;
-        //private Dictionary<IList<double>, IList<IList<double>>> _clustersCandidates;
         private Dictionary<IList<double>, double> _clusterDensitiesCandidates;
-        //private Dictionary<IList<double>, IList<double>> _distances;
         private Dictionary<(IList<double> firstVector, IList<double> secondVector), double> _vectorsDistances;
         private double _radius;
         private double _densestClusterPotential;
@@ -42,7 +40,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             _loadTestDataIOManager = loadTestDataIOManager;
             _loadTestDataPreprocessor = loadTestDataPreprocessor;
             _clusterDensitiesCandidates = new Dictionary<IList<double>, double>();
-            //_distances = new Dictionary<IList<double>, IList<double>>();
             _vectorsDistances = new Dictionary<(IList<double> firstVector, IList<double> secondVector), double>();
             _clustersCentersPotentials = new List<double>();
             _clustersDensities = new List<double>();
@@ -84,7 +81,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             try
             {
                 _potentials = new List<double>();
-                //_clustersCandidates = new Dictionary<IList<double>, IList<IList<double>>>();
                 Vector<double> initialFirstVector = null;
                 Vector<double> firstVector;
                 Vector<double> initialSecondVector = null;
@@ -93,7 +89,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 double distanceSum;
                 double distance;
                 double clusterCandidateDensity;
-                //List<IList<double>> closestPoints;
                 int maxPotentialIndex;
                 _radius = _initialRadius;
 
@@ -109,8 +104,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
 
                         initialFirstVector = firstVector.Clone();
                         firstVector = firstVector.Normalize(2);
-                        //closestPoints = new List<IList<double>>();
-                        //_distances[initialFirstVector] = new List<double>();
 
                         foreach (var secondMetrics in MetricsData)
                         {
@@ -125,18 +118,11 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                                 distance = Distance.Euclidean(firstVector, secondVector);
                                 potentialSum += Math.Exp(-4 / (_radius * _radius) * distance * distance);
                                 distanceSum += distance;
-                                //_distances[initialFirstVector].Add(distance);
                                 _vectorsDistances[(initialFirstVector, initialSecondVector)] = distance;
-
-                                //if (distance <= _radius)
-                                //{
-                                //    closestPoints.Add(initialSecondVector);
-                                //}
                             }
                         }
 
                         _potentials.Add(potentialSum);
-                        //_clustersCandidates[initialFirstVector] = closestPoints;
                         clusterCandidateDensity = distanceSum / _metricsCount;
                         _clusterDensitiesCandidates[initialFirstVector] = clusterCandidateDensity;
                     }
@@ -150,13 +136,11 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     .Select(x => Double.Parse(x, _cultureInfo)));
                 _clustersCenters.Add(_densestClusterCenter);
 
-                // old implementation
-                //var pointsInCluster = _clustersCandidates[_densestClusterCenter];
                 var pointsInCluster = _vectorsDistances
                     .Where(s => Object.Equals(s.Key.firstVector, _densestClusterCenter) && s.Value.CompareTo(_radius, _epsilon) < 0)
                     .Select(t => t.Key.secondVector);
                 var numberOfPointInCluseter = pointsInCluster.Count();
-                // Add the cluster center
+
                 numberOfPointInCluseter++;
                 _clustersSpreads.Add((double) numberOfPointInCluseter / _metricsCount);                
 
@@ -181,7 +165,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 double distance;
                 double gaussianComponent;
                 string[] firstMetrics;
-                //List<Vector<double>> closestPoints = new List<Vector<double>>();
                 var densestClusterPotential = _potentials.Max();
 
                 for (int i = 0; i < MetricsData.Count; i++)
@@ -280,12 +263,10 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
             _clustersCentersPotentials.Add(newDensestClusterCenterPotential);
             _densestClusterCenter = newClusterCenter;
 
-            // old implementation
-            // var numberOfPointsInCluster = _distances[_densestClusterCenter].Where(s => s.CompareTo(_radius, _epsilon) < 0).Count();
             var numberOfPointsInCluster = _vectorsDistances
                 .Where(s => Object.Equals(s.Key.firstVector, _densestClusterCenter) && s.Value.CompareTo(_radius, _epsilon) < 0)
                 .Count();
-            // TODO Get the points in the cluster from the code above
+
             // Add the cluster center
             numberOfPointsInCluster++;
             _clustersSpreads.Add((double)numberOfPointsInCluster / _metricsCount);

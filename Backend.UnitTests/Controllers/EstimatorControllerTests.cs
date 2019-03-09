@@ -337,7 +337,7 @@ namespace Backend.UnitTests.Controllers
             };
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
-            _statisticalEstimator.Setup(statisticalEstimator => statisticalEstimator.GetStatisticalData()).Returns(expectedResult);
+            _statisticalEstimator.Setup(statisticalEstimator => statisticalEstimator.FindStatisticalEstimatorResult()).Returns(expectedResult);
 
             var estimatorController = new EstimatorController(_loadTestDataManager.Object, _apdexScoreEstimator.Object,
                 _clusterEstimator.Object, _fuzzyLogicEstimator.Object, _statisticalEstimator.Object);
@@ -382,7 +382,7 @@ namespace Backend.UnitTests.Controllers
 
             _metricsDataManager.Setup(metricsDataManager => metricsDataManager.GetMetricsData(webServiceId, fromFile, byRow));
             _statisticalEstimator
-                .Setup(statisticalEstimator => statisticalEstimator.GetStatisticalData())
+                .Setup(statisticalEstimator => statisticalEstimator.FindStatisticalEstimatorResult())
                 .Throws(new Exception());
 
             var estimatorController = new EstimatorController(_loadTestDataManager.Object, _apdexScoreEstimator.Object,

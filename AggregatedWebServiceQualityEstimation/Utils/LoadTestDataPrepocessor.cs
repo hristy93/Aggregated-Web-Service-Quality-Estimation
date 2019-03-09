@@ -53,7 +53,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         public IList<string[]> TransformMetricsData(string metricsData, string webServiceId, bool byRow = true,
             bool fromFile = true, bool isFiltered = true)
         {
-            //var fileOutput = ReadTestData(webServiceId, fromFile);
             var fileLines = metricsData.Split(Environment.NewLine);
             var filteredFileLines = fileLines.Where(s => !String.IsNullOrWhiteSpace(s));
             var transformedFileLines = filteredFileLines.Select(x => x.Split(','));
@@ -74,10 +73,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         public string TransformMetricsData(IList<string[]> metricsData, string webServiceId, bool byRow = true,
             bool fromFile = true, bool isFiltered = true, bool toFileFormat = true)
         {
-            //var transformedMetricsData = HandleMetricsDataTransformation(metricsData.AsEnumerable(), webServiceId, byRow, fromFile,
-            //    isFiltered);
             var metricsDataInFileFormat = TranformToFileFormat(metricsData);
-
             return metricsDataInFileFormat;
         }
 
@@ -113,9 +109,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
 
         private void FindDirtyValues(List<string[]> fileLinesTransformed, out Dictionary<int, List<int>> dirtyValuesIndeces, out Dictionary<int, List<double>> markeFileLines)
         {
-            //List<double[]> fileLinesTranformed = new List<double[]>();
-            //fileLinesParsed.Add(fileLinesTransformed.ElementAt(0));
-
             dirtyValuesIndeces = new Dictionary<int, List<int>>();
             markeFileLines = new Dictionary<int, List<double>>();
             double doubleFileLineValue;
@@ -132,17 +125,12 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                     fileLinesTransformed.RemoveAt(outerIndex);
                     break;
                 }
-                //var fileLineTranformed = new double[fileLine.Length];
-                //fileLineParesed[0] = fileLine[0];
-                //fileLineParesed[1] = fileLine[1];
 
                 for (int innerIndex = 2; innerIndex < fileLine.Length; innerIndex++)
                 {
                     fileLineValue = fileLine[innerIndex].Trim();
                     doubleFileLineValue = -1;
                     intFileLineValue = -1;
-
-                    //TODO: handle data like 12.3r56
 
                     if (
                         String.IsNullOrWhiteSpace(fileLineValue)
@@ -179,10 +167,7 @@ namespace AggregatedWebServiceQualityEstimation.Utils
                     }
 
                     markeFileLines[innerIndex].Add(fileLineValueParsed);
-                    //fileLineTranformed[outerIndex - 1] = fileLineValueParsed;
                 }
-
-                //fileLinesTranformed.Add(fileLineTranformed);
             }
         }
 
@@ -246,9 +231,6 @@ namespace AggregatedWebServiceQualityEstimation.Utils
         private IList<string[]> HandleMetricsDataTransformation(IEnumerable<string[]> transformedFileLines,
             string webServiceId, bool byRow = true, bool fromFile = true, bool isFiltered = true)
         {
-            ////var fileOutput = ReadTestData(webServiceId, fromFile);
-            //var fileLines = metricsData.Split(Environment.NewLine);
-            //var transformedFileLines = fileLines.Select(x => x.Split(','));
             IList<string[]> trasformedMetricsData;
             if (byRow)
             {

@@ -55,6 +55,28 @@ class EstimationStore {
         this.setState(this.state.setIn([webServiceId, "isPanelVisible"], isPanelVisible));
     }
 
+    getAllEstimatorsResults = (webServiceId) => {
+        // Get the statistics estimator's result and displaying it in a table
+        EstimationActions.getStatisticalEstimatorResult.defer(webServiceId);
+
+        // Get the apdex estimator's result and displaying it in a chart
+        let apdexScoreLimit = this.state.getIn([webServiceId, "apdexScoreLimit"]);
+        apdexScoreLimit = !isNil(apdexScoreLimit) ? apdexScoreLimit : "";
+        EstimationActions.getApdexScoreEstimatorResult.defer({
+            apdexScoreLimit,
+            webServiceId
+        });
+
+        // Get cluster estimator's result and display it in the panel
+        EstimationActions.getClusterEstimatorResult.defer(webServiceId);
+
+        // Set estimations' panel visibility to true
+        EstimationActions.setEstimationsPanelVisibility.defer({
+            isPanelVisible: true,
+            webServiceId
+        });
+    }
+
     static getFirstWebServiceEstimationData() {
         return this.state.get("first").toJS();
     }

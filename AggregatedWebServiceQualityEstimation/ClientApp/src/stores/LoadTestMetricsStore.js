@@ -42,13 +42,13 @@ class LoadTestMetricsStore {
         const firstServiceloadTestData = LoadTestStore.getFirstServiceLoadTestData();
 
         if (!isNil(firstServiceloadTestData) && firstServiceloadTestData.length !== 0) {
-            EstimationActions.getStatisticalEstimatorResult("first");
+            EstimationActions.getAllEstimatorsResults.defer("first");
         }
 
         const secondServiceloadTestData = LoadTestStore.getSecondServiceLoadTestData();
 
         if (!isNil(secondServiceloadTestData) && secondServiceloadTestData.length !== 0) {
-            EstimationActions.getStatisticalEstimatorResult("second");
+            EstimationActions.getAllEstimatorsResults.defer("second");
         }
     }
 

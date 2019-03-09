@@ -97,7 +97,7 @@ namespace AggregatedWebServiceQualityEstimation.Controllers
 
                 (_statisticalEstimator as IMetricsData)?.GetMetricsData(webServiceId, fromFile: true, byRow: false);
 
-                var statisticalData = _statisticalEstimator.GetStatisticalData();
+                var statisticalData = _statisticalEstimator.FindStatisticalEstimatorResult();
                 return Ok(statisticalData);
             }
             catch (Exception ex)

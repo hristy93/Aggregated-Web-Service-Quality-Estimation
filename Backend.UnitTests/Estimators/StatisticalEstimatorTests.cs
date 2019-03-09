@@ -56,7 +56,7 @@ namespace Backend.UnitTests.Estimators
         }
 
         [Fact]
-        public void GetStatisticalData_Success_FromFile()
+        public void FindStatisticalEstimatorResult_Success_FromFile()
         {
             const string webServiceId = "first";
             const bool byRow = false;
@@ -135,14 +135,14 @@ namespace Backend.UnitTests.Estimators
 
             var statisticalEstimator = new StatisticalEstimator(_loadTestDataManager.Object, _loadTestDataPreprocessor.Object);
             statisticalEstimator.GetMetricsData(webServiceId, fromFile, byRow);
-            var result = statisticalEstimator.GetStatisticalData();
+            var result = statisticalEstimator.FindStatisticalEstimatorResult();
 
             Assert.IsAssignableFrom<IEnumerable<StatisticalEstimation>>(result);
             Assert.Equal<IEnumerable<StatisticalEstimation>>(expectedResult, result);
         }
 
         [Fact]
-        public void GetStatisticalData_Success_NotFromFile()
+        public void FindStatisticalEstimatorResult_Success_NotFromFile()
         {
             const string webServiceId = "first";
             const bool byRow = false;
@@ -221,7 +221,7 @@ namespace Backend.UnitTests.Estimators
 
             var statisticalEstimator = new StatisticalEstimator(_loadTestDataManager.Object, _loadTestDataPreprocessor.Object);
             statisticalEstimator.GetMetricsData(webServiceId, fromFile, byRow);
-            var result = statisticalEstimator.GetStatisticalData();
+            var result = statisticalEstimator.FindStatisticalEstimatorResult();
 
             Assert.IsAssignableFrom<IEnumerable<StatisticalEstimation>>(result);
             Assert.Equal<IEnumerable<StatisticalEstimation>>(expectedResult, result);

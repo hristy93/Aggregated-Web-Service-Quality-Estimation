@@ -1,7 +1,6 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isNil from 'lodash/isNil';
-import LineChartOptions from './LineChartOptions';
 import {
     LineChart as LineChartRecharts,
     CartesianGrid,
@@ -30,6 +29,7 @@ class LineChart extends Component {
         brushStartIndex: PropTypes.number,
         data: PropTypes.instanceOf(Array),
         height: PropTypes.number,
+        id: PropTypes.string.isRequired,
         isVisible: PropTypes.bool,
         lines: PropTypes.arrayOf(PropTypes.shape({
             axisXKey: PropTypes.string,
@@ -112,6 +112,7 @@ class LineChart extends Component {
 
     render() {
         const {
+            id,
             data,
             width,
             height,
@@ -137,6 +138,7 @@ class LineChart extends Component {
                 {
                     data.length > 0 && isVisible &&
                     <LineChartRecharts
+                        id={`line-chart-${id}`}
                         width={width}
                         height={height}
                         data={data}

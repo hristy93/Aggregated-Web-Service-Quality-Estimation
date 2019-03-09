@@ -78,7 +78,7 @@ namespace Backend.UnitTests.Utils
             _loadTestDataPrepocessor.SaveUsedMetrics(_metricsUsed);
             string actualResult = _loadTestDataPrepocessor.TransformMetricsData(_metricsDataByRows, webServiceId, byRow, fromFile, isFiltered, toFileFormat);
 
-            Assert.Equal<string>(_metricsDataInFileFromat, actualResult);
+            Assert.Equal(_metricsDataInFileFromat, actualResult);
         }
 
         [Fact]

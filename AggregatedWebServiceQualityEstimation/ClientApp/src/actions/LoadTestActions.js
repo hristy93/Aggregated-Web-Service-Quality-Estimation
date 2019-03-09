@@ -7,8 +7,8 @@ const tempDate = '1970/01/01 ';
 
 class LoadTestActions {
     constructor() {
-        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData", "setLoadTestDuration",
-            "setTestState", "setTimeLeft", "clearLoadTestData", "setLoadTestDataSize", "setLoadTestDataSource");
+        this.generateActions("setLoadTestDuration", "setTestState", "setTimeLeft", "clearLoadTestData", "setLoadTestDataSize",
+            "setLoadTestDataSource");
     }
 
     runLoadTest = ({ data, duration }) => {
@@ -49,7 +49,7 @@ class LoadTestActions {
 
     checkLoadTestStatus = () => {
         return (dispatch) => {
-            LoadTestServices.cancelLoadTest()
+            LoadTestServices.checkLoadTestStatus()
                 .then((response) => {
                     // handle success
                     const alertMessage = response.data;
@@ -82,7 +82,6 @@ class LoadTestActions {
                         return new Date(tempDate + a.IntervalStartTime) - new Date(tempDate + b.IntervalStartTime);
                     });
                     parsedResultData = parsedResultData.filter(item => item.IntervalStartTime !== "");
-                    //console.log("parsedResultData", webServiceId, parsedResultData);
                     dispatch({ loadTestData: parsedResultData, webServiceId });
                 })
                 .catch((error) => {

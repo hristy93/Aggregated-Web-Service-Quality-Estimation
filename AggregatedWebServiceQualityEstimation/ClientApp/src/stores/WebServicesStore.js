@@ -11,16 +11,18 @@ class WebServicesStore {
 
         this.state = Immutable.Map({
             first: Immutable.Map({
-                url: "https://jsonplaceholder.typicode.com/todos/1",
+                url: "",
                 isUrlValid: false,
                 requestType: "GET",
-                requestPostData: null
+                requestPostData: null,
+                fileName: ''
             }),
             second: Immutable.Map({
-                url: "https://jsonplaceholder.typicode.com/todos/2",
+                url: "",
                 isUrlValid: false,
                 requestType: "GET",
-                requestPostData: null
+                requestPostData: null,
+                fileName: ''
             })
         });
     }
@@ -45,6 +47,10 @@ class WebServicesStore {
                                        
     setRequestPostData = ({ requestPostData, webServiceId }) => {
         this.setState(this.state.setIn([webServiceId, "requestPostData"], requestPostData));
+    }
+
+    setFileName = ({ fileName, webServiceId }) => {
+        this.setState(this.state.setIn([webServiceId, "fileName"], fileName));
     }
 
     static getFirstWebServiceData() {

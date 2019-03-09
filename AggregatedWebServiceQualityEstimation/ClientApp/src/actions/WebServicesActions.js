@@ -2,7 +2,8 @@
 
 class WebServicesActions {
     constructor() {
-        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData");
+        this.generateActions("setUrl", "setUrlValidity", "setRequestType", "setRequestPostData",
+            'setFileName');
     }
 }
 
