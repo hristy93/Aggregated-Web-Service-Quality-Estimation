@@ -42,7 +42,8 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                 double mean;
                 double variance;
                 StatisticalEstimation statisticalEstimation;
-                IList<StatisticalEstimation> statisticalEstimatorResult = new List<StatisticalEstimation>(); ;
+                IList<StatisticalEstimation> statisticalEstimatorResult = new List<StatisticalEstimation>();
+
                 foreach (var metrics in MetricsData)
                 {
                     metricsVector = Vector<double>.Build.DenseOfEnumerable(metrics
@@ -53,17 +54,6 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                     mean = Statistics.Mean(metricsVector);
                     variance = Statistics.Variance(metricsVector);
 
-                    var percentile95 = Statistics.Percentile(metricsVector, 95);
-                    var percentile99 = Statistics.Percentile(metricsVector, 99);
-
-                    var abovePercentile95Count = metricsVector
-                        .Where(item => item >= percentile95).Count();
-                    var abovePercentile99Count = metricsVector
-                       .Where(item => item >= percentile99).Count();
-
-                    var percentageAbovePercentile95 = (double) abovePercentile95Count / metricsVector.Count;
-                    var percentageAbovePercentile99 = (double) abovePercentile99Count / metricsVector.Count;
-
                     statisticalEstimation = new StatisticalEstimation()
                     {
                         MetricName = metrics.Take(1).ToList()[0],
@@ -73,11 +63,7 @@ namespace AggregatedWebServiceQualityEstimation.Estimators
                         UpperQuartile = fiveNumberSummary[3],
                         Max = fiveNumberSummary[4],
                         Mean = mean,
-                        Variance = variance,
-                        Percentile95 = percentile95,
-                        Percentile99 = percentile99,
-                        PercentageAbovePercentile95 = percentageAbovePercentile95,
-                        PercentageAbovePercentile99 = percentageAbovePercentile99
+                        Variance = variance
                     };
 
                     statisticalEstimatorResult.Add(statisticalEstimation);

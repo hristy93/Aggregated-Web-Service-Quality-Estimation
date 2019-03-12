@@ -328,11 +328,7 @@ namespace Backend.UnitTests.Controllers
                    Mean = 25,
                    Variance = 0,
                    LowerQuartile = 15,
-                   UpperQuartile = 35,
-                   Percentile95 = 45,
-                   Percentile99 = 50,
-                   PercentageAbovePercentile95 = 0.2,
-                   PercentageAbovePercentile99 = 0.5
+                   UpperQuartile = 35
                }
             };
 

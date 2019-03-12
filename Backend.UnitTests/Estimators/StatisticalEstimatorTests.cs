@@ -73,11 +73,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 0.83994446666666667,
                     Max = 0.9735,
                     Mean = 0.74313334,
-                    Variance = 0.019280977379922987,
-                    Percentile95 = 0.9735,
-                    Percentile99= 0.9735,
-                    PercentageAbovePercentile95 = 0.2,
-                    PercentageAbovePercentile99 = 0.2
+                    Variance = 0.019280977379922987
                 },
                 new StatisticalEstimation()
                 {
@@ -88,11 +84,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 1.4,
                     Max = 1.4,
                     Mean = 1.24,
-                    Variance =  0.0679999999999999,
-                    Percentile95 = 1.4,
-                    Percentile99 = 1.4,
-                    PercentageAbovePercentile95 = 0.6,
-                    PercentageAbovePercentile99 = 0.6
+                    Variance =  0.0679999999999999
                 },
                 new StatisticalEstimation()
                 {
@@ -103,11 +95,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 0,
                     Max = 0,
                     Mean = 0,
-                    Variance = 0,
-                    Percentile95 = 0,
-                    Percentile99 = 0,
-                    PercentageAbovePercentile95 = 1,
-                    PercentageAbovePercentile99 = 1
+                    Variance = 0
                 },
                 new StatisticalEstimation()
                 {   
@@ -118,11 +106,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 3.025,
                     Max = 3.025,
                     Mean = 3.025,
-                    Variance = 0,
-                    Percentile95 = 3.025,
-                    Percentile99 = 3.025,
-                    PercentageAbovePercentile95 = 1,
-                    PercentageAbovePercentile99 = 1
+                    Variance = 0
                 }
             };
 
@@ -159,11 +143,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 0.83994446666666667,
                     Max = 0.9735,
                     Mean = 0.74313334,
-                    Variance = 0.019280977379922987,
-                    Percentile95 = 0.9735,
-                    Percentile99= 0.9735,
-                    PercentageAbovePercentile95 = 0.2,
-                    PercentageAbovePercentile99 = 0.2
+                    Variance = 0.019280977379922987
                 },
                 new StatisticalEstimation()
                 {
@@ -174,11 +154,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 1.4,
                     Max = 1.4,
                     Mean = 1.24,
-                    Variance =  0.0679999999999999,
-                    Percentile95 = 1.4,
-                    Percentile99 = 1.4,
-                    PercentageAbovePercentile95 = 0.6,
-                    PercentageAbovePercentile99 = 0.6
+                    Variance =  0.0679999999999999
                 },
                 new StatisticalEstimation()
                 {
@@ -189,11 +165,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 0,
                     Max = 0,
                     Mean = 0,
-                    Variance = 0,
-                    Percentile95 = 0,
-                    Percentile99 = 0,
-                    PercentageAbovePercentile95 = 1,
-                    PercentageAbovePercentile99 = 1
+                    Variance = 0
                 },
                 new StatisticalEstimation()
                 {
@@ -204,11 +176,7 @@ namespace Backend.UnitTests.Estimators
                     UpperQuartile = 3.025,
                     Max = 3.025,
                     Mean = 3.025,
-                    Variance = 0,
-                    Percentile95 = 3.025,
-                    Percentile99 = 3.025,
-                    PercentageAbovePercentile95 = 1,
-                    PercentageAbovePercentile99 = 1
+                    Variance = 0
                 }
             };
 

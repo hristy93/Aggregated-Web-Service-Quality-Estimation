@@ -349,7 +349,7 @@ class LoadTest extends Component {
                                                                     id="button-run-load-test"
                                                                     onClick={this.handleRunLoadTestButtonClick}
                                                                     disabled={isRunLoadTestButtonDisabled}
-                                                                    style={isRunLoadTestButtonDisabled ? { pointerEvents: 'none' } : {}}
+                                                                    style={isRunLoadTestButtonDisabled ? { pointerEvents: 'none', marginRight: '1rem' } : { marginRight: '1rem' }}
                                                                 >
                                                                     Run Tests
                                                                 </Button>
@@ -368,31 +368,6 @@ class LoadTest extends Component {
                                                                      Cancel Tests
                                                                  </Button>
                                                              </Tooltip>
-                                                            <Button
-                                                                id="button-write-load-test-data"
-                                                                onClick={() => this.handleWriteLoadTestDataClick("first")}
-                                                            >
-                                                                Write Load Test Data
-                                                            </Button>
-                                                            <Button
-                                                                id="button-read-load-test-data"
-                                                                onClick={() => this.handleReadLoadTestDataClick("first")}
-                                                            >
-                                                                Read Load Test Data
-                                                             </Button>
-                                                            <br />
-                                                            <Button
-                                                                id="button-write-load-test-data"
-                                                                onClick={() => this.handleWriteLoadTestDataClick("second")}
-                                                            >
-                                                                Write Load Test Data
-                                                            </Button>
-                                                            <Button
-                                                                id="button-read-load-test-data"
-                                                                onClick={() => this.handleReadLoadTestDataClick("second")}
-                                                            >
-                                                                Read Load Test Data
-                                                             </Button>
                                                         </ButtonToolbar>
                                                     </ListGroupItem>
                                                     <ListGroupItem>

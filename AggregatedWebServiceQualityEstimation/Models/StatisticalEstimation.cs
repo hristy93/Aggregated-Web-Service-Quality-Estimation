@@ -16,10 +16,6 @@ namespace AggregatedWebServiceQualityEstimation.Models
         public double Max { get; set; }
         public double Mean { get; set; }
         public double Variance { get; set; }
-        public double Percentile95 { get; set; }
-        public double Percentile99 { get; set; }
-        public double PercentageAbovePercentile95 { get; set; }
-        public double PercentageAbovePercentile99 { get; set; }
 
         [ExcludeFromCodeCoverage]
         public override bool Equals(object obj)
@@ -33,11 +29,7 @@ namespace AggregatedWebServiceQualityEstimation.Models
                    UpperQuartile == estimation.UpperQuartile &&
                    Max == estimation.Max &&
                    Mean == estimation.Mean &&
-                   Variance == estimation.Variance &&
-                   Percentile95 == estimation.Percentile95 &&
-                   Percentile99 == estimation.Percentile99 &&
-                   PercentageAbovePercentile95 == estimation.PercentageAbovePercentile95 &&
-                   PercentageAbovePercentile99 == estimation.PercentageAbovePercentile99;
+                   Variance == estimation.Variance;
         }
 
         [ExcludeFromCodeCoverage]
@@ -52,10 +44,6 @@ namespace AggregatedWebServiceQualityEstimation.Models
             hash.Add(Max);
             hash.Add(Mean);
             hash.Add(Variance);
-            hash.Add(Percentile95);
-            hash.Add(Percentile99);
-            hash.Add(PercentageAbovePercentile95);
-            hash.Add(PercentageAbovePercentile99);
             return hash.ToHashCode();
         }
     }
